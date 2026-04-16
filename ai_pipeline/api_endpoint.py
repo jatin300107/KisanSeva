@@ -13,7 +13,7 @@ OPENAI_AVAILABLE = True  # Assume available, will be tested when used
 
 # Initialize clients lazily
 genai_client = None
-grok_client = None
+genai_client_2 = None
 
 def get_genai_client():
     global genai_client
@@ -29,40 +29,16 @@ def get_genai_client():
             GOOGLE_GENAI_AVAILABLE = False
     return genai_client
 
-def get_grok_client():
-    global grok_client
-    if grok_client is None:
-        try:
-            from openai import OpenAI
-            grok_client = OpenAI(
-                api_key=GROK_API_KEY,
-                base_url="https://api.x.ai/v1"
-            )
-        except Exception as e:
-            print(f"OpenAI error: {e}")
-            grok_client = None
-            global OPENAI_AVAILABLE
-            OPENAI_AVAILABLE = False
-    return grok_client
+def get_genai_client_2():
+    global genai_client_2
+    if genai_client_2 is None:
+        import google.genai as genai
+        genai_client_2 = genai.Client(api_key=GEMINI_API_KEY_2)
+    return genai_client_2
 
-# Initialize clients lazily
-genai_client = None
-grok_client = None
 
-def get_genai_client():
-    global genai_client
-    if genai_client is None and GOOGLE_GENAI_AVAILABLE:
-        genai_client = genai.Client(api_key=GEMINI_API_KEY_1)
-    return genai_client
 
-def get_grok_client():
-    global grok_client
-    if grok_client is None and OPENAI_AVAILABLE:
-        grok_client = OpenAI(
-            api_key=GROK_API_KEY,
-            base_url="https://api.x.ai/v1"
-        )
-    return grok_client
+
 
 class SubmitReportRequest(BaseModel):
     type: str
@@ -172,47 +148,44 @@ Respond ONLY in this exact JSON format with no extra text:
         clean_gemini = re.sub(r"```json|```", "", raw_gemini).strip()
         gemini_data = json.loads(clean_gemini)
 
-        # ── Step 3: Grok final report ─────────────────────────────────────
-        grok_client = get_grok_client()
-        if grok_client is None:
-            raise HTTPException(status_code=503, detail="Grok AI service is unavailable")
+        # ── Step 3: Gemini final report ───────────────────────────────────
+        client2 = get_genai_client_2()
 
         grok_prompt = f"""
-You are an expert agricultural and veterinary diagnostician.
+        You are an expert agricultural and veterinary diagnostician.
 
-Farmer's behavioural observations:
-{behavioural_context}
+        Farmer's behavioural observations:
+        {behavioural_context}
 
-AI image analysis:
-- Visual description: {gemini_data['visual_description']}
-- Suspected disease: {gemini_data['possible_disease']}
-- Severity: {gemini_data['severity']}/10
-- Confidence: {gemini_data['confidence']}
+        AI image analysis:
+        - Visual description: {gemini_data['visual_description']}
+        - Suspected disease: {gemini_data['possible_disease']}
+        - Severity: {gemini_data['severity']}/10
+        - Confidence: {gemini_data['confidence']}
 
-Generate a complete diagnostic report.
+        Generate a complete diagnostic report.
 
-Respond ONLY in this exact JSON format with no extra text:
-{{
-  "title": "...",
-  "disease_name": "...",
-  "ai_diagnosis": "...",
-  "ai_suggestions": "..."
-}}
-"""
-        grok_response = grok_client.chat.completions.create(
-            model="grok-3",
-            messages=[{"role": "user", "content": grok_prompt}]
+        Respond ONLY in this exact JSON format with no extra text:
+        {{
+        "title": "...",
+        "disease_name": "...",
+        "ai_diagnosis": "...",
+        "ai_suggestions": "..."
+        }}
+        """
+
+        from google.genai import types
+        grok_response = client2.models.generate_content(
+            model="gemini-2.5-flash-lite",
+            contents=[types.Part.from_text(text=grok_prompt)]
         )
-        if not grok_response:
-            raise HTTPException(status_code=500, detail="Grok API error")
-        raw_grok = grok_response.choices[0].message.content
-        
+        raw_grok = grok_response.text
         clean_grok = re.sub(r"```json|```", "", raw_grok).strip()
         grok_data = json.loads(clean_grok)
 
         # ── Step 4: Insert report ─────────────────────────────────────────
         report_result = supabase.table("reports").insert({
-            "user_id": current_user["id"],
+            "user_id": current_user.id,
             "type": body.type,
             "title": grok_data["title"],
             "ai_diagnosis": grok_data["ai_diagnosis"],
