@@ -1,0 +1,656 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --green:#3B6D11;--green-light:#EAF3DE;--green-mid:#639922;--green-border:#C0DD97;
+  --amber:#BA7517;--amber-light:#FAEEDA;--amber-border:#FAC775;
+  --teal:#0F6E56;--teal-light:#E1F5EE;--teal-border:#9FE1CB;
+  --text:#2C2C2A;--text-muted:#5F5E5A;--text-hint:#888780;
+  --bg:#F9F8F4;--surface:#FFFFFF;--border:#D3D1C7;
+  --radius:10px;--radius-lg:16px;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:15px}
+h1,h2,h3{font-family:'Playfair Display',serif}
+
+.page{display:none;min-height:100vh;flex-direction:column}
+.page.active{display:flex}
+
+/* AUTH */
+.auth-wrap{display:flex;min-height:100vh}
+.auth-left{flex:1;background:var(--green);display:flex;flex-direction:column;justify-content:center;padding:3rem;color:#fff;position:relative;overflow:hidden}
+.auth-left::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
+.auth-left h1{font-size:2.4rem;margin-bottom:1rem;position:relative}
+.auth-left p{font-size:1rem;opacity:0.8;line-height:1.7;position:relative;max-width:320px}
+.auth-leaf{font-size:4rem;margin-bottom:1.5rem;display:block}
+.auth-right{flex:1;display:flex;align-items:center;justify-content:center;padding:2rem}
+.auth-card{width:100%;max-width:400px}
+.auth-card h2{font-size:1.6rem;margin-bottom:0.3rem}
+.auth-card .sub{color:var(--text-muted);font-size:0.9rem;margin-bottom:2rem}
+.tabs{display:flex;gap:0;margin-bottom:2rem;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.tab-btn{flex:1;padding:0.6rem;border:none;background:transparent;cursor:pointer;font-family:inherit;font-size:0.9rem;color:var(--text-muted);transition:all 0.2s}
+.tab-btn.active{background:var(--green);color:#fff;font-weight:500}
+.field{margin-bottom:1.2rem}
+.field label{display:block;font-size:0.82rem;font-weight:500;color:var(--text-muted);margin-bottom:0.4rem;text-transform:uppercase;letter-spacing:0.05em}
+.field input,.field select{width:100%;padding:0.7rem 0.9rem;border:1px solid var(--border);border-radius:var(--radius);font-family:inherit;font-size:0.95rem;background:var(--surface);color:var(--text);outline:none;transition:border 0.2s}
+.field input:focus,.field select:focus{border-color:var(--green)}
+.btn-primary{width:100%;padding:0.8rem;background:var(--green);color:#fff;border:none;border-radius:var(--radius);font-family:inherit;font-size:1rem;font-weight:500;cursor:pointer;transition:opacity 0.2s}
+.btn-primary:hover{opacity:0.9}
+.btn-primary:disabled{opacity:0.6;cursor:not-allowed}
+.error-msg{background:#FCEBEB;border:1px solid #F7C1C1;color:#A32D2D;padding:0.7rem 1rem;border-radius:var(--radius);font-size:0.88rem;margin-bottom:1rem;display:none}
+
+/* NAV */
+nav{background:var(--surface);border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:10}
+.nav-brand{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--green);font-weight:600}
+.nav-brand span{color:var(--text-muted);font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:400;margin-left:0.5rem}
+.nav-links{display:flex;gap:0.5rem;align-items:center}
+.nav-link{padding:0.4rem 0.9rem;border-radius:var(--radius);border:none;background:transparent;cursor:pointer;font-family:inherit;font-size:0.9rem;color:var(--text-muted);transition:all 0.2s}
+.nav-link:hover,.nav-link.active{background:var(--green-light);color:var(--green)}
+.nav-logout{padding:0.4rem 0.9rem;border-radius:var(--radius);border:1px solid var(--border);background:transparent;cursor:pointer;font-family:inherit;font-size:0.85rem;color:var(--text-muted)}
+
+/* MAIN */
+.main-content{flex:1;padding:2rem;max-width:1100px;margin:0 auto;width:100%}
+
+/* DASHBOARD */
+.hero-banner{background:var(--green);border-radius:var(--radius-lg);padding:2rem 2.5rem;color:#fff;margin-bottom:2rem;display:flex;justify-content:space-between;align-items:center}
+.hero-banner h2{font-size:1.8rem;margin-bottom:0.4rem}
+.hero-banner p{opacity:0.8;font-size:0.95rem}
+.hero-icon{font-size:3.5rem;opacity:0.4}
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.2rem 1.5rem}
+.stat-card .label{font-size:0.8rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.4rem}
+.stat-card .value{font-size:1.8rem;font-weight:500;font-family:'Playfair Display',serif;color:var(--green)}
+.section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+.section-header h3{font-size:1.1rem}
+.btn-new{padding:0.5rem 1.1rem;background:var(--green);color:#fff;border:none;border-radius:var(--radius);font-family:inherit;font-size:0.9rem;cursor:pointer}
+.reports-list{display:flex;flex-direction:column;gap:0.75rem}
+.report-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.2rem 1.5rem;cursor:pointer;transition:border-color 0.2s;display:flex;justify-content:space-between;align-items:center}
+.report-card:hover{border-color:var(--green-border)}
+.report-card .rtitle{font-weight:500;margin-bottom:0.25rem;font-size:0.95rem}
+.report-card .rmeta{font-size:0.82rem;color:var(--text-muted)}
+.severity-badge{padding:0.25rem 0.7rem;border-radius:20px;font-size:0.78rem;font-weight:500}
+.sev-low{background:var(--teal-light);color:var(--teal)}
+.sev-med{background:var(--amber-light);color:var(--amber)}
+.sev-high{background:#FCEBEB;color:#A32D2D}
+.empty-state{text-align:center;padding:3rem;color:var(--text-muted)}
+.empty-state .big{font-size:3rem;margin-bottom:1rem}
+.empty-state p{margin-bottom:1.5rem}
+
+/* REPORT FORM */
+.form-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:2rem}
+.form-steps{display:flex;gap:0;margin-bottom:2.5rem;position:relative}
+.form-steps::before{content:'';position:absolute;top:14px;left:14px;right:14px;height:1px;background:var(--border);z-index:0}
+.step-dot{display:flex;flex-direction:column;align-items:center;gap:0.4rem;flex:1;position:relative;z-index:1}
+.dot{width:28px;height:28px;border-radius:50%;border:2px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:500;color:var(--text-muted);transition:all 0.3s}
+.step-dot.done .dot{background:var(--green);border-color:var(--green);color:#fff}
+.step-dot.active .dot{border-color:var(--green);color:var(--green)}
+.step-dot .slabel{font-size:0.72rem;color:var(--text-muted);text-align:center}
+.step-dot.active .slabel,.step-dot.done .slabel{color:var(--green)}
+.type-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem}
+.type-card{border:2px solid var(--border);border-radius:var(--radius);padding:1.5rem;cursor:pointer;text-align:center;transition:all 0.2s}
+.type-card:hover,.type-card.selected{border-color:var(--green);background:var(--green-light)}
+.type-card .icon{font-size:2.5rem;margin-bottom:0.5rem;display:block}
+.type-card .tname{font-weight:500}
+.type-card .tdesc{font-size:0.82rem;color:var(--text-muted);margin-top:0.2rem}
+.q-item{margin-bottom:1.2rem}
+.q-item label{display:block;font-size:0.9rem;color:var(--text);margin-bottom:0.5rem;font-weight:500}
+.q-item input{width:100%;padding:0.65rem 0.9rem;border:1px solid var(--border);border-radius:var(--radius);font-family:inherit;font-size:0.92rem;outline:none;background:var(--surface);color:var(--text)}
+.q-item input:focus{border-color:var(--green)}
+.img-upload{border:2px dashed var(--green-border);border-radius:var(--radius);padding:2rem;text-align:center;cursor:pointer;margin-bottom:1.5rem;transition:all 0.2s;background:var(--green-light)}
+.img-upload:hover{border-color:var(--green)}
+.img-upload .up-icon{font-size:2rem;margin-bottom:0.5rem;display:block}
+.img-upload p{font-size:0.88rem;color:var(--text-muted)}
+.img-preview{width:100%;max-height:200px;object-fit:cover;border-radius:var(--radius);margin-bottom:1rem;display:none}
+.btn-row{display:flex;gap:0.75rem;margin-top:1.5rem}
+.btn-secondary{padding:0.75rem 1.5rem;border:1px solid var(--border);background:transparent;border-radius:var(--radius);font-family:inherit;cursor:pointer;color:var(--text-muted)}
+.btn-submit{flex:1;padding:0.75rem;background:var(--green);color:#fff;border:none;border-radius:var(--radius);font-family:inherit;font-size:1rem;font-weight:500;cursor:pointer}
+.btn-submit:disabled{opacity:0.6;cursor:not-allowed}
+.loading-wrap{text-align:center;padding:3rem}
+.spinner{width:40px;height:40px;border:3px solid var(--green-border);border-top-color:var(--green);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 1rem}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* REPORT DETAIL */
+.back-btn{display:flex;align-items:center;gap:0.4rem;background:none;border:none;cursor:pointer;color:var(--text-muted);font-family:inherit;font-size:0.9rem;margin-bottom:1.5rem;padding:0}
+.back-btn:hover{color:var(--green)}
+.report-header{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:2rem;margin-bottom:1.5rem}
+.report-header h2{font-size:1.5rem;margin-bottom:0.5rem}
+.report-meta{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1.5rem}
+.meta-pill{padding:0.3rem 0.8rem;border-radius:20px;font-size:0.8rem;font-weight:500}
+.pill-green{background:var(--green-light);color:var(--green)}
+.pill-amber{background:var(--amber-light);color:var(--amber)}
+.pill-teal{background:var(--teal-light);color:var(--teal)}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem}
+.detail-block{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem}
+.detail-block h3{font-size:0.8rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);margin-bottom:0.75rem}
+.detail-block p{font-size:0.93rem;line-height:1.7;color:var(--text)}
+.full-block{grid-column:1/-1}
+.consult-form{background:var(--green-light);border:1px solid var(--green-border);border-radius:var(--radius);padding:1.5rem;margin-top:1.5rem}
+.consult-form h3{margin-bottom:1rem;font-size:1rem}
+.consult-form select,.consult-form textarea{width:100%;padding:0.65rem 0.9rem;border:1px solid var(--border);border-radius:var(--radius);font-family:inherit;font-size:0.92rem;margin-bottom:0.75rem;background:var(--surface);outline:none}
+.consult-form textarea{height:100px;resize:vertical}
+
+/* CONSULTATIONS PAGE */
+.consult-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.2rem 1.5rem;margin-bottom:0.75rem}
+.consult-card .ctitle{font-weight:500;margin-bottom:0.3rem}
+.consult-card .cmeta{font-size:0.82rem;color:var(--text-muted);margin-bottom:0.75rem}
+.consult-card .cmessage{font-size:0.9rem;color:var(--text);background:var(--bg);padding:0.75rem;border-radius:var(--radius);border-left:3px solid var(--green-border);margin-bottom:0.75rem}
+.consult-card .cresponse{font-size:0.9rem;color:var(--text);background:var(--teal-light);padding:0.75rem;border-radius:var(--radius);border-left:3px solid var(--teal-border)}
+.status-pill{display:inline-block;padding:0.2rem 0.6rem;border-radius:20px;font-size:0.75rem;font-weight:500}
+.sp-pending{background:var(--amber-light);color:var(--amber)}
+.sp-answered{background:var(--teal-light);color:var(--teal)}
+
+.toast{position:fixed;bottom:2rem;right:2rem;background:#2C2C2A;color:#fff;padding:0.75rem 1.25rem;border-radius:var(--radius);font-size:0.9rem;z-index:100;transform:translateY(100px);opacity:0;transition:all 0.3s}
+.toast.show{transform:translateY(0);opacity:1}
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<!-- AUTH PAGE -->
+<div class="page active" id="page-auth">
+<div class="auth-wrap">
+  <div class="auth-left">
+    <span class="auth-leaf">🌿</span>
+    <h1>AgriDiagnose</h1>
+    <p>AI-powered crop and livestock disease diagnosis for Indian farmers. Get expert analysis in minutes.</p>
+  </div>
+  <div class="auth-right">
+    <div class="auth-card">
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchAuthTab('login')">Login</button>
+        <button class="tab-btn" onclick="switchAuthTab('signup')">Sign Up</button>
+      </div>
+      <div id="auth-error" class="error-msg"></div>
+      <div id="login-form">
+        <div class="field"><label>Email</label><input type="email" id="login-email" placeholder="you@example.com"></div>
+        <div class="field"><label>Password</label><input type="password" id="login-pass" placeholder="••••••••"></div>
+        <button class="btn-primary" onclick="doLogin()">Login</button>
+      </div>
+      <div id="signup-form" style="display:none">
+        <div class="field"><label>Full Name</label><input type="text" id="su-name" placeholder="Ravi Kumar"></div>
+        <div class="field"><label>Email</label><input type="email" id="su-email" placeholder="you@example.com"></div>
+        <div class="field"><label>Phone</label><input type="text" id="su-phone" placeholder="9876543210"></div>
+        <div class="field"><label>Password</label><input type="password" id="su-pass" placeholder="••••••••"></div>
+        <div class="field"><label>Role</label>
+          <select id="su-role">
+            <option value="farmer">Farmer</option>
+            <option value="vet">Veterinarian</option>
+            <option value="agrologist">Agrologist</option>
+          </select>
+        </div>
+        <button class="btn-primary" onclick="doSignup()">Create Account</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- DASHBOARD PAGE -->
+<div class="page" id="page-dashboard">
+<nav>
+  <div class="nav-brand">AgriDiagnose <span id="nav-role-label"></span></div>
+  <div class="nav-links">
+    <button class="nav-link active" onclick="showPage('dashboard')">Dashboard</button>
+    <button class="nav-link" onclick="showPage('consultations')">Consultations</button>
+    <button class="nav-logout" onclick="logout()">Logout</button>
+  </div>
+</nav>
+<div class="main-content">
+  <div class="hero-banner">
+    <div>
+      <h2 id="dash-greeting">Good morning</h2>
+      <p>Here's your farm health overview</p>
+    </div>
+    <div class="hero-icon">🌾</div>
+  </div>
+  <div class="stats-row">
+    <div class="stat-card"><div class="label">Total Reports</div><div class="value" id="stat-total">0</div></div>
+    <div class="stat-card"><div class="label">This Month</div><div class="value" id="stat-month">0</div></div>
+    <div class="stat-card"><div class="label">Consultations</div><div class="value" id="stat-consult">—</div></div>
+  </div>
+  <div class="section-header">
+    <h3>Recent Reports</h3>
+    <button class="btn-new" onclick="showPage('new-report')">+ New Report</button>
+  </div>
+  <div class="reports-list" id="reports-list">
+    <div class="empty-state"><div class="big">🌱</div><p>No reports yet. Start by submitting a new diagnosis.</p><button class="btn-new" onclick="showPage('new-report')">Create First Report</button></div>
+  </div>
+</div>
+</div>
+
+<!-- NEW REPORT PAGE -->
+<div class="page" id="page-new-report">
+<nav>
+  <div class="nav-brand">AgriDiagnose</div>
+  <div class="nav-links">
+    <button class="nav-link" onclick="showPage('dashboard')">← Back</button>
+    <button class="nav-logout" onclick="logout()">Logout</button>
+  </div>
+</nav>
+<div class="main-content">
+  <div class="form-card">
+    <div class="form-steps">
+      <div class="step-dot active" id="step1"><div class="dot">1</div><div class="slabel">Type</div></div>
+      <div class="step-dot" id="step2"><div class="dot">2</div><div class="slabel">Details</div></div>
+      <div class="step-dot" id="step3"><div class="dot">3</div><div class="slabel">Image</div></div>
+      <div class="step-dot" id="step4"><div class="dot">4</div><div class="slabel">Submit</div></div>
+    </div>
+
+    <!-- Step 1: Type -->
+    <div id="form-step-1">
+      <h3 style="margin-bottom:1.5rem;font-size:1.1rem">What would you like to diagnose?</h3>
+      <div class="type-grid">
+        <div class="type-card" id="type-crop" onclick="selectType('crop')">
+          <span class="icon">🌾</span>
+          <div class="tname">Crop Disease</div>
+          <div class="tdesc">Wheat, rice, vegetables and more</div>
+        </div>
+        <div class="type-card" id="type-livestock" onclick="selectType('livestock')">
+          <span class="icon">🐄</span>
+          <div class="tname">Livestock Health</div>
+          <div class="tdesc">Cattle, poultry, goats and more</div>
+        </div>
+      </div>
+      <button class="btn-submit" onclick="goToStep2()" style="max-width:200px">Next →</button>
+    </div>
+
+    <!-- Step 2: Questions -->
+    <div id="form-step-2" style="display:none">
+      <h3 style="margin-bottom:1.5rem;font-size:1.1rem">Tell us what you're observing</h3>
+      <div id="questions-container"></div>
+      <div class="btn-row">
+        <button class="btn-secondary" onclick="goToFormStep(1)">← Back</button>
+        <button class="btn-submit" onclick="goToStep3()">Next →</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Image -->
+    <div id="form-step-3" style="display:none">
+      <h3 style="margin-bottom:0.5rem;font-size:1.1rem">Upload an image (optional)</h3>
+      <p style="font-size:0.88rem;color:var(--text-muted);margin-bottom:1.5rem">A photo helps the AI give a more accurate diagnosis</p>
+      <img class="img-preview" id="img-preview">
+      <div class="img-upload" onclick="document.getElementById('file-input').click()">
+        <span class="up-icon">📷</span>
+        <p>Click to upload a photo of the affected area</p>
+        <p style="font-size:0.78rem;margin-top:0.3rem;color:var(--text-hint)">JPG, PNG up to 5MB</p>
+      </div>
+      <input type="file" id="file-input" accept="image/*" style="display:none" onchange="previewImage(this)">
+      <div class="btn-row">
+        <button class="btn-secondary" onclick="goToFormStep(2)">← Back</button>
+        <button class="btn-submit" onclick="submitReport()" id="submit-btn">Analyse Now</button>
+      </div>
+    </div>
+
+    <!-- Step 4: Loading / Result -->
+    <div id="form-step-4" style="display:none">
+      <div class="loading-wrap" id="loading-wrap">
+        <div class="spinner"></div>
+        <h3 style="font-size:1.1rem;margin-bottom:0.5rem">Analysing your report...</h3>
+        <p style="color:var(--text-muted);font-size:0.9rem">Our AI is examining the symptoms. This may take 15-30 seconds.</p>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- REPORT DETAIL PAGE -->
+<div class="page" id="page-report-detail">
+<nav>
+  <div class="nav-brand">AgriDiagnose</div>
+  <div class="nav-links">
+    <button class="nav-link" onclick="showPage('dashboard')">Dashboard</button>
+    <button class="nav-logout" onclick="logout()">Logout</button>
+  </div>
+</nav>
+<div class="main-content" id="report-detail-content"></div>
+</div>
+
+<!-- CONSULTATIONS PAGE -->
+<div class="page" id="page-consultations">
+<nav>
+  <div class="nav-brand">AgriDiagnose</div>
+  <div class="nav-links">
+    <button class="nav-link" onclick="showPage('dashboard')">Dashboard</button>
+    <button class="nav-link active">Consultations</button>
+    <button class="nav-logout" onclick="logout()">Logout</button>
+  </div>
+</nav>
+<div class="main-content">
+  <h2 style="margin-bottom:1.5rem;font-size:1.3rem">Consultations</h2>
+  <div id="consultations-list"></div>
+</div>
+</div>
+
+<script>
+let token = localStorage.getItem('agri_token');
+let currentUser = null;
+let selectedType = null;
+let questions = [];
+let answers = [];
+let uploadedImageUrl = null;
+let selectedFile = null;
+let currentReportId = null;
+let experts = [];
+
+function toast(msg, dur=3000){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),dur);
+}
+
+function showPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  if(name==='dashboard') loadDashboard();
+  if(name==='consultations') loadConsultations();
+}
+
+function switchAuthTab(tab){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('login-form').style.display=tab==='login'?'block':'none';
+  document.getElementById('signup-form').style.display=tab==='signup'?'block':'none';
+  document.getElementById('auth-error').style.display='none';
+}
+
+async function doLogin(){
+  const email=document.getElementById('login-email').value;
+  const pass=document.getElementById('login-pass').value;
+  if(!email||!pass){showAuthError('Please fill in all fields');return;}
+  try{
+    const r=await fetch(`/auth/login`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pass})});
+    const d=await r.json();
+    if(!r.ok)throw new Error(d.detail||'Login failed');
+    token=d.access_token;
+    localStorage.setItem('agri_token',token);
+    await fetchMe();
+    showPage('dashboard');
+  }catch(e){showAuthError(e.message);}
+}
+
+async function doSignup(){
+  const name=document.getElementById('su-name').value;
+  const email=document.getElementById('su-email').value;
+  const phone=document.getElementById('su-phone').value;
+  const pass=document.getElementById('su-pass').value;
+  const role=document.getElementById('su-role').value;
+  if(!name||!email||!pass){showAuthError('Please fill all required fields');return;}
+  try{
+    const r=await fetch(`/auth/signup`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,email,phone,password:pass,role})});
+    const d=await r.json();
+    if(!r.ok)throw new Error(d.detail||'Signup failed');
+    toast('Account created! Please login.');
+    switchAuthTab('login');
+  }catch(e){showAuthError(e.message);}
+}
+
+function showAuthError(msg){
+  const el=document.getElementById('auth-error');
+  el.textContent=msg;el.style.display='block';
+}
+
+async function fetchMe(){
+  const r=await fetch(`/auth/me`,{headers:{Authorization:`Bearer ${token}`}});
+  currentUser=await r.json();
+  document.getElementById('nav-role-label').textContent=currentUser.role||'';
+}
+
+function logout(){
+  token=null;currentUser=null;
+  localStorage.removeItem('agri_token');
+  showPage('auth');
+}
+
+async function loadDashboard(){
+  const hour=new Date().getHours();
+  const g=hour<12?'Good morning':hour<17?'Good afternoon':'Good evening';
+  document.getElementById('dash-greeting').textContent=g+(currentUser?' '+currentUser.name.split(' ')[0]:'');
+  try{
+    const r=await fetch(`/farmer/reports`,{headers:{Authorization:`Bearer ${token}`}});
+    const d=await r.json();
+    const reports=d.reports||[];
+    document.getElementById('stat-total').textContent=reports.length;
+    const now=new Date();
+    document.getElementById('stat-month').textContent=reports.filter(r=>{
+      const d=new Date(r.created_at);return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear();
+    }).length;
+    renderReportsList(reports);
+  }catch(e){console.error(e);}
+}
+
+function renderReportsList(reports){
+  const el=document.getElementById('reports-list');
+  if(!reports.length){
+    el.innerHTML=`<div class="empty-state"><div class="big">🌱</div><p>No reports yet.</p><button class="btn-new" onclick="showPage('new-report')">Create First Report</button></div>`;
+    return;
+  }
+  el.innerHTML=reports.map(r=>{
+    const sev=r.severity||0;
+    const cls=sev<=3?'sev-low':sev<=6?'sev-med':'sev-high';
+    const label=sev<=3?'Low':sev<=6?'Moderate':'High';
+    const date=new Date(r.created_at).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
+    return `<div class="report-card" onclick="openReport('${r.id}')">
+      <div>
+        <div class="rtitle">${r.title||'Untitled Report'}</div>
+        <div class="rmeta">${r.disease_name||'—'} · ${date} · ${r.type}</div>
+      </div>
+      <span class="severity-badge ${cls}">${label} (${sev}/10)</span>
+    </div>`;
+  }).join('');
+}
+
+function selectType(t){
+  selectedType=t;
+  document.querySelectorAll('.type-card').forEach(c=>c.classList.remove('selected'));
+  document.getElementById('type-'+t).classList.add('selected');
+}
+
+async function goToStep2(){
+  if(!selectedType){toast('Please select crop or livestock');return;}
+  try{
+    const r=await fetch(`/farmer/questions?type=${selectedType}`,{headers:{Authorization:`Bearer ${token}`}});
+    const d=await r.json();
+    questions=d.questions||[];
+    renderQuestions();
+    goToFormStep(2);
+  }catch(e){toast('Failed to load questions');}
+}
+
+function renderQuestions(){
+  const el=document.getElementById('questions-container');
+  el.innerHTML=questions.map((q,i)=>`
+    <div class="q-item">
+      <label>${i+1}. ${q.question}</label>
+      <input type="text" id="ans-${q.id}" placeholder="Your answer...">
+    </div>`).join('');
+}
+
+function goToStep3(){
+  answers=questions.map(q=>({question_id:q.id,answer:document.getElementById('ans-'+q.id).value||'Not specified'}));
+  goToFormStep(3);
+}
+
+function goToFormStep(n){
+  for(let i=1;i<=4;i++) document.getElementById('form-step-'+i).style.display=i===n?'block':'none';
+  for(let i=1;i<=4;i++){
+    const s=document.getElementById('step'+i);
+    s.className='step-dot'+(i<n?' done':i===n?' active':'');
+  }
+}
+
+function previewImage(input){
+  if(!input.files[0])return;
+  selectedFile=input.files[0];
+  const url=URL.createObjectURL(selectedFile);
+  const prev=document.getElementById('img-preview');
+  prev.src=url;prev.style.display='block';
+}
+
+async function submitReport(){
+  goToFormStep(4);
+  uploadedImageUrl=null;
+  try{
+    // Step A: Upload image if selected
+    if(selectedFile){
+      // We need a temp report first — for hackathon, submit without image url then upload
+      // For simplicity, skip image in this flow and note to user
+    }
+    const body={type:selectedType,answers,image_url:uploadedImageUrl};
+    const r=await fetch(`/ai/reports/submit`,{
+      method:'POST',
+      headers:{Authorization:`Bearer ${token}`,'Content-Type':'application/json'},
+      body:JSON.stringify(body)
+    });
+    const d=await r.json();
+    if(!r.ok)throw new Error(d.detail||'Submission failed');
+    currentReportId=d.report_id;
+    // If image selected, upload now
+    if(selectedFile&&d.report_id){
+      const fd=new FormData();
+      fd.append('file',selectedFile);
+      await fetch(`/farmer/reports/${d.report_id}/images`,{
+        method:'POST',
+        headers:{Authorization:`Bearer ${token}`},
+        body:fd
+      });
+    }
+    toast('Report generated!');
+    selectedType=null;answers=[];selectedFile=null;uploadedImageUrl=null;
+    document.getElementById('img-preview').style.display='none';
+    goToFormStep(1);
+    openReport(d.report_id);
+  }catch(e){
+    document.getElementById('loading-wrap').innerHTML=`<p style="color:#A32D2D">Error: ${e.message}</p><button class="btn-new" style="margin-top:1rem" onclick="goToFormStep(3)">Try Again</button>`;
+  }
+}
+
+async function openReport(id){
+  showPage('report-detail');
+  const el=document.getElementById('report-detail-content');
+  el.innerHTML=`<div class="loading-wrap"><div class="spinner"></div></div>`;
+  try{
+    const [rr,er]=await Promise.all([
+      fetch(`/farmer/reports/${id}`,{headers:{Authorization:`Bearer ${token}`}}).then(r=>r.json()),
+      fetch(`/farmer/experts`,{headers:{Authorization:`Bearer ${token}`}}).then(r=>r.json())
+    ]);
+    experts=er.experts||[];
+    const {report,answers,images,consultations}=rr;
+    const sev=report.severity||0;
+    const sevCls=sev<=3?'sev-low':sev<=6?'sev-med':'sev-high';
+    const conf=Math.round((report.confidence||0)*100);
+    const img=images&&images[0]?`<img src="${images[0].image_url}" style="width:100%;max-height:220px;object-fit:cover;border-radius:var(--radius);margin-bottom:1rem">`:'' ;
+    const consultHtml=consultations&&consultations.length?consultations.map(c=>`
+      <div class="consult-card">
+        <div class="cmeta"><span class="status-pill ${c.status==='answered'?'sp-answered':'sp-pending'}">${c.status}</span> · ${new Date(c.created_at).toLocaleDateString('en-IN')}</div>
+        <div class="cmessage">${c.message}</div>
+        ${c.response?`<div class="cresponse"><strong>Expert:</strong> ${c.response}</div>`:''}
+      </div>`).join(''):'<p style="color:var(--text-muted);font-size:0.9rem">No consultations yet.</p>';
+
+    const expertOptions=experts.map(e=>`<option value="${e.id}">${e.name} (${e.role})</option>`).join('');
+
+    el.innerHTML=`
+      <button class="back-btn" onclick="showPage('dashboard')">← Back to Dashboard</button>
+      <div class="report-header">
+        ${img}
+        <h2>${report.title}</h2>
+        <div class="report-meta">
+          <span class="meta-pill pill-green">${report.type}</span>
+          <span class="meta-pill ${sevCls}">Severity ${sev}/10</span>
+          <span class="meta-pill pill-teal">Confidence ${conf}%</span>
+          <span class="meta-pill" style="background:var(--bg);color:var(--text-muted)">${new Date(report.created_at).toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'})}</span>
+        </div>
+        <div style="font-size:1rem;font-weight:500;color:var(--green)">Diagnosed: ${report.disease_name}</div>
+      </div>
+      <div class="detail-grid">
+        <div class="detail-block full-block">
+          <h3>AI Diagnosis</h3>
+          <p>${report.ai_diagnosis}</p>
+        </div>
+        <div class="detail-block full-block">
+          <h3>Suggestions</h3>
+          <p style="white-space:pre-line">${report.ai_suggestions}</p>
+        </div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:1.5rem">
+        <h3 style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);margin-bottom:1rem">Your Answers</h3>
+        ${answers.map(a=>`<div style="display:flex;gap:1rem;padding:0.5rem 0;border-bottom:1px solid var(--border);font-size:0.88rem"><span style="color:var(--text-muted);flex:1">${a.questions?.question||'Question'}</span><span style="color:var(--text);flex:1">${a.answer}</span></div>`).join('')}
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem">
+        <h3 style="font-size:1rem;margin-bottom:1rem">Consultations</h3>
+        ${consultHtml}
+        ${experts.length?`<div class="consult-form" style="margin-top:1rem">
+          <h3>Request Expert Consultation</h3>
+          <select id="expert-select"><option value="">Select an expert...</option>${expertOptions}</select>
+          <textarea id="consult-msg" placeholder="Describe your concerns or questions for the expert..."></textarea>
+          <button class="btn-submit" style="max-width:200px" onclick="sendConsultation('${id}')">Send Request</button>
+        </div>`:''}
+      </div>`;
+  }catch(e){el.innerHTML=`<p style="color:#A32D2D">Error loading report: ${e.message}</p>`;}
+}
+
+async function sendConsultation(reportId){
+  const expertId=document.getElementById('expert-select').value;
+  const msg=document.getElementById('consult-msg').value;
+  if(!expertId||!msg){toast('Please select an expert and write a message');return;}
+  try{
+    const r=await fetch(`/farmer/reports/${reportId}/consultations`,{
+      method:'POST',
+      headers:{Authorization:`Bearer ${token}`,'Content-Type':'application/json'},
+      body:JSON.stringify({expert_id:expertId,message:msg})
+    });
+    const d=await r.json();
+    if(!r.ok)throw new Error(d.detail);
+    toast('Consultation request sent!');
+    openReport(reportId);
+  }catch(e){toast('Error: '+e.message);}
+}
+
+async function loadConsultations(){
+  const el=document.getElementById('consultations-list');
+  el.innerHTML=`<div class="loading-wrap"><div class="spinner"></div></div>`;
+  try{
+    const r=await fetch(`/expert/consultations`,{headers:{Authorization:`Bearer ${token}`}});
+    const d=await r.json();
+    const list=d.consultations||[];
+    if(!list.length){el.innerHTML=`<div class="empty-state"><div class="big">📋</div><p>No consultations assigned to you yet.</p></div>`;return;}
+    el.innerHTML=list.map(c=>`
+      <div class="consult-card">
+        <div class="ctitle">${c.reports?.title||'Report'}</div>
+        <div class="cmeta"><span class="status-pill ${c.status==='answered'?'sp-answered':'sp-pending'}">${c.status}</span> · From: ${c.users?.name||'Farmer'} · ${new Date(c.created_at).toLocaleDateString('en-IN')}</div>
+        <div class="cmessage">${c.message}</div>
+        ${c.response?`<div class="cresponse"><strong>Your response:</strong> ${c.response}</div>`:`
+        <div style="display:flex;gap:0.5rem">
+          <textarea id="resp-${c.id}" style="flex:1;padding:0.6rem;border:1px solid var(--border);border-radius:var(--radius);font-family:inherit;font-size:0.88rem;resize:vertical;height:80px" placeholder="Write your expert response..."></textarea>
+          <button onclick="submitResponse('${c.id}')" style="padding:0.6rem 1rem;background:var(--green);color:#fff;border:none;border-radius:var(--radius);cursor:pointer;font-family:inherit;align-self:flex-end">Send</button>
+        </div>`}
+      </div>`).join('');
+  }catch(e){el.innerHTML=`<p style="color:var(--text-muted)">Could not load consultations.</p>`;}
+}
+
+async function submitResponse(consultId){
+  const resp=document.getElementById('resp-'+consultId).value;
+  if(!resp){toast('Please write a response');return;}
+  try{
+    const r=await fetch(`/expert/consultations/${consultId}/respond`,{
+      method:'PUT',
+      headers:{Authorization:`Bearer ${token}`,'Content-Type':'application/json'},
+      body:JSON.stringify({response:resp})
+    });
+    if(!r.ok)throw new Error('Failed');
+    toast('Response submitted!');
+    loadConsultations();
+  }catch(e){toast('Error: '+e.message);}
+}
+
+// Init
+if(token){fetchMe().then(()=>showPage('dashboard')).catch(()=>showPage('auth'));}
+else showPage('auth');
+</script>
+</body>
+</html>

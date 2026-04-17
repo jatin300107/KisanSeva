@@ -1,21 +1,29 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+
+from auth.auth_routes import router
+from farmer.endpoints import farmer, expert
+from ai_pipeline.api_endpoint import ai_router
 
 app = FastAPI()
 
-# Add CORS middleware
+# CORS (optional for now)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allows all origins
+    allow_origins=["*"],
     allow_credentials=True,
-    allow_methods=["*"],  # Allows all methods
-    allow_headers=["*"],  # Allows all headers
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
-from auth.auth_routes import router
+# Serve frontend
+@app.get("/")
+def serve_frontend():
+    return FileResponse("frontend.html")
+
+# Routes
 app.include_router(router)
-from farmer.endpoints import farmer , expert
 app.include_router(farmer)
 app.include_router(expert)
-from ai_pipeline.api_endpoint import ai_router
 app.include_router(ai_router)
