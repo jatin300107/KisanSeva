@@ -172,7 +172,11 @@ Respond ONLY in this exact JSON format with no extra text:
         "ai_diagnosis": "...",
         "ai_suggestions": "..."
         }}
-        IMPORTANT: Write the title, ai_diagnosis, and ai_suggestions fields in Hindi language. Keep disease_name in English.
+        IMPORTANT: Write ai_diagnosis and ai_suggestions in both English and Hindi. 
+        Format it as:
+        - English explanation first
+        - Then the same content in Hindi below, prefixed with "हिंदी:"
+        Keep disease_name and title in English only.
         Explain in simple terms that a farmer can understand.
         """
 
