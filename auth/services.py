@@ -1,3 +1,5 @@
+from supabase import AuthApiError
+
 from db import supabase
 from fastapi import HTTPException , Depends , status
 
@@ -44,10 +46,10 @@ def sign_in(data: LoginRequest):
             "email": data.email,
             "password": data.password
         })
-    except supabase.auth.AuthError:
-        raise HTTPException(status_code=400, detail="Invalid username or password")
-    if res.user is None or res.session is None:
-            raise HTTPException(status_code=400, detail="Invalid credentials")
+    except AuthApiError as e:
+        raise HTTPException(status_code=400, detail=str(e.message))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Something went wrong")
     
 
     return {
