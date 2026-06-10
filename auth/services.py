@@ -39,13 +39,16 @@ def sign_up(data: SignUpRequest):
 
 
 def sign_in(data: LoginRequest):
-    res = supabase.auth.sign_in_with_password({
-        "email": data.email,
-        "password": data.password
-    })
-
+    try:
+        res = supabase.auth.sign_in_with_password({
+            "email": data.email,
+            "password": data.password
+        })
+    except supabase.auth.AuthError:
+        raise HTTPException(status_code=400, detail="Invalid username or password")
     if res.user is None or res.session is None:
-        raise HTTPException(status_code=400, detail="Invalid credentials")
+            raise HTTPException(status_code=400, detail="Invalid credentials")
+    
 
     return {
         "message": "Login successful",
@@ -71,6 +74,7 @@ def get_current_user(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Invalid token"
             )
+    
 
         return res.user
 
