@@ -7,6 +7,9 @@ from google.genai import types ,errors
 from .retreival import retreive_animal_list
 import httpx
 from backend.exceptions import PrimaryDiagnosisError , EmptyGeminiResponse
+from .helpers import behavioural_context_and_animal_name , gemini_api_call
+
+
 def primary_diagnosis(body ,gemini_client = get_genai_client()):
 
     try:
@@ -15,19 +18,9 @@ def primary_diagnosis(body ,gemini_client = get_genai_client()):
         
 
         
-        question_ids = [a["question_id"] for a in body.answers]
-        questions_result = supabase.table("questions")\
-            .select("id, question")\
-            .in_("id", question_ids)\
-            .execute()
-
-        q_map = {q["id"]: q["question"] for q in questions_result.data}
-        behavioural_context = "\n".join([
-            f"Q: {q_map.get(a['question_id'], 'Unknown')}\nA: {a['answer']}"
-            for a in body.answers
-        ])
-        q_id = next((k for k, v in q_map.items() if v == "What type of animal is affected?"), None)
-        animal_name = next((a["answer"] for a in body.answers if a["question_id"] == q_id), None)
+       
+        behavioural_context , animal_name = behavioural_context_and_animal_name(body)
+        
         list_of_disease = retreive_animal_list(animal=animal_name)
         
 
@@ -64,45 +57,18 @@ def primary_diagnosis(body ,gemini_client = get_genai_client()):
             img_response = httpx.get(body.image_url)
             img_bytes = img_response.content
             mime_type = img_response.headers.get("content-type", "image/jpeg")
-            response = gemini_client.models.generate_content(
-                        model="gemini-2.0-flash",
-                        contents=[
-                            types.Part.from_bytes(data=img_bytes, mime_type=mime_type),
-                            types.Part.from_text(text=gemini_prompt)
-                        ]
-                    )
+            response = gemini_api_call(body=body , prompt= gemini_prompt ,gemini_client=gemini_client , image_url=body.image_url )
         else:
-            response = gemini_client.models.generate_content(
-                        model="gemini-2.0-flash",
-                        contents=[
-                            
-                            types.Part.from_text(text=gemini_prompt)
-                        ]
-                    )
+            response = gemini_api_call( prompt= gemini_prompt ,gemini_client=gemini_client  )
     except errors.APIError as e:
         if e.status_code  == 429:
             gemini_client = genai_client_2
             if body.image_url:
             
             
-                img_response = httpx.get(body.image_url)
-                img_bytes = img_response.content
-                mime_type = img_response.headers.get("content-type", "image/jpeg")
-                response = gemini_client.models.generate_content(
-                            model="gemini-2.0-flash",
-                            contents=[
-                                types.Part.from_bytes(data=img_bytes, mime_type=mime_type),
-                                types.Part.from_text(text=gemini_prompt)
-                            ]
-                        )
+                response = gemini_api_call( prompt= gemini_prompt ,gemini_client=gemini_client , image_url=body.image_url )
             else:
-                response = gemini_client.models.generate_content(
-                            model="gemini-2.0-flash",
-                            contents=[
-                                
-                                types.Part.from_text(text=gemini_prompt)
-                            ]
-                        )
+                response = gemini_api_call( prompt= gemini_prompt ,gemini_client=gemini_client )
         else:
             raise PrimaryDiagnosisError(e)
     if not response.text:

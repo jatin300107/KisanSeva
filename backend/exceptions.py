@@ -21,3 +21,9 @@ class PrimaryDiagnosisError(Exception):
 class EmptyGeminiResponse(Exception):
     def __init__(self):
         super().__init__(f"Gemini returned empty response")
+
+
+class ReportGenerationError(Exception):
+    def __init__(self, msg):
+        self.msg = msg
+        super().__init__(f"Couldn't generate Report : {self.msg}")
