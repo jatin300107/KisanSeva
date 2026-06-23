@@ -1,11 +1,12 @@
 import json
-from backend.ai_pipeline.ai_clients import get_genai_client
+from backend.ai_pipeline.ai_clients import get_genai_client , genai_client_2
 from backend.db import supabase
 from fastapi import HTTPException
 import google.genai as genai
-from google.genai import types
+from google.genai import types ,errors
 from .retreival import retreive_animal_list
 import httpx
+from backend.exceptions import PrimaryDiagnosisError , EmptyGeminiResponse
 def primary_diagnosis(body ,gemini_client = get_genai_client()):
 
     try:
@@ -31,8 +32,7 @@ def primary_diagnosis(body ,gemini_client = get_genai_client()):
         
 
             
-        if gemini_client is None:
-            raise HTTPException(status_code=503, detail="Google GenAI service is unavailable")
+        
 
             
         gemini_prompt = f"""
@@ -79,6 +79,37 @@ def primary_diagnosis(body ,gemini_client = get_genai_client()):
                             types.Part.from_text(text=gemini_prompt)
                         ]
                     )
-
-    except:
-        raise 
+    except errors.APIError as e:
+        if e.status_code  == 429:
+            gemini_client = genai_client_2
+            if body.image_url:
+            
+            
+                img_response = httpx.get(body.image_url)
+                img_bytes = img_response.content
+                mime_type = img_response.headers.get("content-type", "image/jpeg")
+                response = gemini_client.models.generate_content(
+                            model="gemini-2.0-flash",
+                            contents=[
+                                types.Part.from_bytes(data=img_bytes, mime_type=mime_type),
+                                types.Part.from_text(text=gemini_prompt)
+                            ]
+                        )
+            else:
+                response = gemini_client.models.generate_content(
+                            model="gemini-2.0-flash",
+                            contents=[
+                                
+                                types.Part.from_text(text=gemini_prompt)
+                            ]
+                        )
+        else:
+            raise PrimaryDiagnosisError(e)
+    if not response.text:
+        raise EmptyGeminiResponse()
+    raw = response.text.strip().removeprefix("```json").removesuffix("```").strip()
+    result = json.loads(raw)
+    
+    
+    return result
+    
