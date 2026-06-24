@@ -4,36 +4,14 @@ from backend.auth.services import get_current_user
 from backend.db import supabase
 from fastapi import APIRouter, Depends , HTTPException
 from pydantic import BaseModel
-
+from.primary_daignosis import primary_diagnosis
+from .report_generation import generate_report
+from backend.exceptions import ReportGenerationError
+from fastapi.concurrency import run_in_threadpool
 ai_router = APIRouter(prefix="/ai", tags=["AI"])
 
 
-GOOGLE_GENAI_AVAILABLE = True  
-OPENAI_AVAILABLE = True  
 
-genai_client = None
-genai_client_2 = None
-
-def get_genai_client():
-    global genai_client
-    if genai_client is None:
-        try:
-            import google.genai as genai
-            from google.genai import types
-            genai_client = genai.Client(api_key=GEMINI_API_KEY_1)
-        except Exception as e:
-            print(f"Google GenAI error: {e}")
-            genai_client = None
-            global GOOGLE_GENAI_AVAILABLE
-            GOOGLE_GENAI_AVAILABLE = False
-    return genai_client
-
-def get_genai_client_2():
-    global genai_client_2
-    if genai_client_2 is None:
-        import google.genai as genai
-        genai_client_2 = genai.Client(api_key=GEMINI_API_KEY_2)
-    return genai_client_2
 
 
 
@@ -51,151 +29,22 @@ async def submit_report(
 ):
     try:
      
-        if not GOOGLE_GENAI_AVAILABLE or not OPENAI_AVAILABLE:
-            raise HTTPException(status_code=503, detail="AI services are currently unavailable. Please try again later.")
-
-        
-        question_ids = [a["question_id"] for a in body.answers]
-        questions_result = supabase.table("questions")\
-            .select("id, question")\
-            .in_("id", question_ids)\
-            .execute()
-
-        q_map = {q["id"]: q["question"] for q in questions_result.data}
-        behavioural_context = "\n".join([
-            f"Q: {q_map.get(a['question_id'], 'Unknown')}\nA: {a['answer']}"
-            for a in body.answers
-        ])
-
-      
-        if body.image_url:
-            # download image bytes from Supabase public URL
-            import httpx
-            img_response = httpx.get(body.image_url)
-            img_bytes = img_response.content
-            mime_type = img_response.headers.get("content-type", "image/jpeg")
-
-            gemini_client = get_genai_client()
-            if gemini_client is None:
-                raise HTTPException(status_code=503, detail="Google GenAI service is unavailable")
-
-            import google.genai as genai
-            from google.genai import types
-
-            gemini_prompt = f"""
-You are an agricultural/veterinary AI assistant.
-Analyze this image and the behavioural context below.
-
-Behavioural observations:
-{behavioural_context}
-
-Provide:
-1. A detailed visual description of what you observe
-2. Possible disease or condition
-3. Severity estimate (1-10)
-4. Confidence level (0.0 to 1.0)
-
-Respond ONLY in this exact JSON format with no extra text:
-{{
-  "visual_description": "...",
-  "possible_disease": "...",
-  "severity": 5,
-  "confidence": 0.85
-}}
-"""
-            gemini_response = gemini_client.models.generate_content(
-                model="gemini-2.5-flash-lite",
-                contents=[
-                    types.Part.from_bytes(data=img_bytes, mime_type=mime_type),
-                    types.Part.from_text(text=gemini_prompt)
-                ]
-            )
-        else:
-            gemini_client = get_genai_client()
-            if gemini_client is None:
-                raise HTTPException(status_code=503, detail="Google GenAI service is unavailable")
-
-            import google.genai as genai
-            from google.genai import types
-
-            gemini_prompt = f"""
-You are an agricultural/veterinary AI assistant.
-No image was provided. Based only on these behavioural observations:
-
-{behavioural_context}
-
-Provide:
-1. Possible disease or condition
-2. Severity estimate (1-10)
-3. Confidence level (0.0 to 1.0)
-
-Respond ONLY in this exact JSON format with no extra text:
-{{
-  "visual_description": "No image provided",
-  "possible_disease": "...",
-  "severity": 5,
-  "confidence": 0.6
-}}
-"""
-            gemini_response = gemini_client.models.generate_content(
-                model="gemini-2.5-flash-lite",
-                contents=[types.Part.from_text(text=gemini_prompt)]
-            )
-        if not gemini_response:
-            raise HTTPException(status_code=500, detail="Gemini API error")
-        raw_gemini = gemini_response.text
-        clean_gemini = re.sub(r"```json|```", "", raw_gemini).strip()
-        gemini_data = json.loads(clean_gemini)
-
-        
-        client2 = get_genai_client_2()
-
-        grok_prompt = f"""
-        You are an expert agricultural and veterinary diagnostician.
-
-        Farmer's behavioural observations:
-        {behavioural_context}
-
-        AI image analysis:
-        - Visual description: {gemini_data['visual_description']}
-        - Suspected disease: {gemini_data['possible_disease']}
-        - Severity: {gemini_data['severity']}/10
-        - Confidence: {gemini_data['confidence']}
-
-        Generate a complete diagnostic report.
-
-        Respond ONLY in this exact JSON format with no extra text:
-        {{
-        "title": "...",
-        "disease_name": "...",
-        "ai_diagnosis": "...",
-        "ai_suggestions": "..."
-        }}
-        IMPORTANT: Write ai_diagnosis and ai_suggestions in both English and Hindi. 
-        Format it as:
-        - English explanation first
-        - Then the same content in Hindi below, prefixed with "हिंदी:"
-        Keep disease_name and title in English only.
-        Explain in simple terms that a farmer can understand.
-        """
-
-        from google.genai import types
-        grok_response = client2.models.generate_content(
-            model="gemini-2.5-flash-lite",
-            contents=[types.Part.from_text(text=grok_prompt)]
-        )
-        raw_grok = grok_response.text
-        clean_grok = re.sub(r"```json|```", "", raw_grok).strip()
-        grok_data = json.loads(clean_grok)
+        primary_response = await run_in_threadpool(primary_diagnosis, body=body)
+        report = await run_in_threadpool(generate_report,body=body , primary_response=primary_response)
+        clean_report = re.sub(r"```json|```", "", report).strip()
+        try:
+            report_data = json.loads(clean_report)
+        except json.JSONDecodeError as e:
+            raise ReportGenerationError(f"Failed to parse report JSON: {e}")
         report_result = supabase.table("reports").insert({
             "user_id": current_user.id,
             "type": body.type,
-            "title": grok_data["title"],
-            "ai_diagnosis": grok_data["ai_diagnosis"],
-            "ai_suggestions": grok_data["ai_suggestions"],
-            "disease_name": grok_data["disease_name"],
-            "severity": gemini_data["severity"],
-            "confidence": gemini_data["confidence"],
+            "title": report_data["title"],
+            "ai_diagnosis": report_data["ai_diagnosis"],
+            "ai_suggestions": report_data["ai_suggestions"],
+            "disease_name": report_data["disease_name"],
+            "severity": primary_response["severity"],
+            "confidence": primary_response["confidence"],
             "status": "generated"
         }).execute()
 
@@ -222,14 +71,14 @@ Respond ONLY in this exact JSON format with no extra text:
 
         return {
             "report_id": report_id,
-            "title": grok_data["title"],
-            "disease_name": grok_data["disease_name"],
-            "ai_diagnosis": grok_data["ai_diagnosis"],
-            "ai_suggestions": grok_data["ai_suggestions"],
-            "severity": gemini_data["severity"],
-            "confidence": gemini_data["confidence"],
+            "title": report_data["title"],
+            "disease_name": report_data["disease_name"],
+            "ai_diagnosis": report_data["ai_diagnosis"],
+            "ai_suggestions": report_data["ai_suggestions"],
+            "severity": primary_response["severity"],
+            "confidence": primary_response["confidence"],
             "image_url": body.image_url
         }
 
-    except Exception as e:
+    except ReportGenerationError as e:
         raise HTTPException(status_code=500, detail=str(e))
