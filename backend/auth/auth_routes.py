@@ -1,8 +1,8 @@
 from fastapi import APIRouter , Depends , UploadFile , File , HTTPException
-from auth.services import sign_in , sign_up , get_current_user , SignUpRequest , LoginRequest
+from backend.auth.services import sign_in , sign_up , get_current_user , SignUpRequest , LoginRequest
 from pydantic import BaseModel, EmailStr
 import uuid
-from db import supabase
+from backend.db import supabase
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
 

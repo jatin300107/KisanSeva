@@ -1,6 +1,6 @@
 from supabase import AuthApiError
 
-from db import supabase
+from backend.db import supabase
 from fastapi import HTTPException , Depends , status
 
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
@@ -17,7 +17,7 @@ class LoginRequest(BaseModel):
     email: EmailStr
     password: str
 def sign_up(data: SignUpRequest):
-    # Step 1: Create auth user
+    
     res = supabase.auth.sign_up({
         "email": data.email,
         "password": data.password
@@ -26,9 +26,9 @@ def sign_up(data: SignUpRequest):
     if res.user is None:
         raise HTTPException(status_code=400, detail="Signup failed")
 
-    # Step 2: Insert into public users table
+    
     supabase.table("users").insert({
-        "id": res.user.id,  # 🔥 LINKING KEY
+        "id": res.user.id,  
         "name": data.name,
         "phone": data.phone,
         "role": data.role

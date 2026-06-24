@@ -1,5 +1,5 @@
 import json
-from backend.ai_pipeline.ai_clients import get_genai_client , genai_client_2
+from backend.ai_pipeline.ai_clients import  genai_client_2
 from backend.db import supabase
 from fastapi import HTTPException
 import google.genai as genai
@@ -10,7 +10,7 @@ from backend.exceptions import PrimaryDiagnosisError , EmptyGeminiResponse
 from .helpers import behavioural_context_and_animal_name , gemini_api_call
 
 
-def primary_diagnosis(body ,gemini_client = get_genai_client()):
+def primary_diagnosis(body ,gemini_client ):
 
     try:
         if gemini_client is None:

@@ -1,4 +1,5 @@
-from backend.configs import GEMINI_API_KEY_1 , GEMINI_API_KEY_2
+from configs import GEMINI_API_KEY_1 , GEMINI_API_KEY_2 , SARVAM_API_KEY
+from sarvamai import AsyncSarvamAI
 
 
 GOOGLE_GENAI_AVAILABLE = True  
@@ -6,7 +7,8 @@ OPENAI_AVAILABLE = True
 
 genai_client = None
 genai_client_2 = None
-
+if not GEMINI_API_KEY_1:
+    raise ValueError()
 def get_genai_client():
     global genai_client
     if genai_client is None:
@@ -27,3 +29,8 @@ def get_genai_client_2():
         import google.genai as genai
         genai_client_2 = genai.Client(api_key=GEMINI_API_KEY_2)
     return genai_client_2
+if not SARVAM_API_KEY:
+    raise ValueError()
+def get_sarvam_client():
+    client = AsyncSarvamAI(api_subscription_key=SARVAM_API_KEY)
+    return client

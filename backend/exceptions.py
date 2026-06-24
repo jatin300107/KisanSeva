@@ -27,3 +27,8 @@ class ReportGenerationError(Exception):
     def __init__(self, msg):
         self.msg = msg
         super().__init__(f"Couldn't generate Report : {self.msg}")
+
+class TranslationError(Exception):
+    def __init__(self, msg):
+        self.msg = msg
+        super().__init__(f"Couldn't translate Report : {self.msg}")

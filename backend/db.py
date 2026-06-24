@@ -1,4 +1,4 @@
-from backend.configs import SUPABASE_URL , SUPABASE_KEY
+from configs import SUPABASE_URL , SUPABASE_KEY
 
 if not SUPABASE_KEY or not SUPABASE_URL:
     raise Exception("Supabase credentials not found")
@@ -18,3 +18,4 @@ class LazySupabase:
         return getattr(get_supabase(), name)
 
 supabase = LazySupabase()
+

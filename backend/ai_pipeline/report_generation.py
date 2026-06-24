@@ -1,12 +1,12 @@
-from ai_clients import get_genai_client_2
+
 from fastapi import HTTPException
-from retreival import retrive_disease_data
+from .retreival import retrive_disease_data
 import json
 from backend.exceptions import NoDiseaseDiagnosed , InvalidDiseaseDiagnose , ReportGenerationError
 from .helpers import behavioural_context_and_animal_name , gemini_api_call
 from google.genai import types , errors
 
-def generate_report(primary_response ,body , gemini_client = get_genai_client_2()  ):
+def generate_report(primary_response ,body , gemini_client   ):
     if gemini_client is None:
             raise HTTPException(status_code=503, detail="Google GenAI service is unavailable")
         
@@ -49,6 +49,15 @@ def generate_report(primary_response ,body , gemini_client = get_genai_client_2(
                 3. Treatment plan
                 4. Warning signs to watch for
                 5. Prevention for other animals
+                Respond ONLY in this exact JSON format with no extra text:
+                {{
+                "title": "...",
+                "disease_name": "...",
+                "ai_diagnosis": "...",
+                "ai_suggestions": "..."
+
+                }}
+                
 
                 Write in simple, clear language a farmer can understand. Avoid medical jargon.
                 """
