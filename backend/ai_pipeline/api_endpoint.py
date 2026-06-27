@@ -31,8 +31,8 @@ async def submit_report(
 ):
     try:
      
-        primary_response = await run_in_threadpool(primary_diagnosis, body=body , gemini_client= Depends(get_genai_client) )
-        report = await run_in_threadpool(generate_report,body=body , primary_response=primary_response , gemini_client = Depends(get_genai_client_2))
+        primary_response = await run_in_threadpool(primary_diagnosis, body=body , gemini_client= get_genai_client() )
+        report = await run_in_threadpool(generate_report,body=body , primary_response=primary_response , gemini_client = get_genai_client_2())
         clean_report = re.sub(r"```json|```", "", report).strip()
         try:
             report_data = json.loads(clean_report)

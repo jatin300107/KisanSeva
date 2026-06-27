@@ -10,9 +10,9 @@ farmer = APIRouter(prefix="/farmer", tags=["Farmer"])
 
 
 
-@farmer.post("/reports/{report_id}/images")
+@farmer.post("/reports/images")
 async def upload_image(
-    report_id: str,
+    
     file: UploadFile = File(...),
     current_user = Depends(get_current_user)
 ):
@@ -35,11 +35,7 @@ async def upload_image(
         public_url = supabase.storage.from_("reports").get_public_url(file_name)
 
         
-        supabase.table("report_images").insert({
-            "report_id": report_id,
-            "image_url": public_url
-        }).execute()
-
+        
         return {
             "message": "Image uploaded",
             "image_url": public_url
@@ -176,7 +172,7 @@ expert = APIRouter(prefix="/expert", tags=["Expert"])
 
 @expert.get("/consultations")
 async def get_consultations(
-    status: Optional[str] = None,  # ?status=pending or ?status=answered
+    status: Optional[str] = None, 
     current_user=Depends(get_current_user)
 ):
     try:
@@ -212,11 +208,10 @@ async def get_consultations(
         raise HTTPException(status_code=500, detail=str(e))
 
 
-# ── Expert: respond to a consultation ────────────────────────────────────────
 @expert.put("/consultations/{consultation_id}/respond")
 async def respond_consultation(
     consultation_id: str,
-    body: dict,  # {"response": "..."}
+    body: dict, 
     current_user=Depends(get_current_user)
 ):
     try:

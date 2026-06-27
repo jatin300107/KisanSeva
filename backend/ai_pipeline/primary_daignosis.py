@@ -57,10 +57,12 @@ def primary_diagnosis(body ,gemini_client ):
             img_response = httpx.get(body.image_url)
             img_bytes = img_response.content
             mime_type = img_response.headers.get("content-type", "image/jpeg")
-            response = gemini_api_call(body=body , prompt= gemini_prompt ,gemini_client=gemini_client , image_url=body.image_url )
+            response = gemini_api_call( prompt= gemini_prompt ,gemini_client=gemini_client , image_url=body.image_url )
         else:
             response = gemini_api_call( prompt= gemini_prompt ,gemini_client=gemini_client  )
     except errors.APIError as e:
+        print(type(e))
+        print(e)
         if e.status_code  == 429:
             gemini_client = genai_client_2
             if body.image_url:

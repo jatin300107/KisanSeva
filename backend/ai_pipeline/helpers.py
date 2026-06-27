@@ -24,7 +24,7 @@ def gemini_api_call( gemini_client ,prompt , image_url = None):
         img_bytes = img_response.content
         mime_type = img_response.headers.get("content-type", "image/jpeg")
         response = gemini_client.models.generate_content(
-                        model="gemini-2.0-flash",
+                        model="gemini-2.5-flash",
                         contents=[
                             types.Part.from_bytes(data=img_bytes, mime_type=mime_type),
                             types.Part.from_text(text=prompt)
@@ -32,7 +32,7 @@ def gemini_api_call( gemini_client ,prompt , image_url = None):
                     )
     else:
         response = gemini_client.models.generate_content(
-                        model="gemini-2.0-flash",
+                        model="gemini-2.5-flash",
                         contents=[
                             
                             types.Part.from_text(text=prompt)
