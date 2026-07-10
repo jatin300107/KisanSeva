@@ -4,10 +4,10 @@ from backend.db import supabase
 from fastapi import HTTPException
 import google.genai as genai
 from google.genai import types ,errors
-from .retreival import retreive_animal_list
+from .retreival import retreive_disease_list
 import httpx
 from backend.exceptions import PrimaryDiagnosisError , EmptyGeminiResponse
-from .helpers import behavioural_context_and_animal_name , gemini_api_call
+from .helpers import behavioural_context_and_name , gemini_api_call
 
 
 def primary_diagnosis(body ,gemini_client ):
@@ -19,9 +19,9 @@ def primary_diagnosis(body ,gemini_client ):
 
         
        
-        behavioural_context , animal_name = behavioural_context_and_animal_name(body)
+        behavioural_context , name = behavioural_context_and_name(body)
         
-        list_of_disease = retreive_animal_list(animal=animal_name)
+        list_of_disease = retreive_disease_list(name=name , type=body.type)
         
 
             
@@ -29,14 +29,14 @@ def primary_diagnosis(body ,gemini_client ):
 
             
         gemini_prompt = f"""
-                    You are a veterinary AI assistant.
+                    You are a veterinary and agrologist AI assistant.
 
                     Analyze the image and behavioural observations to identify the most likely disease.
 
                     Behavioural observations:
                     {behavioural_context}
 
-                    Known diseases for this animal:
+                    Known diseases for this animal/crop:
                     {list_of_disease}
 
                     Rules:

@@ -5,7 +5,7 @@ from backend.auth.services import get_current_user
 from backend.db import supabase
 from fastapi import APIRouter, Depends , HTTPException
 from pydantic import BaseModel
-from.primary_daignosis import primary_diagnosis
+from .primary_daignosis import primary_diagnosis
 from .report_generation import generate_report
 from backend.exceptions import ReportGenerationError
 from fastapi.concurrency import run_in_threadpool
