@@ -18,6 +18,7 @@ def generate_report(primary_response ,body , gemini_client   ):
         raise HTTPException(status_code=422, detail="Confidence too low for a reliable diagnosis")
     try:
         disease_data = retrive_disease_data(possible_disease = primary_response.get("disease_name"), name=name,type=body.type)[0]
+        
     except NoDiseaseDiagnosed:
           raise HTTPException(status_code=404 , detail= "No disease diagnosed")
     except InvalidDiseaseDiagnose:

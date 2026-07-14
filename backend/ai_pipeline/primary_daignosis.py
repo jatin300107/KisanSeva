@@ -10,18 +10,21 @@ from backend.exceptions import PrimaryDiagnosisError , EmptyGeminiResponse
 from .helpers import behavioural_context_and_name , gemini_api_call
 
 
-def primary_diagnosis(body ,gemini_client ):
+def primary_diagnosis(body,gemini_client ):
 
     try:
         if gemini_client is None:
             raise HTTPException(status_code=503, detail="Google GenAI service is unavailable")
-        
 
         
        
         behavioural_context , name = behavioural_context_and_name(body)
         
-        list_of_disease = retreive_disease_list(name=name , type=body.type)
+        try:
+            list_of_disease = retreive_disease_list(name=name, type=body.type)
+        except Exception as e:
+            raise HTTPException(status_code=500, detail =f"{e}")
+            
         
 
             
@@ -61,8 +64,6 @@ def primary_diagnosis(body ,gemini_client ):
         else:
             response = gemini_api_call( prompt= gemini_prompt ,gemini_client=gemini_client  )
     except errors.APIError as e:
-        print(type(e))
-        print(e)
         if e.status_code  == 429:
             gemini_client = genai_client_2
             if body.image_url:

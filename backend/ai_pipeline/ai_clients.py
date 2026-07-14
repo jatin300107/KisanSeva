@@ -17,8 +17,7 @@ def get_genai_client():
         try:
             import google.genai as genai
             genai_client = genai.Client(api_key=GEMINI_API_KEY_1)
-        except Exception as e:
-            print(f"Google GenAI error: {e}")
+        except Exception:
             genai_client = None
             global GOOGLE_GENAI_AVAILABLE
             GOOGLE_GENAI_AVAILABLE = False
@@ -33,8 +32,7 @@ def get_genai_client_2():
         try:
             import google.genai as genai
             genai_client_2 = genai.Client(api_key=GEMINI_API_KEY_2)
-        except Exception as e:
-            print(f"Google GenAI client 2 error: {e}")
+        except Exception:
             genai_client_2 = None
     return genai_client_2
 

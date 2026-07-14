@@ -49,7 +49,8 @@ def sign_in(data: LoginRequest):
     except AuthApiError as e:
         raise HTTPException(status_code=400, detail=str(e.message))
     except Exception as e:
-        raise HTTPException(status_code=500, detail="Something went wrong")
+        raise HTTPException(status_code=500, detail=f"{e}")
+        
     
 
     return {
