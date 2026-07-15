@@ -22,7 +22,8 @@ def sign_up(data: SignUpRequest):
         "email": data.email,
         "password": data.password
     })
-
+    if data.role not in ["farmer","vet","agrologist"]:
+        raise HTTPException(status_code=400, detail="Invalid role must be either 'farmer', 'vet', or 'agrologist'")
     if res.user is None:
         raise HTTPException(status_code=400, detail="Signup failed")
 
@@ -56,7 +57,8 @@ def sign_in(data: LoginRequest):
     return {
         "message": "Login successful",
         "access_token": res.session.access_token,
-        "user_id": res.user.id
+        "user_id": res.user.id,
+        "role" : res.role
     }
 
 
