@@ -1,6 +1,6 @@
 import json , re
 from backend.exceptions import TranslationError
-from backend.ai_pipeline.translation import translate
+#from backend.ai_pipeline.translation import translate
 from backend.auth.services import get_current_user
 from backend.db import supabase
 from fastapi import APIRouter, Depends , HTTPException
@@ -48,6 +48,7 @@ async def submit_report(
             "severity": primary_response["severity"],
             "confidence": primary_response["confidence"],
             "status": "generated"
+            
         }).execute()
 
         report_id = report_result.data[0]["id"]
@@ -84,7 +85,7 @@ async def submit_report(
 
     except ReportGenerationError as e:
         raise HTTPException(status_code=500, detail=str(e))
-    
+'''    
 class TranslateReportRequest(BaseModel):
     
     current_language: str
@@ -161,4 +162,4 @@ async def translate_text(
         "translated_ai_diagnosis": translated_ai_diagnosis,
         "translated_ai_suggestions": translated_ai_suggestions
     }
-    
+    '''

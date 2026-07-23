@@ -59,8 +59,9 @@ def generate_report(primary_response ,body , gemini_client   ):
 
                 }}
                 
+                Note* : Respond in simple, clear language a farmer can understand. Avoid medical jargon.
+                Create report in Bilingual format (English + Hindi) for better comprehension. Use simple Hindi phrases alongside English explanations.
 
-                Write in simple, clear language a farmer can understand. Avoid medical jargon.
                 """
 
     try:

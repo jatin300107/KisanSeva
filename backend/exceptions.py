@@ -2,8 +2,9 @@
 
 
 class DiseaseNotFound(Exception):
-    def __init__(self):
-        super().__init__(f"Animal disease data not found in records")
+    def __init__(self , name):
+        self.name = name
+        super().__init__(f"Disease data for {self.name} not found in records")
     
 class NoDiseaseDiagnosed(Exception):
     def __init__(self):

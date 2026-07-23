@@ -25,12 +25,16 @@ def login(data: LoginRequest):
 
 @router.get("/me")
 def get_me(current_user=Depends(get_current_user)):
+    result = supabase.table("users").select("name, role").eq("id", current_user.id).single().execute()
+    
+    if not result.data:
+        raise HTTPException(status_code=404, detail="User profile not found")
+
     return {
         "user_id": current_user.id,
         "email": current_user.email,
-        "role": current_user.role,
-        "name": current_user.name,
-
+        "role": result.data["role"],
+        "name": result.data["name"],
     }
 
 

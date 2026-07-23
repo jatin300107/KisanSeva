@@ -275,8 +275,8 @@ async def get_questions(
     current_user=Depends(get_current_user)
 ):
     try:
-        if type not in ["crop", "livestock"]:
-            raise HTTPException(status_code=400, detail="type must be 'crop' or 'livestock'")
+        if type not in ["crop", "animal"]:
+            raise HTTPException(status_code=400, detail="type must be 'crop' or 'animal'")
 
         result = supabase.table("questions")\
             .select("id, question")\

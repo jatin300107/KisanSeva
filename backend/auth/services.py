@@ -47,6 +47,8 @@ def sign_in(data: LoginRequest):
             "email": data.email,
             "password": data.password
         })
+        role = supabase.table("users").select("role").eq("id", res.user.id).single().execute().data["role"]
+        
     except AuthApiError as e:
         raise HTTPException(status_code=400, detail=str(e.message))
     except Exception as e:
@@ -58,7 +60,7 @@ def sign_in(data: LoginRequest):
         "message": "Login successful",
         "access_token": res.session.access_token,
         "user_id": res.user.id,
-        "role" : res.role
+        "role" : role,
     }
 
 
