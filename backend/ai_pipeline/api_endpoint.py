@@ -9,7 +9,7 @@ from .primary_daignosis import primary_diagnosis
 from .report_generation import generate_report
 from backend.exceptions import ReportGenerationError
 from fastapi.concurrency import run_in_threadpool
-from .ai_clients import get_genai_client , get_genai_client_2 , get_sarvam_client
+from .ai_clients import get_genai_client , get_genai_client_2 
 ai_router = APIRouter(prefix="/ai", tags=["AI"])
 
 

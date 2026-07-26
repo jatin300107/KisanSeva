@@ -1,9 +1,9 @@
 from configs import GEMINI_API_KEY_1, GEMINI_API_KEY_2, SARVAM_API_KEY
-from sarvamai import AsyncSarvamAI
+'''from sarvamai import AsyncSarvamAI'''
 
 
 GOOGLE_GENAI_AVAILABLE = bool(GEMINI_API_KEY_1)
-OPENAI_AVAILABLE = bool(SARVAM_API_KEY)
+'''OPENAI_AVAILABLE = bool(SARVAM_API_KEY)'''
 
 genai_client = None
 genai_client_2 = None
@@ -37,8 +37,8 @@ def get_genai_client_2():
     return genai_client_2
 
 
-def get_sarvam_client():
+'''ef get_sarvam_client():
     if not SARVAM_API_KEY:
         return None
     client = AsyncSarvamAI(api_subscription_key=SARVAM_API_KEY)
-    return client
+    return client'''

@@ -1,7 +1,7 @@
 from backend.exceptions import TranslationError
 from fastapi.concurrency import run_in_threadpool
-from sarvamai.core.api_error import ApiError
-'''async def translate(text , current_language , language , client ):
+'''from sarvamai.core.api_error import ApiError
+async def translate(text , current_language , language , client ):
     try: 
         response = await client.text.translate(
                 input=text,
