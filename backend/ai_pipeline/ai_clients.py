@@ -1,4 +1,4 @@
-from configs import GEMINI_API_KEY_1, GEMINI_API_KEY_2, SARVAM_API_KEY
+from configs import GEMINI_API_KEY_1, GEMINI_API_KEY_2
 '''from sarvamai import AsyncSarvamAI'''
 
 
