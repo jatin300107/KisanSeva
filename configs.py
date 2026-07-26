@@ -12,7 +12,3 @@ GEMINI_API_KEY_1 = os.getenv("GEMINI_API_KEY_1")
 GEMINI_API_KEY_2 = os.getenv("GEMINI_API_KEY_2")
 GROK_API_KEY = os.getenv("GROK_API_KEY")
 
-
-SARVAM_API_KEY = os.getenv("SARVAM_API_KEY")
-if not SARVAM_API_KEY:
-    raise ValueError()
