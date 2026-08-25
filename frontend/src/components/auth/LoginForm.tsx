@@ -1,129 +1,92 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Mail, Lock, LogIn } from 'lucide-react';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Mail, Lock, LogIn, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
-import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
-import { Card } from '../ui/Card';
+import { Button } from '../ui/Button';
 
-export const LoginForm: React.FC = () => {
+export default function LoginForm() {
+  const { login } = useAuth();
   const navigate = useNavigate();
-  const { login, user } = useAuth();
-  
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [showPass, setShowPass] = useState(false);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
-
-    if (!email) {
-      setError('Email is required');
-      return;
-    }
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters');
-      return;
-    }
-
+    if (!email || !password) { setError('Please fill in all fields'); return; }
+    if (password.length < 6) { setError('Password must be at least 6 characters'); return; }
+    setError('');
+    setLoading(true);
     try {
-      setIsLoading(true);
-      await login({ email, password });
-      if (user?.role === 'farmer') {
-        navigate('/farmer/dashboard');
-      } else {
-        navigate('/expert/dashboard');
-      }
-    } catch (err: any) {
-      setError(err.response?.data?.detail || 'Failed to login. Please check your credentials.');
+      const role = await login({ email, password });
+      if (role === 'farmer') navigate('/farmer/dashboard');
+      else navigate('/expert/dashboard');
+    } catch (err: unknown) {
+      const e = err as { response?: { data?: { detail?: string } } };
+      setError(e?.response?.data?.detail || 'Invalid credentials. Please try again.');
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="w-full max-w-md"
-    >
-      <Card className="p-8">
-        <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h2>
-          <p className="text-gray-500">Log in to access your KisanSeva account</p>
+    <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 rounded-xl">
+          {error}
         </div>
+      )}
 
-        {error && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            className="bg-red-50 text-red-600 text-sm p-3 rounded-lg mb-6 border border-red-100"
-          >
-            {error}
-          </motion.div>
-        )}
+      <Input
+        label="Email address"
+        id="login-email"
+        type="email"
+        placeholder="you@example.com"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        icon={<Mail size={16} />}
+        required
+      />
 
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <Input
-            label="Email Address"
-            type="email"
-            placeholder="farmer@example.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            icon={Mail}
-            disabled={isLoading}
-          />
-
-          <Input
-            label="Password"
-            type="password"
+      {/* Password with show/hide */}
+      <div className="flex flex-col gap-1.5">
+        <label className="text-sm font-medium text-slate-700">Password</label>
+        <div className="relative">
+          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
+            <Lock size={16} />
+          </span>
+          <input
+            id="login-password"
+            type={showPass ? 'text' : 'password'}
             placeholder="••••••••"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            icon={Lock}
-            disabled={isLoading}
+            className="w-full rounded-xl border border-slate-200 bg-white py-2.5 text-sm text-slate-800 placeholder:text-slate-400 transition-all duration-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 pl-10 pr-10"
+            required
           />
-
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input
-                id="remember-me"
-                name="remember-me"
-                type="checkbox"
-                className="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-300 rounded"
-              />
-              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
-                Remember me
-              </label>
-            </div>
-            <div className="text-sm">
-              <a href="#" className="font-medium text-emerald-600 hover:text-emerald-500">
-                Forgot password?
-              </a>
-            </div>
-          </div>
-
-          <Button
-            type="submit"
-            className="w-full"
-            loading={isLoading}
-            icon={<LogIn size={18} />}
+          <button
+            type="button"
+            onClick={() => setShowPass(!showPass)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
           >
-            Log In
-          </Button>
-        </form>
-
-        <div className="mt-6 text-center text-sm text-gray-500">
-          Don't have an account?{' '}
-          <Link to="/signup" className="font-medium text-emerald-600 hover:text-emerald-500 transition-colors">
-            Sign up now
-          </Link>
+            {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
+          </button>
         </div>
-      </Card>
-    </motion.div>
+      </div>
+
+      <Button
+        type="submit"
+        variant="primary"
+        size="lg"
+        loading={loading}
+        icon={<LogIn size={18} />}
+        className="w-full mt-1"
+      >
+        Sign in to KisanSeva
+      </Button>
+    </form>
   );
-};
+}

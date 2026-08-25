@@ -1,4 +1,3 @@
-import React from 'react';
 import { Loader2 } from 'lucide-react';
 
 interface SpinnerProps {
@@ -7,13 +6,13 @@ interface SpinnerProps {
   label?: string;
 }
 
-export const Spinner: React.FC<SpinnerProps> = ({ size = 24, className = '', label }) => {
+export function Spinner({ size = 24, className = '', label }: SpinnerProps) {
   return (
-    <div className={`flex flex-col items-center justify-center ${className}`}>
-      <Loader2 size={size} className="animate-spin text-emerald-500" />
-      {label && <span className="mt-2 text-sm text-gray-500">{label}</span>}
+    <div className={`flex flex-col items-center justify-center gap-2 ${className}`}>
+      <Loader2 size={size} className="animate-spin text-emerald-600" />
+      {label && <p className="text-sm text-slate-500">{label}</p>}
     </div>
   );
-};
+}
 
 export default Spinner;

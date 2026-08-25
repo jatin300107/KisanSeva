@@ -1,43 +1,45 @@
-import React, { useState } from 'react';
-import { Menu } from 'lucide-react';
+import { useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Menu, X } from 'lucide-react';
+import type { ReactNode } from 'react';
 import Navbar from './Navbar';
 import Sidebar from './Sidebar';
-import { motion, AnimatePresence } from 'framer-motion';
 
 interface DashboardLayoutProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
-const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+export default function DashboardLayout({ children }: DashboardLayoutProps) {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-slate-50 font-inter">
+    <div className="min-h-screen bg-slate-50">
       <Navbar />
-      
-      <div className="pt-16 flex h-screen overflow-hidden">
-        {/* Desktop Sidebar */}
-        <div className="hidden md:block h-full">
-          <Sidebar />
+      <div className="flex pt-16 min-h-screen">
+        {/* Desktop sidebar */}
+        <div className="hidden md:flex shrink-0">
+          <div className="h-[calc(100vh-4rem)] sticky top-16 overflow-y-auto">
+            <Sidebar />
+          </div>
         </div>
 
-        {/* Mobile Sidebar Overlay */}
+        {/* Mobile sidebar overlay */}
         <AnimatePresence>
-          {isSidebarOpen && (
+          {sidebarOpen && (
             <>
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                onClick={() => setIsSidebarOpen(false)}
-                className="fixed inset-0 bg-slate-900/20 backdrop-blur-sm z-30 md:hidden"
+                className="fixed inset-0 z-40 bg-slate-900/50 backdrop-blur-sm md:hidden"
+                onClick={() => setSidebarOpen(false)}
               />
               <motion.div
-                initial={{ x: '-100%' }}
+                initial={{ x: -264 }}
                 animate={{ x: 0 }}
-                exit={{ x: '-100%' }}
+                exit={{ x: -264 }}
                 transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                className="fixed inset-y-0 left-0 pt-16 w-64 z-30 md:hidden bg-white"
+                className="fixed top-16 left-0 bottom-0 z-50 md:hidden"
               >
                 <Sidebar />
               </motion.div>
@@ -45,26 +47,18 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
           )}
         </AnimatePresence>
 
-        {/* Main Content */}
-        <main className="flex-1 h-full overflow-y-auto relative">
-          {/* Mobile Sidebar Toggle Button */}
-          <div className="md:hidden sticky top-0 bg-slate-50/80 backdrop-blur-sm border-b border-slate-200 p-4 z-20 flex justify-between items-center">
-            <span className="font-semibold text-slate-700">Dashboard</span>
-            <button 
-              onClick={() => setIsSidebarOpen(true)}
-              className="p-2 bg-white rounded-lg shadow-sm border border-slate-200 text-slate-600"
-            >
-              <Menu size={20} />
-            </button>
-          </div>
-          
-          <div className="p-4 md:p-8 pb-20">
-            {children}
-          </div>
+        {/* Main content */}
+        <main className="flex-1 p-4 md:p-8 min-w-0">
+          {/* Mobile toggle */}
+          <button
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            className="md:hidden mb-4 p-2 rounded-lg bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors"
+          >
+            {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
+          {children}
         </main>
       </div>
     </div>
   );
-};
-
-export default DashboardLayout;
+}

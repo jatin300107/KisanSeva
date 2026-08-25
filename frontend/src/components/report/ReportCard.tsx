@@ -1,75 +1,100 @@
-import React from 'react';
 import { motion } from 'framer-motion';
-import { Calendar, ArrowRight, Activity } from 'lucide-react';
-import type { Report } from '../../types';
+import { ArrowRight, Activity, Leaf, Heart } from 'lucide-react';
+import type { Report } from '../../types/index';
+import { Badge } from '../ui/Badge';
+
+const severityBarColor: Record<string, string> = {
+  low:      'bg-emerald-500',
+  medium:   'bg-amber-500',
+  high:     'bg-red-500',
+  critical: 'bg-red-700',
+};
+
+const severityBadgeVariant: Record<string, 'success' | 'warning' | 'danger'> = {
+  low:      'success',
+  medium:   'warning',
+  high:     'danger',
+  critical: 'danger',
+};
+
+/** Backend severity is a number 1-4 (or 0-1 float). Normalise to label. */
+function getSeverityLabel(severity: number): string {
+  if (severity <= 1) return 'low';
+  if (severity <= 2) return 'medium';
+  if (severity <= 3) return 'high';
+  return 'critical';
+}
+
+function formatDate(dateStr: string) {
+  return new Date(dateStr).toLocaleDateString('en-IN', {
+    day: 'numeric', month: 'short', year: 'numeric',
+  });
+}
 
 interface ReportCardProps {
   report: Report;
   onClick?: () => void;
 }
 
-export const ReportCard: React.FC<ReportCardProps> = ({ report, onClick }) => {
-  const getSeverityBadge = (severity: number) => {
-    if (severity <= 3) {
-      return <span className="px-2.5 py-1 text-xs font-semibold rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">Severity: Low ({severity}/10)</span>;
-    } else if (severity <= 6) {
-      return <span className="px-2.5 py-1 text-xs font-semibold rounded-full bg-amber-100 text-amber-800 border border-amber-200">Severity: Moderate ({severity}/10)</span>;
-    } else {
-      return <span className="px-2.5 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800 border border-red-200">Severity: High ({severity}/10)</span>;
-    }
-  };
-
-  const formatDate = (dateStr: string) => {
-    try {
-      return new Date(dateStr).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-      });
-    } catch {
-      return dateStr;
-    }
-  };
+export function ReportCard({ report, onClick }: ReportCardProps) {
+  const severityLabel = getSeverityLabel(report.severity ?? 0);
+  const barColor = severityBarColor[severityLabel];
+  const badgeVariant = severityBadgeVariant[severityLabel] || 'neutral';
 
   return (
     <motion.div
-      whileHover={{ y: -4, scale: 1.01 }}
+      whileHover={{ y: -4 }}
       transition={{ duration: 0.2 }}
       onClick={onClick}
-      className="bg-white rounded-xl shadow-sm border border-slate-200 p-5 hover:shadow-md hover:border-emerald-300 transition-all cursor-pointer flex flex-col justify-between"
+      className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden cursor-pointer hover:shadow-md hover:border-emerald-200 transition-all duration-300 group"
     >
-      <div>
-        <div className="flex items-center justify-between gap-2 mb-3">
-          <span className={`px-2.5 py-0.5 text-xs font-bold uppercase rounded-md ${report.type === 'crop' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-teal-50 text-teal-700 border border-teal-200'}`}>
-            {report.type === 'crop' ? '🌾 Crop' : '🐄 Animal'}
-          </span>
-          <div className="flex items-center text-slate-400 text-xs gap-1">
-            <Calendar className="w-3.5 h-3.5" />
-            <span>{formatDate(report.created_at)}</span>
+      {/* Severity colour bar */}
+      <div className={`h-1 ${barColor}`} />
+
+      <div className="p-5">
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="w-7 h-7 bg-slate-100 rounded-lg flex items-center justify-center shrink-0">
+                {report.type === 'crop'
+                  ? <Leaf size={14} className="text-emerald-600" />
+                  : <Heart size={14} className="text-rose-500" />}
+              </span>
+              <span className="text-xs text-slate-400 font-medium capitalize">
+                {report.type} Disease
+              </span>
+            </div>
+
+            <h3 className="font-bold text-slate-800 text-base leading-snug mb-1 truncate">
+              {report.disease_name || 'Pending Analysis'}
+            </h3>
+            <p className="text-xs text-slate-500 truncate">{report.title}</p>
           </div>
+
+          <ArrowRight
+            size={16}
+            className="text-slate-300 group-hover:text-emerald-500 group-hover:translate-x-1 transition-all mt-1 shrink-0"
+          />
         </div>
 
-        <h3 className="font-bold text-slate-800 text-lg mb-1 line-clamp-1 group-hover:text-emerald-600 transition-colors">
-          {report.title || 'Diagnostic Report'}
-        </h3>
-        
-        <p className="text-sm font-medium text-emerald-700 mb-4 flex items-center gap-1.5">
-          <Activity className="w-4 h-4" />
-          <span>{report.disease_name}</span>
-        </p>
-      </div>
-
-      <div className="pt-3 border-t border-slate-100 flex items-center justify-between mt-2">
-        <div className="flex items-center gap-2">
-          {getSeverityBadge(report.severity)}
-          <span className="text-xs text-slate-500 font-medium bg-slate-100 px-2 py-0.5 rounded-full">
-            {Math.round((report.confidence || 0) * 100)}% Match
+        <div className="mt-4 pt-4 border-t border-slate-50 flex items-center gap-2 flex-wrap">
+          {report.severity != null && (
+            <Badge variant={badgeVariant}>
+              <Activity size={10} /> {severityLabel}
+            </Badge>
+          )}
+          {report.confidence != null && (
+            <Badge variant="info">
+              {Math.round(report.confidence * 100)}% conf.
+            </Badge>
+          )}
+          <span className="text-xs text-slate-400 ml-auto">
+            {report.created_at ? formatDate(report.created_at) : ''}
           </span>
-        </div>
-        <div className="p-1.5 rounded-full bg-slate-50 group-hover:bg-emerald-50 text-slate-400 group-hover:text-emerald-600 transition-colors">
-          <ArrowRight className="w-4 h-4" />
         </div>
       </div>
     </motion.div>
   );
-};
+}
+
+export default ReportCard;

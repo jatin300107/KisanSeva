@@ -1,20 +1,25 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import type { ReactNode } from 'react';
 
 interface CardProps {
-  children: React.ReactNode;
+  children: ReactNode;
   className?: string;
   hover?: boolean;
+  onClick?: () => void;
 }
 
-export const Card: React.FC<CardProps> = ({ children, className = '', hover = false }) => {
+export function Card({ children, className = '', hover = false, onClick }: CardProps) {
   return (
-    <motion.div
-      whileHover={hover ? { scale: 1.02, y: -2 } : {}}
-      transition={{ type: 'spring', stiffness: 300 }}
-      className={`bg-white rounded-2xl shadow-lg border border-transparent ${hover ? 'hover:border-emerald-200 hover:shadow-xl' : ''} transition-all duration-300 ${className}`}
+    <div
+      onClick={onClick}
+      className={`bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden transition-all duration-300 ${
+        hover
+          ? 'cursor-pointer hover:shadow-md hover:-translate-y-1 hover:border-emerald-200'
+          : ''
+      } ${className}`}
     >
       {children}
-    </motion.div>
+    </div>
   );
-};
+}
+
+export default Card;

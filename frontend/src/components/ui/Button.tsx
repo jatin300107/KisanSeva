@@ -1,56 +1,59 @@
-import React from 'react';
-import { motion } from 'framer-motion';
 import { Loader2 } from 'lucide-react';
+import type { ReactNode, ButtonHTMLAttributes } from 'react';
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'danger' | 'ghost';
-  size?: 'sm' | 'md' | 'lg';
+type Variant = 'primary' | 'secondary' | 'danger' | 'ghost';
+type Size = 'sm' | 'md' | 'lg';
+
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: Variant;
+  size?: Size;
   loading?: boolean;
-  icon?: React.ReactNode;
+  icon?: ReactNode;
+  children?: ReactNode;
 }
 
-export const Button: React.FC<ButtonProps> = ({
-  children,
+const variantClasses: Record<Variant, string> = {
+  primary:
+    'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md hover:from-emerald-700 hover:to-teal-700 hover:shadow-lg hover:shadow-emerald-500/25',
+  secondary:
+    'border-2 border-emerald-500 text-emerald-600 bg-transparent hover:bg-emerald-50',
+  danger:
+    'bg-red-500 text-white hover:bg-red-600 shadow-sm',
+  ghost:
+    'text-slate-600 bg-transparent hover:bg-slate-100 hover:text-slate-800',
+};
+
+const sizeClasses: Record<Size, string> = {
+  sm: 'px-3 py-1.5 text-xs font-medium rounded-lg gap-1.5',
+  md: 'px-5 py-2.5 text-sm font-semibold rounded-xl gap-2',
+  lg: 'px-7 py-3.5 text-base font-semibold rounded-xl gap-2.5',
+};
+
+export function Button({
   variant = 'primary',
   size = 'md',
   loading = false,
-  disabled = false,
   icon,
+  children,
   className = '',
+  disabled,
   ...props
-}) => {
-  const baseStyles = 'inline-flex items-center justify-center font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none';
-  
-  const variants = {
-    primary: 'bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white focus:ring-emerald-500 shadow-md',
-    secondary: 'border-2 border-emerald-500 text-emerald-600 hover:bg-emerald-50 focus:ring-emerald-500',
-    danger: 'bg-red-500 hover:bg-red-600 text-white focus:ring-red-500 shadow-md',
-    ghost: 'text-gray-700 hover:bg-gray-100 focus:ring-gray-500',
-  };
-
-  const sizes = {
-    sm: 'px-3 py-1.5 text-sm',
-    md: 'px-4 py-2 text-base',
-    lg: 'px-6 py-3 text-lg',
-  };
-
-  const motionProps = {
-    whileHover: { scale: disabled || loading ? 1 : 1.02 },
-    whileTap: { scale: disabled || loading ? 1 : 0.98 },
-    className: `${baseStyles} ${variants[variant]} ${sizes[size]} ${className}`,
-    disabled: disabled || loading,
-    ...props,
-  } as any;
-
+}: ButtonProps) {
+  const isDisabled = disabled || loading;
   return (
-    <motion.button
-      {...motionProps}
+    <button
+      disabled={isDisabled}
+      className={`inline-flex items-center justify-center transition-all duration-200 active:scale-95 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed disabled:active:scale-100 ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
+      {...props}
     >
-      {loading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-      {!loading && icon && <span className="mr-2">{icon}</span>}
+      {loading ? (
+        <Loader2 size={size === 'lg' ? 18 : 16} className="animate-spin" />
+      ) : icon ? (
+        <span className="shrink-0">{icon}</span>
+      ) : null}
       {children}
-    </motion.button>
+    </button>
   );
-};
+}
 
 export default Button;

@@ -7,7 +7,7 @@ interface AuthContextType {
   token: string | null;
   isLoading: boolean;
   isAuthenticated: boolean;
-  login: (data: LoginRequest) => Promise<void>;
+  login: (data: LoginRequest) => Promise<string>;
   signup: (data: SignUpRequest) => Promise<void>;
   logout: () => void;
   fetchMe: () => Promise<void>;
@@ -40,7 +40,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, [token, fetchMe]);
 
-  const login = async (data: LoginRequest) => {
+  const login = async (data: LoginRequest): Promise<string> => {
     const res = await authApi.login(data);
     const { access_token, user_id, role } = res.data;
     localStorage.setItem('access_token', access_token);
@@ -54,6 +54,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } else {
       await fetchMe();
     }
+    return role || 'farmer';
   };
 
   const signup = async (data: SignUpRequest) => {

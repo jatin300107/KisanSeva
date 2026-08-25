@@ -1,240 +1,270 @@
-import React from 'react';
+import { useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
+import {
+  Leaf, Brain, Camera, Users, Globe, Shield, Clock,
+  ArrowRight, ChevronDown, Sparkles, CheckCircle2,
+  FileText, Zap,
+} from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Brain, Users, FileText, Camera, ClipboardList, Sparkles, FileCheck, ArrowRight, Leaf } from 'lucide-react';
 import Navbar from '../components/layout/Navbar';
 
-const Landing: React.FC = () => {
-  const fadeIn = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
-  };
+const features = [
+  { icon: Brain,   title: 'AI-Powered Diagnosis', desc: 'Upload images and get instant disease identification using our trained agricultural AI model.', color: 'emerald' },
+  { icon: Camera,  title: 'Photo Analysis',       desc: 'Simply photograph your crop or animal — no special equipment or expertise needed.', color: 'teal' },
+  { icon: Users,   title: 'Expert Network',       desc: 'Connect directly with certified veterinarians and agrologists for deeper consultation.', color: 'blue' },
+  { icon: Globe,   title: 'Bilingual Reports',    desc: 'Receive full diagnosis reports in both English and Hindi for wider accessibility.', color: 'violet' },
+  { icon: Shield,  title: '95% Accuracy',         desc: 'Our model is trained on thousands of validated disease cases from agricultural experts.', color: 'amber' },
+  { icon: Clock,   title: '2-Min Reports',        desc: 'Get comprehensive AI-backed diagnosis reports in under 2 minutes.', color: 'rose' },
+];
 
-  const staggerContainer = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.2 }
-    }
-  };
+const steps = [
+  { icon: Camera,       label: 'Capture',  desc: 'Take a clear photo of the affected crop or animal' },
+  { icon: FileText,     label: 'Describe', desc: 'Answer a few targeted diagnostic questions' },
+  { icon: Brain,        label: 'Analyze',  desc: 'Our AI processes and cross-references the disease database' },
+  { icon: CheckCircle2, label: 'Report',   desc: 'Receive a detailed bilingual diagnosis and treatment plan' },
+];
 
+const stats = [
+  { value: '95%',  label: 'Diagnosis Accuracy' },
+  { value: '2 min', label: 'Avg. Report Time' },
+  { value: '500+', label: 'Verified Experts' },
+  { value: '10K+', label: 'Farmers Helped' },
+];
+
+const iconColorMap: Record<string, string> = {
+  emerald: 'bg-emerald-100 text-emerald-700',
+  teal:    'bg-teal-100 text-teal-700',
+  blue:    'bg-blue-100 text-blue-700',
+  violet:  'bg-violet-100 text-violet-700',
+  amber:   'bg-amber-100 text-amber-700',
+  rose:    'bg-rose-100 text-rose-700',
+};
+
+function FadeInSection({ children }: { children: React.ReactNode }) {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: '-80px' });
   return (
-    <div className="min-h-screen bg-slate-50 font-inter font-sans">
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 40 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.6 }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+export default function Landing() {
+  return (
+    <div className="min-h-screen bg-white">
       <Navbar />
 
-      {/* Hero Section */}
-      <section className="relative h-screen flex items-center justify-center pt-16 overflow-hidden">
-        {/* Background Gradients & Elements */}
-        <div className="absolute inset-0 bg-gradient-to-br from-emerald-900 via-emerald-800 to-teal-900 z-0" />
-        <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] z-0" />
-        
-        {/* Floating elements */}
-        <div className="absolute inset-0 overflow-hidden z-0 pointer-events-none">
-          <motion.div 
-            animate={{ y: [0, -20, 0], rotate: [0, 5, 0] }} 
-            transition={{ repeat: Infinity, duration: 5, ease: "easeInOut" }}
-            className="absolute top-1/4 left-[10%] text-emerald-400/30"
+      {/* ── Hero ── */}
+      <section className="gradient-hero min-h-screen flex flex-col items-center justify-center text-center px-4 pt-24 pb-20 relative overflow-hidden">
+        {/* Decorative blobs */}
+        <div className="absolute top-20 left-10 w-72 h-72 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-teal-400/10 rounded-full blur-3xl pointer-events-none" />
+        {/* Floating leaves */}
+        <span className="absolute top-32 left-24 text-emerald-400/30 animate-float pointer-events-none"><Leaf size={36} /></span>
+        <span className="absolute top-52 right-32 text-teal-300/25 animate-float-delayed pointer-events-none"><Leaf size={26} /></span>
+        <span className="absolute bottom-36 left-36 text-emerald-300/15 animate-float-slow pointer-events-none"><Leaf size={52} /></span>
+
+        {/* Badge */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="inline-flex items-center gap-2 bg-emerald-500/20 border border-emerald-400/30 text-emerald-200 text-sm font-medium px-4 py-2 rounded-full mb-8"
+        >
+          <Sparkles size={14} />
+          Trusted by 10,000+ farmers across India
+        </motion.div>
+
+        {/* Headline */}
+        <motion.h1
+          initial={{ opacity: 0, y: 28 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.1 }}
+          className="text-5xl md:text-7xl font-black text-white leading-tight mb-6 max-w-4xl"
+        >
+          Diagnose Crop &amp; Livestock
+          <br />
+          <span className="gradient-text">Diseases with AI</span>
+        </motion.h1>
+
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.2 }}
+          className="text-emerald-100/75 text-lg md:text-xl max-w-2xl mb-10 leading-relaxed"
+        >
+          Upload a photo, answer a few questions, and receive an expert-backed diagnosis in minutes.
+          Protect your harvest before it&apos;s too late.
+        </motion.p>
+
+        {/* CTA buttons */}
+        <motion.div
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.3 }}
+          className="flex flex-col sm:flex-row gap-4 mb-16"
+        >
+          <Link
+            to="/signup"
+            className="inline-flex items-center gap-2 bg-white text-emerald-700 font-bold px-8 py-4 rounded-xl hover:bg-emerald-50 transition-colors shadow-xl"
           >
-            <Leaf size={64} />
-          </motion.div>
-          <motion.div 
-            animate={{ y: [0, 30, 0], rotate: [0, -10, 0] }} 
-            transition={{ repeat: Infinity, duration: 7, ease: "easeInOut" }}
-            className="absolute bottom-1/3 right-[15%] text-emerald-300/20"
+            Start Free Diagnosis <ArrowRight size={18} />
+          </Link>
+          <a
+            href="#how-it-works"
+            className="inline-flex items-center gap-2 border border-emerald-400/40 text-white font-semibold px-8 py-4 rounded-xl hover:bg-white/10 transition-colors"
           >
-            <Leaf size={96} />
-          </motion.div>
-          <div className="absolute top-1/3 right-[20%] w-32 h-32 bg-emerald-500/20 rounded-full blur-3xl" />
-          <div className="absolute bottom-1/4 left-[20%] w-48 h-48 bg-teal-400/20 rounded-full blur-3xl" />
-        </div>
+            See How It Works <ChevronDown size={18} />
+          </a>
+        </motion.div>
 
-        <div className="relative z-10 max-w-5xl mx-auto px-4 text-center">
-          <motion.div
-            initial="hidden"
-            animate="visible"
-            variants={staggerContainer}
-            className="space-y-8"
-          >
-            <motion.div variants={fadeIn} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-emerald-100 text-sm font-medium mb-4">
-              <Sparkles size={16} />
-              <span>Smart farming for a better tomorrow</span>
-            </motion.div>
-
-            <motion.h1 variants={fadeIn} className="text-5xl md:text-7xl font-extrabold text-white tracking-tight leading-tight">
-              AI-Powered <br className="hidden md:block" />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-teal-200">
-                Agricultural Diagnosis
-              </span>
-            </motion.h1>
-
-            <motion.p variants={fadeIn} className="max-w-2xl mx-auto text-lg md:text-xl text-emerald-50/80 leading-relaxed">
-              Protect your crops and livestock with intelligent disease detection. Get expert-backed reports in minutes, tailored for farmers and agrologists.
-            </motion.p>
-
-            <motion.div variants={fadeIn} className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-              <Link 
-                to="/signup" 
-                className="w-full sm:w-auto px-8 py-4 bg-white text-emerald-900 rounded-full font-bold text-lg hover:bg-emerald-50 transition-all hover:scale-105 shadow-[0_0_40px_rgba(16,185,129,0.3)] flex items-center justify-center gap-2"
-              >
-                Get Started <ArrowRight size={20} />
-              </Link>
-              <button 
-                onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
-                className="w-full sm:w-auto px-8 py-4 bg-white/10 backdrop-blur-md text-white border border-white/20 rounded-full font-bold text-lg hover:bg-white/20 transition-all flex items-center justify-center"
-              >
-                Learn More
-              </button>
-            </motion.div>
-          </motion.div>
-        </div>
-        
-        {/* Curved bottom separator */}
-        <div className="absolute bottom-0 left-0 right-0 h-16 bg-slate-50" style={{ clipPath: 'polygon(0 100%, 100% 100%, 100% 0, 0 100%)' }}></div>
-        <div className="absolute bottom-0 left-0 right-0 h-16 bg-slate-50" style={{ clipPath: 'polygon(0 100%, 100% 100%, 0 0)' }}></div>
-      </section>
-
-      {/* Features Section */}
-      <section id="features" className="py-24 px-4 md:px-8 max-w-7xl mx-auto relative z-10">
-        <div className="text-center mb-16">
-          <motion.h2 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            className="text-3xl md:text-4xl font-bold text-slate-900 mb-4"
-          >
-            Powerful Features for Modern Farmers
-          </motion.h2>
-          <p className="text-slate-600 max-w-2xl mx-auto text-lg">
-            Our platform combines cutting-edge AI with expert agricultural knowledge to bring you the best disease management tools.
-          </p>
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-8">
-          {[
-            {
-              icon: Brain,
-              title: "AI Diagnosis",
-              desc: "Upload images and get instant AI-powered disease identification for crops and livestock."
-            },
-            {
-              icon: Users,
-              title: "Expert Consultation",
-              desc: "Connect with veterinary and agricultural experts for personalized advice and second opinions."
-            },
-            {
-              icon: FileText,
-              title: "Bilingual Reports",
-              desc: "Receive detailed, easy-to-understand reports in both English and Hindi."
-            }
-          ].map((feature, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ delay: i * 0.2 }}
-              className="bg-white rounded-3xl p-8 shadow-xl shadow-slate-200/50 hover:-translate-y-2 transition-transform duration-300 border border-slate-100"
-            >
-              <div className="w-16 h-16 rounded-2xl bg-emerald-100 flex items-center justify-center text-emerald-600 mb-6">
-                <feature.icon size={32} />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">{feature.title}</h3>
-              <p className="text-slate-600 leading-relaxed">{feature.desc}</p>
-            </motion.div>
+        {/* Stats strip */}
+        <motion.div
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.45 }}
+          className="grid grid-cols-2 md:grid-cols-4 gap-6 bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl px-8 py-5"
+        >
+          {stats.map((s) => (
+            <div key={s.label} className="text-center">
+              <div className="text-3xl font-black text-white">{s.value}</div>
+              <div className="text-emerald-200/65 text-xs mt-1">{s.label}</div>
+            </div>
           ))}
-        </div>
+        </motion.div>
       </section>
 
-      {/* How It Works Section */}
-      <section className="py-24 bg-white relative overflow-hidden border-y border-slate-100">
-        <div className="max-w-7xl mx-auto px-4 md:px-8">
-          <div className="text-center mb-20">
-            <motion.h2 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="text-3xl md:text-4xl font-bold text-slate-900 mb-4"
-            >
-              How It Works
-            </motion.h2>
-            <p className="text-slate-600 text-lg">Simple steps to get expert insights</p>
-          </div>
-
-          <div className="relative">
-            {/* Connecting line */}
-            <div className="hidden md:block absolute top-1/2 left-0 right-0 h-1 bg-emerald-100 -translate-y-1/2 z-0"></div>
-            
-            <div className="grid md:grid-cols-4 gap-12 relative z-10">
-              {[
-                { icon: Camera, title: "Upload Image", step: "01" },
-                { icon: ClipboardList, title: "Answer Questions", step: "02" },
-                { icon: Sparkles, title: "AI Analysis", step: "03" },
-                { icon: FileCheck, title: "Get Report", step: "04" }
-              ].map((item, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.15 }}
-                  className="flex flex-col items-center text-center"
-                >
-                  <div className="w-24 h-24 rounded-full bg-white border-4 border-emerald-50 shadow-xl flex items-center justify-center mb-6 relative group hover:border-emerald-200 transition-colors">
-                    <div className="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center text-sm shadow-md">
-                      {item.step}
-                    </div>
-                    <item.icon size={40} className="text-emerald-500 group-hover:scale-110 transition-transform" />
-                  </div>
-                  <h3 className="text-lg font-bold text-slate-800">{item.title}</h3>
-                </motion.div>
-              ))}
+      {/* ── Features ── */}
+      <section id="features" className="py-24 px-4 bg-white">
+        <div className="max-w-6xl mx-auto">
+          <FadeInSection>
+            <div className="text-center mb-16">
+              <span className="text-emerald-600 font-semibold text-sm uppercase tracking-widest">Features</span>
+              <h2 className="text-4xl md:text-5xl font-black text-slate-900 mt-3 mb-4">
+                Everything to protect your harvest
+              </h2>
+              <p className="text-slate-500 text-lg max-w-xl mx-auto">
+                Powerful tools built for modern Indian farmers and agricultural experts.
+              </p>
             </div>
+          </FadeInSection>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {features.map((f, i) => (
+              <motion.div
+                key={f.title}
+                initial={{ opacity: 0, y: 28 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.08, duration: 0.5 }}
+                className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300"
+              >
+                <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 ${iconColorMap[f.color]}`}>
+                  <f.icon size={22} />
+                </div>
+                <h3 className="text-lg font-bold text-slate-800 mb-2">{f.title}</h3>
+                <p className="text-slate-500 text-sm leading-relaxed">{f.desc}</p>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-24 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-emerald-500 to-teal-600 z-0"></div>
-        <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/connected.png')] z-0"></div>
-        
-        <div className="max-w-4xl mx-auto px-4 relative z-10 text-center">
+      {/* ── How It Works ── */}
+      <section id="how-it-works" className="py-24 px-4 bg-emerald-50/60">
+        <div className="max-w-5xl mx-auto">
+          <FadeInSection>
+            <div className="text-center mb-16">
+              <span className="text-emerald-600 font-semibold text-sm uppercase tracking-widest">Process</span>
+              <h2 className="text-4xl md:text-5xl font-black text-slate-900 mt-3 mb-4">How It Works</h2>
+              <p className="text-slate-500 text-lg max-w-xl mx-auto">
+                Four simple steps to get an AI-powered diagnosis for your farm.
+              </p>
+            </div>
+          </FadeInSection>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 relative">
+            {steps.map((s, i) => (
+              <motion.div
+                key={s.label}
+                initial={{ opacity: 0, y: 28 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.15, duration: 0.5 }}
+                className="relative text-center"
+              >
+                <div className="w-16 h-16 bg-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4 text-white shadow-lg shadow-emerald-600/25">
+                  <s.icon size={26} />
+                </div>
+                <div className="absolute -top-3 -left-1 w-7 h-7 bg-white rounded-full border-2 border-emerald-500 flex items-center justify-center text-emerald-600 font-black text-xs shadow-sm">
+                  {i + 1}
+                </div>
+                <h3 className="text-lg font-bold text-slate-800 mb-2">{s.label}</h3>
+                <p className="text-slate-500 text-sm leading-relaxed">{s.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── CTA ── */}
+      <section className="gradient-hero py-28 px-4">
+        <div className="max-w-3xl mx-auto text-center">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            className="bg-white/10 backdrop-blur-lg rounded-3xl p-12 border border-white/20 shadow-2xl"
+            transition={{ duration: 0.6 }}
           >
-            <h2 className="text-4xl font-bold text-white mb-6">Ready to protect your farm?</h2>
-            <p className="text-emerald-50 text-xl mb-10 max-w-2xl mx-auto">
-              Join thousands of farmers using KisanSeva to safeguard their crops and livestock.
+            <div className="w-16 h-16 bg-emerald-400/20 border border-emerald-300/30 rounded-2xl flex items-center justify-center mx-auto mb-6">
+              <Zap size={28} className="text-emerald-300" />
+            </div>
+            <h2 className="text-4xl md:text-5xl font-black text-white mb-6">
+              Ready to protect your farm?
+            </h2>
+            <p className="text-emerald-100/70 text-lg mb-10">
+              Join thousands of farmers using AI to safeguard their livelihood.
             </p>
-            <Link 
-              to="/signup" 
-              className="inline-flex items-center gap-2 px-10 py-4 bg-white text-emerald-700 rounded-full font-bold text-lg hover:bg-emerald-50 transition-transform hover:scale-105 shadow-xl"
-            >
-              Sign Up Now <ArrowRight size={20} />
-            </Link>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link
+                to="/signup"
+                className="inline-flex items-center gap-2 bg-white text-emerald-700 font-bold px-9 py-4 rounded-xl hover:bg-emerald-50 transition-colors shadow-xl"
+              >
+                Create Free Account <ArrowRight size={18} />
+              </Link>
+              <Link
+                to="/login"
+                className="inline-flex items-center gap-2 border border-emerald-400/40 text-white font-semibold px-9 py-4 rounded-xl hover:bg-white/10 transition-colors"
+              >
+                Sign In
+              </Link>
+            </div>
           </motion.div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-slate-900 text-slate-400 py-12">
-        <div className="max-w-7xl mx-auto px-4 md:px-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="flex items-center gap-2 text-white">
-              <Leaf className="w-6 h-6 text-emerald-500" />
-              <span className="text-2xl font-bold tracking-tight">KisanSeva</span>
+      {/* ── Footer ── */}
+      <footer className="bg-slate-900 py-10 px-4">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-2 text-white font-black text-xl">
+            <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center">
+              <Leaf size={16} className="text-white" />
             </div>
-            <div className="text-sm">
-              &copy; {new Date().getFullYear()} KisanSeva. All rights reserved.
-            </div>
+            KisanSeva
+          </div>
+          <p className="text-slate-400 text-sm">
+            © {new Date().getFullYear()} KisanSeva. Built with ❤️ for Indian farmers.
+          </p>
+          <div className="flex gap-6">
+            <Link to="/login" className="text-slate-400 hover:text-white text-sm transition-colors">Login</Link>
+            <Link to="/signup" className="text-slate-400 hover:text-white text-sm transition-colors">Sign Up</Link>
           </div>
         </div>
       </footer>
     </div>
   );
-};
-
-export default Landing;
+}
