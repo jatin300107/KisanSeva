@@ -2,7 +2,8 @@
 
 AI-powered crop disease and livestock health diagnosis for farmers. Built in 4 days for **IdealabX 2.0**.
 
-**Live Demo:** (https://kisan-seva-gilt.vercel.app/)
+**Live Demo:** https://kisan-seva-gilt.vercel.app/ (frontend)
+**Backend API:** [your Render URL]
 **GitHub:** https://github.com/jatin300107/KisanSeva
 
 ---
@@ -29,12 +30,11 @@ KisanSeva puts an AI agronomist in their pocket.
 
 | Layer | Technology |
 |---|---|
-| Backend | FastAPI (Python) |
+| Backend | FastAPI (Python), deployed on Render |
 | AI | Gemini 2.5 Flash (multimodal) |
 | Database | Supabase (PostgreSQL) |
 | Auth | Supabase Auth (JWT) |
-| Frontend | Single-page HTML/CSS/JS |
-| Deployment | Render |
+| Frontend | React + vite, deployed on Vercel |
 
 ---
 
