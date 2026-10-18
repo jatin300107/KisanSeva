@@ -2,7 +2,8 @@
 
 AI-powered crop disease and livestock health diagnosis for farmers. Built in 4 days for **IdealabX 2.0**.
 
-**Live Demo:** https://kisanseva-s7pe.onrender.com
+**Live Demo:** https://kisan-seva-gilt.vercel.app/ (frontend)
+**Backend API:** [your Render URL]
 **GitHub:** https://github.com/jatin300107/KisanSeva
 
 ---
@@ -18,10 +19,10 @@ KisanSeva puts an AI agronomist in their pocket.
 ## What It Does
 
 - Upload a photo of an affected crop or describe livestock symptoms via a guided form
-- Gemini 2.5 Flash analyzes the input and returns a diagnosis with severity score, confidence level, and treatment recommendations
+- Stage 1: Gemini multimodal model classifies the input against a fixed, database-backed disease vocabulary — not free-form generation, so diagnoses stay grounded in known conditions
+- Stage 2: A second model generates the full report (severity score, confidence, treatment recommendations), grounded on the Stage 1 classification
 - Farmers can request expert consultation directly from their report
-- Experts review and respond to consultations through a separate dashboard
-- Admins manage users and monitor activity
+- Experts review and respond through a separate dashboard
 
 ---
 
@@ -29,12 +30,11 @@ KisanSeva puts an AI agronomist in their pocket.
 
 | Layer | Technology |
 |---|---|
-| Backend | FastAPI (Python) |
+| Backend | FastAPI (Python), deployed on Render |
 | AI | Gemini 2.5 Flash (multimodal) |
 | Database | Supabase (PostgreSQL) |
 | Auth | Supabase Auth (JWT) |
-| Frontend | Single-page HTML/CSS/JS |
-| Deployment | Render |
+| Frontend | React + vite, deployed on Vercel |
 
 ---
 
@@ -63,6 +63,8 @@ KisanSeva/
 ```
 
 ---
+## Engineering Notes
+- Diagnosed and fixed a critical bug where a shared Supabase client was mutating the Authorization header globally during auth calls, silently poisoning data queries. Fixed by splitting into dedicated auth_client and data_client with explicit RLS policies.
 
 ## Setup
 
@@ -94,7 +96,7 @@ SECRET_KEY=your_jwt_secret
 bash uvicorn main:app --reload
 ```
 ### Or just use the live deployment
-https://kisanseva-s7pe.onrender.com
+(https://kisan-seva-gilt.vercel.app/)
 
 ---
 
