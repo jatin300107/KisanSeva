@@ -20,11 +20,18 @@ def sign_up(data: SignUpRequest,
             auth_client = Depends(get_auth_client)):
     if data.role not in ["farmer","vet","agrologist"]:
             raise HTTPException(status_code=400, detail="Invalid role must be either 'farmer', 'vet', or 'agrologist'")
-    res = auth_client.auth.sign_up({
-        "email": data.email,
-        "password": data.password
-    })
+    try:
+        res = auth_client.auth.sign_up({
+            "email": data.email,
+            "password": data.password
+        })
+
     
+    except AuthApiError as e:
+        raise HTTPException(status_code=400, detail=str(e.message))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"{e}")
+
     if res.user is None:
         raise HTTPException(status_code=400, detail="Signup failed")
 
