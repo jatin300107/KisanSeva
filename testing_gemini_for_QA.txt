@@ -1,0 +1,416 @@
+KISANSEVA VOICE INTAKE AGENT: TEST RECORD
+Gemini function calling, 12 fixed questions
+Date: 2026-10-20
+
+==================================================
+TEST 1 (first prompt, English)
+==================================================
+AI: Hello! Could you please describe in your own words what is wrong with the animal?
+
+You: he is behaving odd , not eating food , seems like fever 
+
+AI: What type of animal is affected, and how old is it?
+
+You: cattle 12 years old 
+
+AI: When did these symptoms first appear, and has the cattle lost weight recently?
+
+You: 3 days ago , cant say of weight loss
+
+AI: Are other animals in the herd showing similar symptoms, and has the animal been vaccinated recently?
+
+You: yess , its partner is also behaving odd since today
+
+AI: Has the animal been vaccinated recently, or had any changes in its stool or urine?
+
+You: no , its okk
+
+AI: Is the animal pregnant or recently gave birth, and has it been in contact with any new animals recently?
+
+You: it have birth last month , new animal is just his child
+
+FINAL ANSWERS
+[
+  {
+    "id": "a0bd5f13-97dc-4fcc-858a-b781c917d62f",
+    "question": "What type of animal is affected?",
+    "answer": "cattle"
+  },
+  {
+    "id": "654f45fb-2c73-4396-bba5-1faba65a6308",
+    "question": "How old is the animal?",
+    "answer": "12 years old"
+  },
+  {
+    "id": "6e8f2dd0-9d48-4e18-9aad-7562f4366d4d",
+    "question": "What symptoms is the animal showing?",
+    "answer": "behaving odd, not eating food, seems like fever"
+  },
+  {
+    "id": "d68ae755-1bf3-48a6-ba8a-d603f09cb8b0",
+    "question": "When did the symptoms first appear?",
+    "answer": "3 days ago"
+  },
+  {
+    "id": "672649e1-a58c-4eba-8daa-83cf4f4da569",
+    "question": "Is the animal eating and drinking normally?",
+    "answer": "not eating food"
+  },
+  {
+    "id": "86e3a871-4770-4d9b-85f3-637e42923e56",
+    "question": "Has the animal lost weight recently?",
+    "answer": "unknown"
+  },
+  {
+    "id": "bbeace75-2a9d-495e-9486-0ecaad8b4f2e",
+    "question": "Is the animal showing signs of fever? (hot skin, shivering)",
+    "answer": "seems like fever"
+  },
+  {
+    "id": "c7c23a0e-0895-4f51-bdea-37d4866f4bd9",
+    "question": "Are other animals in the herd showing similar symptoms?",
+    "answer": "yes, partner is also behaving odd since today"
+  },
+  {
+    "id": "31effa1f-4223-45e2-9e01-8980bee2cd4e",
+    "question": "Has the animal been vaccinated recently?",
+    "answer": "no"
+  },
+  {
+    "id": "cd1533ff-c2e6-4384-9902-9de323cf2065",
+    "question": "Any changes in the animal's stool or urine?",
+    "answer": "ok"
+  },
+  {
+    "id": "e188d8b2-315a-4622-ab6f-6441fa306f74",
+    "question": "Is the animal pregnant or recently gave birth?",
+    "answer": "gave birth last month"
+  },
+  {
+    "id": "62bedc41-f1f0-43e3-86cf-9c4b136a32ba",
+    "question": "Has the animal been in contact with any new animals recently?",
+    "answer": "yes, contact with its offspring"
+  }
+]
+
+==================================================
+TEST 2 (changed prompt, Hinglish, one question per turn)
+==================================================
+AI: Hello! Tell me, what is wrong with your animal? What troubles are you seeing?
+
+You: he is behaving odd , not eating food , seems like fever 
+
+AI: Which type of animal is it? For example, is it a cow, a goat, or a sheep?
+
+You: bhais
+
+AI: How old is the buffalo? (Like 2 years old, or a baby calf?)
+
+You: 12
+
+AI: When did you first notice these problems? (Like today, two days ago, or last week?)
+
+You: 3 din pehle
+
+AI: Is the buffalo drinking water and eating any food at all, or has it completely stopped?
+
+You: thoda bhot khati hai ,pehle jitna nhi khati
+
+AI: Did the buffalo's body feel very hot, or was it shivering?
+
+You: hnn thand lagri use
+
+AI: Has the buffalo lost any weight recently, like becoming weak or bony?
+
+You: pta nhi
+
+AI: Are your other animals also falling sick or showing similar signs?
+
+You: aaj se ek aur use sath wali bhi ajeeb si hori
+
+AI: Did you give the buffalo any new vaccine or medicine injection recently?
+
+You: nhi
+
+AI: Have you noticed any changes in its gobar (stool) or urine? Like loose motion, hard stool, or strange color?
+
+You: nhi , thik hai
+
+AI: Is the buffalo pregnant, or did it give birth recently?
+
+You: 3 mahine pehle bacha diya tha
+
+AI: Has this buffalo been near any new animals brought from outside recently?
+
+You: nhi
+
+FINAL ANSWERS
+[
+  {
+    "id": "a0bd5f13-97dc-4fcc-858a-b781c917d62f",
+    "question": "What type of animal is affected?",
+    "answer": "buffalo"
+  },
+  {
+    "id": "654f45fb-2c73-4396-bba5-1faba65a6308",
+    "question": "How old is the animal?",
+    "answer": "12 years old"
+  },
+  {
+    "id": "6e8f2dd0-9d48-4e18-9aad-7562f4366d4d",
+    "question": "What symptoms is the animal showing?",
+    "answer": "behaving odd, not eating food, seems like fever"
+  },
+  {
+    "id": "d68ae755-1bf3-48a6-ba8a-d603f09cb8b0",
+    "question": "When did the symptoms first appear?",
+    "answer": "3 days ago"
+  },
+  {
+    "id": "672649e1-a58c-4eba-8daa-83cf4f4da569",
+    "question": "Is the animal eating and drinking normally?",
+    "answer": "eating less than usual"
+  },
+  {
+    "id": "86e3a871-4770-4d9b-85f3-637e42923e56",
+    "question": "Has the animal lost weight recently?",
+    "answer": "unknown"
+  },
+  {
+    "id": "bbeace75-2a9d-495e-9486-0ecaad8b4f2e",
+    "question": "Is the animal showing signs of fever? (hot skin, shivering)",
+    "answer": "shivering / feeling cold"
+  },
+  {
+    "id": "c7c23a0e-0895-4f51-bdea-37d4866f4bd9",
+    "question": "Are other animals in the herd showing similar symptoms?",
+    "answer": "another nearby animal is also showing strange symptoms starting today"
+  },
+  {
+    "id": "31effa1f-4223-45e2-9e01-8980bee2cd4e",
+    "question": "Has the animal been vaccinated recently?",
+    "answer": "no vaccination recently"
+  },
+  {
+    "id": "cd1533ff-c2e6-4384-9902-9de323cf2065",
+    "question": "Any changes in the animal's stool or urine?",
+    "answer": "normal stool and urine"
+  },
+  {
+    "id": "e188d8b2-315a-4622-ab6f-6441fa306f74",
+    "question": "Is the animal pregnant or recently gave birth?",
+    "answer": "gave birth 3 months ago"
+  },
+  {
+    "id": "62bedc41-f1f0-43e3-86cf-9c4b136a32ba",
+    "question": "Has the animal been in contact with any new animals recently?",
+    "answer": "no contact with new animals"
+  }
+]
+
+==================================================
+TEST 3 (rewritten prompt, cow)
+==================================================
+AI: What is wrong with your animal?
+
+You: gai ka dudh kam ho gaya, kuch khati nahi
+
+AI: Yeh gai kitne saal ya mahine ki hai?
+
+You: 6 saal
+
+AI: Yeh takleef kab shuru hui thi?
+
+You: 2 din
+
+AI: Kya yeh gai pani pee rahi hai?
+
+You: nhi
+
+AI: Kya gai ka wajan kam hua hai?
+
+You: nhi
+
+AI: Kya gai ko bukhar jaisa lag raha hai, jaise jism garam hona ya kaanpna?
+
+You: hnn thoda lg toh rha
+
+AI: Kya baaki janwaron ko bhi aisi hi takleef hai?
+
+You: hn ek aur bhi thik nhi lag rhi
+
+AI: Kya is gai ko abhi kuch din pehle koi teeka ya vaccine lagi thi?
+
+You: nhi
+
+AI: Kya iske gobar ya peshab mein koi badlav hai?
+
+You: lag toh nhi rha
+
+AI: Kya yeh gai gabin hai ya isne abhi bachha diya hai?
+
+You: abhi nhi ek saal pehle diya
+
+AI: Kya yeh gai pichle kuch dinon mein kisi naye janwar ke contact mein aayi thi?
+
+You: nhi
+
+FINAL ANSWERS
+[
+  {
+    "id": "a0bd5f13-97dc-4fcc-858a-b781c917d62f",
+    "question": "What type of animal is affected?",
+    "answer": "gai"
+  },
+  {
+    "id": "654f45fb-2c73-4396-bba5-1faba65a6308",
+    "question": "How old is the animal?",
+    "answer": "6 saal"
+  },
+  {
+    "id": "6e8f2dd0-9d48-4e18-9aad-7562f4366d4d",
+    "question": "What symptoms is the animal showing?",
+    "answer": "dudh kam ho gaya, kuch khati nahi"
+  },
+  {
+    "id": "d68ae755-1bf3-48a6-ba8a-d603f09cb8b0",
+    "question": "When did the symptoms first appear?",
+    "answer": "2 din"
+  },
+  {
+    "id": "672649e1-a58c-4eba-8daa-83cf4f4da569",
+    "question": "Is the animal eating and drinking normally?",
+    "answer": "nhi"
+  },
+  {
+    "id": "86e3a871-4770-4d9b-85f3-637e42923e56",
+    "question": "Has the animal lost weight recently?",
+    "answer": "nhi"
+  },
+  {
+    "id": "bbeace75-2a9d-495e-9486-0ecaad8b4f2e",
+    "question": "Is the animal showing signs of fever? (hot skin, shivering)",
+    "answer": "hnn thoda lg toh rha"
+  },
+  {
+    "id": "c7c23a0e-0895-4f51-bdea-37d4866f4bd9",
+    "question": "Are other animals in the herd showing similar symptoms?",
+    "answer": "hn ek aur bhi thik nhi lag rhi"
+  },
+  {
+    "id": "31effa1f-4223-45e2-9e01-8980bee2cd4e",
+    "question": "Has the animal been vaccinated recently?",
+    "answer": "nhi"
+  },
+  {
+    "id": "cd1533ff-c2e6-4384-9902-9de323cf2065",
+    "question": "Any changes in the animal's stool or urine?",
+    "answer": "lag toh nhi rha"
+  },
+  {
+    "id": "e188d8b2-315a-4622-ab6f-6441fa306f74",
+    "question": "Is the animal pregnant or recently gave birth?",
+    "answer": "abhi nhi ek saal pehle diya"
+  },
+  {
+    "id": "62bedc41-f1f0-43e3-86cf-9c4b136a32ba",
+    "question": "Has the animal been in contact with any new animals recently?",
+    "answer": "nhi"
+  }
+]
+
+==================================================
+TEST 4 (rewritten prompt, buffalo, details in first message)
+==================================================
+AI: Hello. Can you tell me what is wrong with your animal?
+
+You: meri bhains 5 saal ki hai, 2 din se kuch nahi kha rahi aur garam lag rahi hai
+
+AI: Kya bhains ka wazan kam hua hai?
+
+You: hn thoda
+
+AI: Kya baaki janwaron ko bhi aisi hi takleef hai?
+
+You: hn ek aur thodi bimar lg rhi hai
+
+AI: Kya isko koi tikka ya vaccine lagwayi thi abhi hal hi mein?
+
+You: nhi
+
+AI: Kya gobar ya peshab mein koi badlaav hai?
+
+You: nhi, kitne swaal puchoge yrr
+
+AI: Bas thode aur sawal hain. Kya bhains gaban hai ya isne abhi bachha diya hai?
+
+You: nhi
+
+AI: Kya ye bhains pichle kuch dino mein kisi naye janwar ke contact mein aayi thi?
+
+You: nhi
+
+FINAL ANSWERS
+[
+  {
+    "id": "a0bd5f13-97dc-4fcc-858a-b781c917d62f",
+    "question": "What type of animal is affected?",
+    "answer": "bhains"
+  },
+  {
+    "id": "654f45fb-2c73-4396-bba5-1faba65a6308",
+    "question": "How old is the animal?",
+    "answer": "5 saal"
+  },
+  {
+    "id": "6e8f2dd0-9d48-4e18-9aad-7562f4366d4d",
+    "question": "What symptoms is the animal showing?",
+    "answer": "2 din se kuch nahi kha rahi aur garam lag rahi hai"
+  },
+  {
+    "id": "d68ae755-1bf3-48a6-ba8a-d603f09cb8b0",
+    "question": "When did the symptoms first appear?",
+    "answer": "2 din se"
+  },
+  {
+    "id": "672649e1-a58c-4eba-8daa-83cf4f4da569",
+    "question": "Is the animal eating and drinking normally?",
+    "answer": "kuch nahi kha rahi"
+  },
+  {
+    "id": "86e3a871-4770-4d9b-85f3-637e42923e56",
+    "question": "Has the animal lost weight recently?",
+    "answer": "hn thoda"
+  },
+  {
+    "id": "bbeace75-2a9d-495e-9486-0ecaad8b4f2e",
+    "question": "Is the animal showing signs of fever? (hot skin, shivering)",
+    "answer": "garam lag rahi hai"
+  },
+  {
+    "id": "c7c23a0e-0895-4f51-bdea-37d4866f4bd9",
+    "question": "Are other animals in the herd showing similar symptoms?",
+    "answer": "hn ek aur thodi bimar lg rhi hai"
+  },
+  {
+    "id": "31effa1f-4223-45e2-9e01-8980bee2cd4e",
+    "question": "Has the animal been vaccinated recently?",
+    "answer": "nhi"
+  },
+  {
+    "id": "cd1533ff-c2e6-4384-9902-9de323cf2065",
+    "question": "Any changes in the animal's stool or urine?",
+    "answer": "nhi"
+  },
+  {
+    "id": "e188d8b2-315a-4622-ab6f-6441fa306f74",
+    "question": "Is the animal pregnant or recently gave birth?",
+    "answer": "nhi"
+  },
+  {
+    "id": "62bedc41-f1f0-43e3-86cf-9c4b136a32ba",
+    "question": "Has the animal been in contact with any new animals recently?",
+    "answer": "nhi"
+  }
+]
+
