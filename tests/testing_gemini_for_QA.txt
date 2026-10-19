@@ -414,3 +414,103 @@ FINAL ANSWERS
   }
 ]
 
+
+==================================================
+TEST RUN (2026-10-20 00:35:45)
+==================================================
+
+AI: Hello. What is wrong with your animal?
+
+You: meri bhains 5 saal ki hai, 2 din se kuch nahi kha rahi aur garam lag rahi hai
+
+AI: Kya bhains paani pee rahi hai ya nahi?
+
+You: hn
+
+AI: Kya pichhle kuch dinon mein bhains ka wazan kam hua hai?
+
+You: pta nhi, wjan kese kaam  hua , koi dawai batao
+
+AI: Aapke paas jo doosri gay ya bhains hain, kya unhe bhi aisi hi takleef hai?
+
+You: uska apna bachda hai bss
+
+AI: Kya bhains ko haal hi mein koi teeka ya injection laga hai?
+
+You: nhi, bimari kya hai kuch toh batao
+
+AI: Kya gobar ya peshab mein koi badlaav dikha hai?
+
+You: nhi
+
+AI: Kya bhains gaban hai ya usne abhi bachda diya hai?
+
+You: abhi toh bataya uska ek bachda hai, tum meri baato ka jawab kyu nhi de rhe
+
+AI: Kya pichhle kuch dino mein bhains kisi naye janwar ke contact mein aayi hai?
+
+You: nhi , ajeeb ho yrr meri baat ka toh jawab do
+
+FINAL ANSWERS
+[
+  {
+    "id": "a0bd5f13-97dc-4fcc-858a-b781c917d62f",
+    "question": "What type of animal is affected?",
+    "answer": "bhains"
+  },
+  {
+    "id": "654f45fb-2c73-4396-bba5-1faba65a6308",
+    "question": "How old is the animal?",
+    "answer": "5 saal"
+  },
+  {
+    "id": "6e8f2dd0-9d48-4e18-9aad-7562f4366d4d",
+    "question": "What symptoms is the animal showing?",
+    "answer": "2 din se kuch nahi kha rahi aur garam lag rahi hai"
+  },
+  {
+    "id": "d68ae755-1bf3-48a6-ba8a-d603f09cb8b0",
+    "question": "When did the symptoms first appear?",
+    "answer": "2 din se"
+  },
+  {
+    "id": "672649e1-a58c-4eba-8daa-83cf4f4da569",
+    "question": "Is the animal eating and drinking normally?",
+    "answer": "kuch nahi kha rahi, paani pee rahi hai"
+  },
+  {
+    "id": "86e3a871-4770-4d9b-85f3-637e42923e56",
+    "question": "Has the animal lost weight recently?",
+    "answer": "unknown"
+  },
+  {
+    "id": "bbeace75-2a9d-495e-9486-0ecaad8b4f2e",
+    "question": "Is the animal showing signs of fever? (hot skin, shivering)",
+    "answer": "garam lag rahi hai"
+  },
+  {
+    "id": "c7c23a0e-0895-4f51-bdea-37d4866f4bd9",
+    "question": "Are other animals in the herd showing similar symptoms?",
+    "answer": "uska apna bachda hai bss"
+  },
+  {
+    "id": "31effa1f-4223-45e2-9e01-8980bee2cd4e",
+    "question": "Has the animal been vaccinated recently?",
+    "answer": "nhi"
+  },
+  {
+    "id": "cd1533ff-c2e6-4384-9902-9de323cf2065",
+    "question": "Any changes in the animal's stool or urine?",
+    "answer": "nhi"
+  },
+  {
+    "id": "e188d8b2-315a-4622-ab6f-6441fa306f74",
+    "question": "Is the animal pregnant or recently gave birth?",
+    "answer": "abhi bachda diya hai"
+  },
+  {
+    "id": "62bedc41-f1f0-43e3-86cf-9c4b136a32ba",
+    "question": "Has the animal been in contact with any new animals recently?",
+    "answer": "nhi"
+  }
+]
