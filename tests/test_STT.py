@@ -1,6 +1,7 @@
 import asyncio
 import json
 import os
+import shutil
 import subprocess
 import sys
 import time
@@ -38,7 +39,7 @@ if BIAS_WORDS:
 
 AUDIO_EXTS = {
     ".wav", ".mp3", ".ogg", ".opus", ".m4a", ".aac", ".flac",
-    ".amr", ".webm", ".mp4", ".3gp", ".pcm",
+    ".amr", ".webm", ".mp4", ".mpeg", ".3gp", ".pcm",
 }
 
 
@@ -46,16 +47,35 @@ def to_pcm(path: Path) -> bytes:
     """Convert any audio file to raw 16 kHz mono signed 16-bit little-endian PCM."""
     if path.suffix.lower() == ".pcm":
         return path.read_bytes()  # assumed to already be 16 kHz mono s16le
+    ffmpeg = os.environ.get("FFMPEG_PATH") or shutil.which("ffmpeg")
+    if not ffmpeg:
+        scripts_dir = Path(sys.prefix) / ("Scripts" if os.name == "nt" else "bin")
+        for candidate in (scripts_dir / "ffmpeg.exe", scripts_dir / "ffmpeg"):
+            if candidate.is_file():
+                ffmpeg = str(candidate)
+                break
+    if not ffmpeg:
+        try:
+            import imageio_ffmpeg
+        except ImportError:
+            pass
+        else:
+            ffmpeg = imageio_ffmpeg.get_ffmpeg_exe()
+    if not ffmpeg:
+        raise FileNotFoundError(
+            "FFmpeg executable not found. Add it to PATH, set FFMPEG_PATH to its "
+            "full path, or install imageio-ffmpeg in the active virtual environment. "
+            "The 'ffmpeg' Python package alone does not include the FFmpeg executable."
+        )
+
     cmd = [
-        "ffmpeg", "-v", "error", "-i", str(path),
+        ffmpeg, "-v", "error", "-i", str(path),
         "-ar", str(SAMPLE_RATE), "-ac", "1", "-f", "s16le", "-",
     ]
     try:
         result = subprocess.run(cmd, capture_output=True, check=True)
-    except FileNotFoundError:
-        sys.exit("ffmpeg is not installed or not on PATH.")
     except subprocess.CalledProcessError as e:
-        raise RuntimeError(e.stderr.decode(errors="ignore"))
+        raise RuntimeError(e.stderr.decode(errors="ignore")) from e
     return result.stdout
 
 
