@@ -1,0 +1,15 @@
+[
+  {"id": "q1",  "slot": "symptoms",          "type": "open", "text": "What is wrong with the animal?"},
+  {"id": "q2",  "slot": "animal_type",       "type": "open", "text": "What type of animal is affected?"},
+  {"id": "q3",  "slot": "age",               "type": "open", "text": "How old is the animal?"},
+  {"id": "q4",  "slot": "onset",             "type": "open", "text": "When did the symptoms first appear?"},
+  {"id": "q5",  "slot": "eating",            "type": "open", "text": "Is the animal eating normally?"},
+  {"id": "q6",  "slot": "drinking",          "type": "open", "text": "Is the animal drinking normally?"},
+  {"id": "q7",  "slot": "weight_loss",       "type": "open", "text": "Has the animal lost weight recently?"},
+  {"id": "q8",  "slot": "fever_signs",       "type": "open", "text": "Does the animal seem to have a fever?"},
+  {"id": "q9",  "slot": "herd_similar",      "type": "open", "text": "Are other animals in the herd showing similar symptoms?"},
+  {"id": "q10", "slot": "vaccinated",        "type": "open", "text": "Has the animal been vaccinated recently?"},
+  {"id": "q11", "slot": "stool_urine",       "type": "open", "text": "Any changes in the animal's stool or urine?"},
+  {"id": "q12", "slot": "pregnant",          "type": "open", "text": "Is the animal pregnant?"},
+  {"id": "q13", "slot": "new_animal_contact","type": "open", "text": "Has the animal been in contact with any new animals recently?"}
+]
