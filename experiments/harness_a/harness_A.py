@@ -2,11 +2,14 @@
 import asyncio, json, time, os, sys, random
 from collections import deque
 from dataclasses import dataclass, field
+from pathlib import Path
 from google import genai
 from google.genai import types
 from rules import build_rules
 from dotenv import load_dotenv
-load_dotenv()
+
+BASE_DIR = Path(__file__).resolve().parent
+load_dotenv(BASE_DIR.parent.parent / ".env")
 
 MODE = sys.argv[1] if len(sys.argv) > 1 else "baseline"   # baseline | shadow | inject
 TURN_TIME = float(os.getenv("TURN_TIME", "10"))             # seconds per farmer turn, real time
@@ -14,12 +17,12 @@ GEMINI_TIMEOUT = float(os.getenv("GEMINI_TIMEOUT", "35"))
 INJECT_CAP = int(os.getenv("INJECT_CAP", "3"))
 END_WAIT = 15.0
 MODEL = os.getenv("GEMINI_MODEL", "gemini-3.5-flash-lite")
-BANK_DATA = json.load(open("bank.json", encoding="utf-8"))
+BANK_DATA = json.loads((BASE_DIR / "bank.json").read_text(encoding="utf-8"))
 QUESTIONS = {q["slot"]: (q["id"], q["text"]) for q in BANK_DATA}
 
 # ---------- logging ----------
 T0 = time.monotonic()
-LOG = open(f"log_{MODE}_{int(time.time())}.jsonl", "w", encoding="utf-8")
+LOG = open(BASE_DIR / f"log_{MODE}_{int(time.time())}.jsonl", "w", encoding="utf-8")
 def log(event, **kw):
     LOG.write(json.dumps({"t": round(time.monotonic() - T0, 2), "event": event, **kw},
                          ensure_ascii=False) + "\n")
@@ -217,7 +220,11 @@ def score(st: State, gold: dict):
 
 if __name__ == "__main__":
     bank = [Q(**q) for q in BANK_DATA]
-    script = json.load(open(sys.argv[2] if len(sys.argv) > 2 else "script_clean.json", encoding="utf-8"))
+    script_name = sys.argv[2] if len(sys.argv) > 2 else "script_clean.json"
+    script_path = Path(script_name)
+    if not script_path.is_absolute():
+        script_path = BASE_DIR / script_path
+    script = json.loads(script_path.read_text(encoding="utf-8"))
     bank_ids = {q.id for q in bank}
     bank_slots = {q.slot for q in bank}
     bad_ids = set(script["answers"]) - bank_ids
