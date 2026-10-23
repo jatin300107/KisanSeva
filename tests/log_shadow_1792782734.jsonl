@@ -1,0 +1,66 @@
+{"t": 3.45, "event": "turn_boundary", "turn": 0, "queue_len": 13, "call_in_flight": false}
+{"t": 3.45, "event": "ask", "turn": 0, "qid": "q1", "slot": "symptoms", "type": "open", "text": "What is wrong with the animal?"}
+{"t": 13.46, "event": "answer", "turn": 0, "qid": "q1", "text": "The cow has diarrhea."}
+{"t": 13.46, "event": "gemini_start", "turn": 1, "version": 1}
+{"t": 13.46, "event": "turn_boundary", "turn": 1, "queue_len": 12, "call_in_flight": true}
+{"t": 13.46, "event": "ask", "turn": 1, "qid": "q2", "slot": "animal_type", "type": "open", "text": "What type of animal is affected?"}
+{"t": 23.47, "event": "answer", "turn": 1, "qid": "q2", "text": "It is a cow."}
+{"t": 23.47, "event": "gemini_result", "outcome": "shadow", "api_latency": 2.47, "lag_turns": 1, "extracted": [{"slot": "symptoms", "value": "diarrhea", "raw_text": "The cow has diarrhea.", "source_turn": 0}, {"slot": "animal_type", "value": "cow", "raw_text": "The cow has diarrhea.", "source_turn": 0}], "followups": []}
+{"t": 23.47, "event": "gemini_start", "turn": 2, "version": 2}
+{"t": 23.47, "event": "turn_boundary", "turn": 2, "queue_len": 11, "call_in_flight": true}
+{"t": 23.47, "event": "ask", "turn": 2, "qid": "q3", "slot": "age", "type": "open", "text": "How old is the animal?"}
+{"t": 33.47, "event": "answer", "turn": 2, "qid": "q3", "text": "It is 3 years old."}
+{"t": 33.47, "event": "gemini_result", "outcome": "shadow", "api_latency": 1.45, "lag_turns": 1, "extracted": [{"slot": "animal_type", "value": "cow", "raw_text": "It is a cow.", "source_turn": 1}], "followups": []}
+{"t": 33.47, "event": "gemini_start", "turn": 3, "version": 3}
+{"t": 33.47, "event": "turn_boundary", "turn": 3, "queue_len": 10, "call_in_flight": true}
+{"t": 33.47, "event": "ask", "turn": 3, "qid": "q4", "slot": "onset", "type": "open", "text": "When did the symptoms first appear?"}
+{"t": 43.48, "event": "answer", "turn": 3, "qid": "q4", "text": "The symptoms started 2 days ago."}
+{"t": 43.48, "event": "gemini_result", "outcome": "shadow", "api_latency": 1.77, "lag_turns": 1, "extracted": [{"slot": "age", "value": "3 years", "raw_text": "It is 3 years old.", "source_turn": 2}], "followups": []}
+{"t": 43.48, "event": "gemini_start", "turn": 4, "version": 4}
+{"t": 43.48, "event": "turn_boundary", "turn": 4, "queue_len": 9, "call_in_flight": true}
+{"t": 43.48, "event": "ask", "turn": 4, "qid": "q5", "slot": "eating", "type": "open", "text": "Is the animal eating normally?"}
+{"t": 53.48, "event": "answer", "turn": 4, "qid": "q5", "text": "It is eating normally."}
+{"t": 53.49, "event": "gemini_result", "outcome": "shadow", "api_latency": 1.23, "lag_turns": 1, "extracted": [{"slot": "onset", "value": "2 days ago", "raw_text": "The symptoms started 2 days ago.", "source_turn": 3}], "followups": []}
+{"t": 53.49, "event": "gemini_start", "turn": 5, "version": 5}
+{"t": 53.49, "event": "turn_boundary", "turn": 5, "queue_len": 8, "call_in_flight": true}
+{"t": 53.49, "event": "ask", "turn": 5, "qid": "q6", "slot": "drinking", "type": "open", "text": "Is the animal drinking normally?"}
+{"t": 63.49, "event": "answer", "turn": 5, "qid": "q6", "text": "It is drinking normally."}
+{"t": 63.49, "event": "gemini_result", "outcome": "shadow", "api_latency": 1.13, "lag_turns": 1, "extracted": [{"slot": "eating", "value": "yes", "raw_text": "It is eating normally.", "source_turn": 4}], "followups": []}
+{"t": 63.49, "event": "gemini_start", "turn": 6, "version": 6}
+{"t": 63.49, "event": "turn_boundary", "turn": 6, "queue_len": 7, "call_in_flight": true}
+{"t": 63.49, "event": "ask", "turn": 6, "qid": "q7", "slot": "weight_loss", "type": "open", "text": "Has the animal lost weight recently?"}
+{"t": 73.49, "event": "answer", "turn": 6, "qid": "q7", "text": "No, it has not lost weight."}
+{"t": 73.49, "event": "gemini_result", "outcome": "shadow", "api_latency": 1.14, "lag_turns": 1, "extracted": [{"slot": "drinking", "value": "yes", "raw_text": "It is drinking normally.", "source_turn": 5}], "followups": []}
+{"t": 73.49, "event": "gemini_start", "turn": 7, "version": 7}
+{"t": 73.49, "event": "turn_boundary", "turn": 7, "queue_len": 6, "call_in_flight": true}
+{"t": 73.49, "event": "ask", "turn": 7, "qid": "q8", "slot": "fever_signs", "type": "open", "text": "Does the animal seem to have a fever?"}
+{"t": 83.5, "event": "answer", "turn": 7, "qid": "q8", "text": "No fever."}
+{"t": 83.5, "event": "gemini_result", "outcome": "shadow", "api_latency": 1.9, "lag_turns": 1, "extracted": [{"slot": "weight_loss", "value": "no", "raw_text": "No, it has not lost weight.", "source_turn": 6}], "followups": []}
+{"t": 83.5, "event": "gemini_start", "turn": 8, "version": 8}
+{"t": 83.5, "event": "turn_boundary", "turn": 8, "queue_len": 5, "call_in_flight": true}
+{"t": 83.5, "event": "ask", "turn": 8, "qid": "q9", "slot": "herd_similar", "type": "open", "text": "Are other animals in the herd showing similar symptoms?"}
+{"t": 93.5, "event": "answer", "turn": 8, "qid": "q9", "text": "No other animals have these symptoms."}
+{"t": 93.5, "event": "gemini_result", "outcome": "shadow", "api_latency": 0.97, "lag_turns": 1, "extracted": [{"slot": "fever_signs", "value": "no", "raw_text": "No fever.", "source_turn": 7}], "followups": []}
+{"t": 93.5, "event": "gemini_start", "turn": 9, "version": 9}
+{"t": 93.5, "event": "turn_boundary", "turn": 9, "queue_len": 4, "call_in_flight": true}
+{"t": 93.5, "event": "ask", "turn": 9, "qid": "q10", "slot": "vaccinated", "type": "open", "text": "Has the animal been vaccinated recently?"}
+{"t": 103.52, "event": "answer", "turn": 9, "qid": "q10", "text": "Yes, it was vaccinated recently."}
+{"t": 103.52, "event": "gemini_result", "outcome": "shadow", "api_latency": 1.76, "lag_turns": 1, "extracted": [{"slot": "herd_similar", "value": "no", "raw_text": "No other animals have these symptoms.", "source_turn": 8}], "followups": []}
+{"t": 103.52, "event": "gemini_start", "turn": 10, "version": 10}
+{"t": 103.52, "event": "turn_boundary", "turn": 10, "queue_len": 3, "call_in_flight": true}
+{"t": 103.52, "event": "ask", "turn": 10, "qid": "q11", "slot": "stool_urine", "type": "open", "text": "Any changes in the animal's stool or urine?"}
+{"t": 113.53, "event": "answer", "turn": 10, "qid": "q11", "text": "The stool is loose."}
+{"t": 113.53, "event": "gemini_result", "outcome": "shadow", "api_latency": 1.34, "lag_turns": 1, "extracted": [{"slot": "vaccinated", "value": "yes", "raw_text": "Yes, it was vaccinated recently.", "source_turn": 9}], "followups": []}
+{"t": 113.53, "event": "gemini_start", "turn": 11, "version": 11}
+{"t": 113.53, "event": "turn_boundary", "turn": 11, "queue_len": 2, "call_in_flight": true}
+{"t": 113.53, "event": "ask", "turn": 11, "qid": "q12", "slot": "pregnant", "type": "open", "text": "Is the animal pregnant?"}
+{"t": 123.54, "event": "answer", "turn": 11, "qid": "q12", "text": "No, it is not pregnant."}
+{"t": 123.54, "event": "gemini_result", "outcome": "shadow", "api_latency": 1.33, "lag_turns": 1, "extracted": [{"slot": "stool_urine", "value": "loose stool", "raw_text": "The stool is loose.", "source_turn": 10}], "followups": []}
+{"t": 123.54, "event": "gemini_start", "turn": 12, "version": 12}
+{"t": 123.54, "event": "turn_boundary", "turn": 12, "queue_len": 1, "call_in_flight": true}
+{"t": 123.54, "event": "ask", "turn": 12, "qid": "q13", "slot": "new_animal_contact", "type": "open", "text": "Has the animal been in contact with any new animals recently?"}
+{"t": 133.55, "event": "answer", "turn": 12, "qid": "q13", "text": "No, there was no contact with new animals."}
+{"t": 133.55, "event": "dead_air_risk", "reason": "queue_empty_call_pending", "turn": 13}
+{"t": 133.55, "event": "gemini_result", "outcome": "shadow", "api_latency": 1.16, "lag_turns": 1, "extracted": [{"slot": "pregnant", "value": "no", "raw_text": "No, it is not pregnant.", "source_turn": 11}], "followups": []}
+{"t": 133.55, "event": "session_end", "turns": 13, "answers": {"symptoms": {"raw": "The cow has diarrhea.", "value": "diarrhea", "turn": 0, "flags": []}, "animal_type": {"raw": "It is a cow.", "value": "cow", "turn": 1, "flags": []}, "age": {"raw": "It is 3 years old.", "value": "3 years", "turn": 2, "flags": []}, "onset": {"raw": "The symptoms started 2 days ago.", "value": "2 days ago", "turn": 3, "flags": []}, "eating": {"raw": "It is eating normally.", "value": "yes", "turn": 4, "flags": []}, "drinking": {"raw": "It is drinking normally.", "value": "yes", "turn": 5, "flags": []}, "weight_loss": {"raw": "No, it has not lost weight.", "value": "no", "turn": 6, "flags": []}, "fever_signs": {"raw": "No fever.", "value": "no", "turn": 7, "flags": []}, "herd_similar": {"raw": "No other animals have these symptoms.", "value": "no", "turn": 8, "flags": []}, "vaccinated": {"raw": "Yes, it was vaccinated recently.", "value": "yes", "turn": 9, "flags": []}, "stool_urine": {"raw": "The stool is loose.", "value": "loose stool", "turn": 10, "flags": []}, "pregnant": {"raw": "No, it is not pregnant.", "value": "no", "turn": 11, "flags": []}, "new_animal_contact": {"raw": "No, there was no contact with new animals.", "value": "no", "turn": 12, "flags": []}}, "injected": 0}
+{"t": 133.57, "event": "score", "per_slot": {"symptoms": true, "animal_type": true, "age": true, "onset": true, "eating": true, "drinking": true, "weight_loss": true, "fever_signs": true, "herd_similar": true, "vaccinated": true, "stool_urine": true, "pregnant": true, "new_animal_contact": true}, "accuracy": 1.0}

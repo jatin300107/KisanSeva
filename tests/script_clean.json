@@ -1,0 +1,37 @@
+{
+  "name": "clean",
+  "purpose": "Each answer responds directly to its planned question.",
+  "turn_time": {
+    "default": 0
+  },
+  "answers": {
+    "q1": {"text": "The cow has diarrhea.", "direct": "diarrhea"},
+    "q2": {"text": "It is a cow.", "direct": "cow"},
+    "q3": {"text": "It is 3 years old.", "direct": "3 years"},
+    "q4": {"text": "The symptoms started 2 days ago.", "direct": "2 days ago"},
+    "q5": {"text": "It is eating normally.", "direct": "yes"},
+    "q6": {"text": "It is drinking normally.", "direct": "yes"},
+    "q7": {"text": "No, it has not lost weight.", "direct": "no"},
+    "q8": {"text": "No fever.", "direct": "no"},
+    "q9": {"text": "No other animals have these symptoms.", "direct": "no"},
+    "q10": {"text": "Yes, it was vaccinated recently.", "direct": "yes"},
+    "q11": {"text": "The stool is loose.", "direct": "loose stool"},
+    "q12": {"text": "No, it is not pregnant.", "direct": "no"},
+    "q13": {"text": "No, there was no contact with new animals.", "direct": "no"}
+  },
+  "gold": {
+    "symptoms": "diarrhea",
+    "animal_type": "cow",
+    "age": "3 years",
+    "onset": "2 days ago",
+    "eating": "yes",
+    "drinking": "yes",
+    "weight_loss": "no",
+    "fever_signs": "no",
+    "herd_similar": "no",
+    "vaccinated": "yes",
+    "stool_urine": "loose stool",
+    "pregnant": "no",
+    "new_animal_contact": "no"
+  }
+}
