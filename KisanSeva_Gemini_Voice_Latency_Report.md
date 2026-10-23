@@ -87,17 +87,9 @@ KisanSeva's voice agent asks follow-up questions about animal or crop health bef
 
 These are API-stream timings. They do not necessarily include audio capture, speech-to-text, text-to-speech, playback startup, or the user's turn-taking delay. Measure end-to-end user-perceived latency separately.
 
-## 6. Recommended next steps
 
-1. **P0 — Instrument end-to-end timing.** Record timestamps for end of user speech, request sent, first stream event, first text token, first sentence ready, TTS start, and first audible audio. Report median, P90 and P95 per stage.
-2. **P0 — Investigate the two 45-second turns.** Correlate them with provider request IDs, retries, timeouts, network conditions, prompt/history size, and concurrent requests. Re-run the same scenario several times.
-3. **P1 — Optimize for short next-question generation.** Use a strict prompt contract: ask exactly one concise follow-up question, avoid explanations unless needed, and cap output tokens. Preserve safety-critical questions.
-4. **P1 — Benchmark low vs high thinking fairly.** Use the same prompts and history, alternate the order, run repeated trials, and compare both latency and question quality. Do not choose low thinking solely from latency.
-5. **P1 — Test prompt/history size.** Compare full history with a structured summary of prior answers while keeping the current question and relevant symptoms. Verify that diagnostic quality does not degrade.
-6. **P2 — Compare models under controlled conditions.** Test Gemini 3.5 Flash Lite and Gemini 3.8 Flash on the same prompts, settings, region, concurrency, and timing method. Use enough repetitions to estimate P50/P90; do not decide based on one 232-second sample.
-7. **P2 — Design for pauses.** If supported by the product design, use a short, non-misleading acknowledgement or visible progress indicator while waiting. Avoid fabricated spoken filler that could confuse farmers.
 
-## 7. Conclusions and limitations
+## 6. Conclusions and limitations
 
 The data supports a clear engineering priority: **reduce time-to-first-sentence**. For the 20 Gemini 3.5 Flash Lite streaming calls, first-sentence median is **11.62 s** and P90 is **17.38 s**; this is too slow for a natural back-and-forth voice interview. The gap from first sentence to full completion is comparatively small, so optimizing only the final tail of generation is unlikely to solve the perceived delay.
 
