@@ -1,6 +1,6 @@
 from pathlib import Path
 
-PROMPT_DIR = Path(__file__).parent / "prompts"
+PROMPT_DIR = Path(__file__).parent
 CATEGORY_FILES = {"crop": "crop.md", "livestock": "livestock.md"}
 
 # Only hi-IN has been tested with Gnani. Add others only after testing STT, TTS and prompts in them.

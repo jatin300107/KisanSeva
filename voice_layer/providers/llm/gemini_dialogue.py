@@ -36,6 +36,11 @@ class GeminiDialogue:
                 disable=True
             ),
         )
+        self._text_only_config = self._config.model_copy(update={
+            "tool_config": types.ToolConfig(
+                function_calling_config=types.FunctionCallingConfig(mode="NONE")
+            )
+        })
         self._history: list[types.Content] = []
         self._pending: list[types.Part] = []
 
@@ -53,13 +58,22 @@ class GeminiDialogue:
             types.Part.from_function_response(name=name, response=response)
             for name, response in results
         ]
-
+    async def send_tool_results(
+        self, results: list[tuple[str, dict]], text_only: bool = True
+    ) -> LLMTurn:
+        parts = [
+            types.Part.from_function_response(name=name, response=response)
+            for name, response in results
+        ]
+        return await self._call(
+            types.Content(role="user", parts=parts), text_only=text_only
+        )
     async def send_user_text(self, text: str) -> LLMTurn:
         parts = self._pending + [types.Part.from_text(text=text)]
         self._pending = []
         return await self._call(types.Content(role="user", parts=parts))
 
-    async def _call(self, content: types.Content) -> LLMTurn:
+    async def _call(self, content: types.Content, text_only: bool = False) -> LLMTurn:
         self._history.append(content)
         t0 = time.perf_counter()
         try:
@@ -67,7 +81,7 @@ class GeminiDialogue:
                 self._client.aio.models.generate_content(
                     model=self._s.gemini_model,
                     contents=self._history,
-                    config=self._config,
+                    config=self._text_only_config if text_only else self._config,
                 ),
                 self._s.gemini_timeout_s,
             )

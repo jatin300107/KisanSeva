@@ -14,73 +14,73 @@
         "index": 1,
         "text": "क्या",
         "audio_ms": 1780.0,
-        "latency_ms": 59
+        "latency_ms": 113
       },
       {
         "index": 2,
         "text": "अजीब सा बर्ताव कर रही है भैसिया",
         "audio_ms": 4308.0,
-        "latency_ms": 139
+        "latency_ms": 145
       },
       {
         "index": 3,
         "text": "खाना नहीं खा रही है",
         "audio_ms": 2804.0,
-        "latency_ms": 104
+        "latency_ms": 115
       },
       {
         "index": 4,
         "text": "हाँ गरम तो बहुत लग रही है",
         "audio_ms": 3764.0,
-        "latency_ms": 71
+        "latency_ms": 141
       },
       {
         "index": 5,
         "text": "नहीं बछड़ा वछड़ा तो नहीं दी है",
         "audio_ms": 4500.0,
-        "latency_ms": 131
+        "latency_ms": 61
       },
       {
         "index": 6,
         "text": "कब तक ठीक हो जाएगी",
         "audio_ms": 2996.0,
-        "latency_ms": 80
+        "latency_ms": 99
       },
       {
         "index": 7,
         "text": "हमको",
         "audio_ms": 2132.0,
-        "latency_ms": 93
+        "latency_ms": 66
       },
       {
         "index": 8,
         "text": "हमको नहीं पता",
         "audio_ms": 2208.0,
-        "latency_ms": 79
+        "latency_ms": 115
       },
       {
         "index": 9,
         "text": "हूँ",
         "audio_ms": 1748.0,
-        "latency_ms": 126
+        "latency_ms": 113
       },
       {
         "index": 10,
         "text": "क्या",
         "audio_ms": 1600.0,
-        "latency_ms": 110
+        "latency_ms": 111
       },
       {
         "index": 11,
         "text": "ठीक है ठीक है",
         "audio_ms": 2164.0,
-        "latency_ms": 105
+        "latency_ms": 114
       },
       {
         "index": 12,
         "text": "पता नहीं",
         "audio_ms": 2228.0,
-        "latency_ms": 104
+        "latency_ms": 114
       }
     ],
     "joined": "क्या अजीब सा बर्ताव कर रही है भैसिया खाना नहीं खा रही है हाँ गरम तो बहुत लग रही है नहीं बछड़ा वछड़ा तो नहीं दी है कब तक ठीक हो जाएगी हमको हमको नहीं पता हूँ क्या ठीक है ठीक है पता नहीं"

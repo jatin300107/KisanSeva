@@ -260,13 +260,13 @@ class VoiceOrchestrator:
                 if not calls:
                     raise LLMError("gemini did not call submit_answers")
 
-            parsed, parse_err = self._merge_calls(calls)
+            parsed, say, parse_err = self._merge_calls(calls)
             outcome = self.validator.apply(parsed, ctx)    # state is committed here
             responses = self._responses(turn, outcome, parse_err)
 
-            if outcome.matches_gemini_intent and turn.text and not parse_err:
+            if outcome.matches_gemini_intent and (say or turn.text) and not parse_err:
                 self.dialogue.defer_tool_results(responses)
-                spoken = turn.text
+                spoken = say or turn.text
                 m["path"] = "single_call"
             else:
                 turn2 = await self.dialogue.send_tool_results(responses)
@@ -326,15 +326,18 @@ class VoiceOrchestrator:
         return [c for c in turn.tool_calls if c.name == "submit_answers"]
 
     @staticmethod
-    def _merge_calls(calls) -> tuple[SubmitAnswers | None, str | None]:
-        answers, err = [], None
+    def _merge_calls(calls) -> tuple[SubmitAnswers | None, str, str | None]:
+        answers, say, err = [], "", None
         for c in calls:
             try:
-                answers += parse_submit_answers(c.args).answers
+                parsed = parse_submit_answers(c.args)
+                answers += parsed.answers
+                if parsed.say.strip():
+                    say = parsed.say.strip()
             except ValidationError as e:
                 err = str(e)[:300]
-        parsed = SubmitAnswers(answers=answers) if answers else None
-        return parsed, err
+        parsed = SubmitAnswers(answers=answers, say=say) if answers else None
+        return parsed, say, err
 
     @staticmethod
     def _responses(turn: LLMTurn, outcome: Outcome, parse_err: str | None):

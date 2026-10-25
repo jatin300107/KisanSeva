@@ -75,6 +75,8 @@ class GnaniSTT:
     async def listen(self, audio: AsyncIterator[bytes], language: str) -> Utterance:
         s = self._s
         segments: list[dict] = []
+        reason = "unknown"
+        max_level = 0.0
         st = {
             "processing": 0,
             "last_event": time.monotonic(),
@@ -88,6 +90,7 @@ class GnaniSTT:
                 s.gnani_stt_url,
                 additional_headers=self._headers(language),
                 open_timeout=s.gnani_connect_timeout_s,
+                proxy=None,
             )
         except (OSError, asyncio.TimeoutError, WebSocketException) as e:
             raise STTError(f"stt connect failed: {type(e).__name__}: {e}") from e
@@ -112,10 +115,13 @@ class GnaniSTT:
                 st["closed"] = True
 
         async def sender():
+            nonlocal max_level
             framer = Reframer()
             async for chunk in audio:
                 for frame in framer.feed(chunk):
-                    if _level(frame) > s.stt_energy_threshold:
+                    level = _level(frame)
+                    max_level = max(max_level, level)
+                    if level > s.stt_energy_threshold:
                         st["last_voice"] = time.monotonic()
                     await ws.send(frame)
             tail = framer.flush()
@@ -147,13 +153,16 @@ class GnaniSTT:
                 if st["closed"]:
                     if st["processing"] > len(segments) and not segments:
                         raise STTError("stt connection closed before any transcript")
+                    reason = "closed"
                     break
                 if now - start > s.stt_max_utterance_s:
+                    reason = "max_utterance"
                     log.warning("stt hit max utterance length")
                     break
 
                 if st["processing"] == 0:
                     if now - start > s.stt_no_speech_timeout_s:
+                        reason = "no_speech_timeout"
                         break
                     continue
 
@@ -162,6 +171,7 @@ class GnaniSTT:
                 all_back = len(segments) >= st["processing"]
                 quiet_for = now - max(st["last_event"], st["last_voice"])
                 if all_back and quiet_for > s.stt_answer_gap_s:
+                    reason = "answer_gap"
                     break
         finally:
             for t in (send_task, recv_task):
@@ -183,7 +193,13 @@ class GnaniSTT:
         ]
         text = " ".join(p["text"] for p in parts if p["text"]).strip()
         log.info(
-            "stt done segments=%d latencies_ms=%s chars=%d",
-            len(parts), [p["latency_ms"] for p in parts], len(text),
+            "stt done reason=%s max_level=%.0f threshold=%.0f segments=%d "
+            "latencies_ms=%s chars=%d",
+            reason,
+            max_level,
+            s.stt_energy_threshold,
+            len(parts),
+            [p["latency_ms"] for p in parts],
+            len(text),
         )
         return Utterance(text=text, segments=parts, no_speech=not text)

@@ -27,6 +27,13 @@ class AnswerItem(BaseModel):
 
 class SubmitAnswers(BaseModel):
     answers: list[AnswerItem]
+    say: str = Field(
+        default="",
+        description=(
+            "The exact words to speak to the farmer next in the call language. "
+            "Never empty."
+        ),
+    )
 
 
 # ---- What we send back as the tool result ---------------------------------
@@ -82,13 +89,16 @@ def _to_gemini_schema(schema: dict) -> dict:
 
 
 def submit_answers_declaration() -> types.FunctionDeclaration:
+    schema = _to_gemini_schema(SubmitAnswers.model_json_schema())
+    schema["required"] = sorted(set(schema.get("required", [])) | {"answers", "say"})
     return types.FunctionDeclaration(
         name="submit_answers",
         description=(
             "Record the outcome for each question the farmer's latest message "
-            "addressed. Call this after every farmer message."
+            "addressed, and give the words to speak next. Call this after every "
+            "farmer message."
         ),
-        parameters=_to_gemini_schema(SubmitAnswers.model_json_schema()),
+        parameters=schema,
     )
 
 
