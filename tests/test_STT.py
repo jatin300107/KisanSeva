@@ -2,6 +2,7 @@ import asyncio
 import json
 import os
 import shutil
+import socket
 import subprocess
 import sys
 import time
@@ -83,7 +84,12 @@ async def transcribe(pcm: bytes) -> list[dict]:
     segments: list[dict] = []
     state = {"processing": 0, "last_event": time.monotonic()}
 
-    async with websockets.connect(WS_URL, additional_headers=HEADERS) as ws:
+    async with websockets.connect(
+        WS_URL,
+        additional_headers=HEADERS,
+        proxy=None,
+        family=socket.AF_INET,
+    ) as ws:
 
         async def receiver():
             try:
