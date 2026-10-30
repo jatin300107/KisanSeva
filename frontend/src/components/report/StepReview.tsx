@@ -73,7 +73,12 @@ export const StepReview: React.FC<StepReviewProps> = ({
 
         <div className="p-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider">Questionnaire</h3>
+            <div className="flex items-center gap-2">
+              <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider">Voice QA Consultation</h3>
+              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-100 text-emerald-800 border border-emerald-200">
+                🎙️ AI Voice Recorded
+              </span>
+            </div>
             <button onClick={() => onGoToStep(3)} className="p-2 text-gray-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors">
               <Edit2 className="w-5 h-5" />
             </button>

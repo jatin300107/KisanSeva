@@ -8,7 +8,7 @@ import { StepQuestionnaire } from './StepQuestionnaire';
 import { StepReview } from './StepReview';
 import { StepProcessing } from './StepProcessing';
 
-const STEPS = ['Select Type', 'Upload Image', 'Questionnaire', 'Review', 'Processing'];
+const STEPS = ['Select Type', 'Upload Image', 'Voice QA', 'Review', 'Processing'];
 
 export const ReportWizard: React.FC<{ onComplete: (res: SubmitReportResponse) => void }> = ({ onComplete }) => {
   const [step, setStep] = useState(1);

@@ -14,6 +14,10 @@ export default defineConfig({
       '/farmer': 'http://127.0.0.1:8000',
       '/expert': 'http://127.0.0.1:8000',
       '/ai': 'http://127.0.0.1:8000',
+      '/voice': {
+        target: 'http://127.0.0.1:8000',
+        ws: true,
+      },
     },
   },
 })
