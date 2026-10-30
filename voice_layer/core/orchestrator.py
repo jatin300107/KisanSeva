@@ -262,6 +262,10 @@ class VoiceOrchestrator:
 
             parsed, say, parse_err = self._merge_calls(calls)
             outcome = self.validator.apply(parsed, ctx)    # state is committed here
+            log.info("validator args=%s say=%r matched=%s resolved=%s results=%s",
+                     json.dumps([c.args for c in calls], ensure_ascii=False), say,
+                     outcome.matches_gemini_intent, outcome.resolved_ids,
+                     [(r.question_id, r.accepted, r.reason) for r in outcome.result.results])
             responses = self._responses(turn, outcome, parse_err)
 
             if outcome.matches_gemini_intent and (say or turn.text) and not parse_err:
