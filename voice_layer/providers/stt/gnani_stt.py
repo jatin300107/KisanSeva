@@ -160,7 +160,8 @@ class GnaniSTT:
                     log.warning("stt hit max utterance length")
                     break
 
-                if st["processing"] == 0:
+                expected = max(st["processing"], len(segments))
+                if expected == 0:
                     if now - start > s.stt_no_speech_timeout_s:
                         reason = "no_speech_timeout"
                         break
@@ -194,11 +195,12 @@ class GnaniSTT:
         text = " ".join(p["text"] for p in parts if p["text"]).strip()
         log.info(
             "stt done reason=%s max_level=%.0f threshold=%.0f segments=%d "
-            "latencies_ms=%s chars=%d",
+            "processing=%d latencies_ms=%s chars=%d",
             reason,
             max_level,
             s.stt_energy_threshold,
             len(parts),
+            st["processing"],
             [p["latency_ms"] for p in parts],
             len(text),
         )
