@@ -5,6 +5,7 @@ import { aiApi } from '../../api/ai';
 import type { DiagnosisType, AnswerEntry, SubmitReportResponse } from '../../types';
 
 interface StepProcessingProps {
+  submissionId: string;
   type: DiagnosisType | null;
   answers: AnswerEntry[];
   imageUrl: string | null;
@@ -20,7 +21,9 @@ const MESSAGES = [
   'Almost done...'
 ];
 
-export const StepProcessing: React.FC<StepProcessingProps> = ({ type, answers, imageUrl, onComplete, onError }) => {
+const submittedReports = new Set<string>();
+
+export const StepProcessing: React.FC<StepProcessingProps> = ({ submissionId, type, answers, imageUrl, onComplete, onError }) => {
   const [msgIndex, setMsgIndex] = useState(0);
   const [errorState, setErrorState] = useState(false);
 
@@ -32,16 +35,21 @@ export const StepProcessing: React.FC<StepProcessingProps> = ({ type, answers, i
   }, []);
 
   useEffect(() => {
-    if (type) {
-      aiApi.submitReport({ type, answers, image_url: imageUrl })
-        .then(res => {
-          onComplete(res.data);
-        })
-        .catch(() => {
-          setErrorState(true);
-        });
-    }
-  }, [type, answers, imageUrl, onComplete]);
+    if (!type) return;
+
+    const submissionKey = submissionId;
+    if (submittedReports.has(submissionKey)) return;
+    submittedReports.add(submissionKey);
+
+    aiApi.submitReport({ type, answers, image_url: imageUrl })
+      .then(res => {
+        onComplete(res.data);
+      })
+      .catch(() => {
+        submittedReports.delete(submissionKey);
+        setErrorState(true);
+      });
+  }, [submissionId, type, answers, imageUrl, onComplete]);
 
   if (errorState) {
     return (

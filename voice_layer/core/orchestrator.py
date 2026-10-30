@@ -365,6 +365,7 @@ class VoiceOrchestrator:
     # ------------------------------------------------------------------
 
     async def _speak(self, text: str) -> SpeakResult:
+        await self._emit({"type": "agent_text", "text": text})
         self._accepting_mic = False
         self._playback_done.clear()
         t0 = time.perf_counter()
@@ -410,7 +411,12 @@ class VoiceOrchestrator:
         snap = self.queue.snapshot()
         for qid in ids:
             await self._emit(
-                {"type": "answer_saved", "question_id": qid, "status": snap[qid].status}
+                {
+                    "type": "answer_saved",
+                    "question_id": qid,
+                    "status": snap[qid].status,
+                    "value": snap[qid].value,
+                }
             )
 
     async def _emit(self, event: dict) -> None:

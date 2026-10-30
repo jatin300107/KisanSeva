@@ -18,6 +18,7 @@ export const ReportWizard: React.FC<{ onComplete: (res: SubmitReportResponse) =>
   const [questions, setQuestions] = useState<Question[]>([]);
   const [answers, setAnswers] = useState<AnswerEntry[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [submissionId] = useState(() => crypto.randomUUID());
 
   const nextStep = () => setStep(prev => Math.min(prev + 1, 5));
   const prevStep = () => setStep(prev => Math.max(prev - 1, 1));
@@ -74,7 +75,7 @@ export const ReportWizard: React.FC<{ onComplete: (res: SubmitReportResponse) =>
             <StepReview key="step4" type={type} imageUrl={imageUrl} questions={questions} answers={answers} onSubmit={nextStep} onGoToStep={goToStep} onBack={prevStep} />
           )}
           {step === 5 && (
-            <StepProcessing key="step5" type={type} answers={answers} imageUrl={imageUrl} onComplete={onComplete} onError={() => setStep(4)} />
+            <StepProcessing key="step5" submissionId={submissionId} type={type} answers={answers} imageUrl={imageUrl} onComplete={onComplete} onError={() => setStep(4)} />
           )}
         </AnimatePresence>
       </div>
