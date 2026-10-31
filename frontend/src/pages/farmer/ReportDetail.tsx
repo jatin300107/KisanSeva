@@ -41,7 +41,7 @@ export default function ReportDetail() {
           <Spinner size={32} label="Loading Report Details..." />
         </div>
       ) : error || !data ? (
-        <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center space-y-4 max-w-lg mx-auto my-12">
+        <div className="surface p-8 sm:p-12 text-center space-y-4 max-w-lg mx-auto my-12">
           <h2 className="text-xl font-bold text-slate-800">Report Error</h2>
           <p className="text-sm text-slate-500">{error || 'Unable to display report'}</p>
           <Button variant="primary" onClick={() => navigate('/farmer/dashboard')}>

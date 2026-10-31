@@ -30,11 +30,11 @@ export const StepReview: React.FC<StepReviewProps> = ({
       className="max-w-3xl mx-auto space-y-8"
     >
       <div className="text-center space-y-2">
-        <h2 className="text-2xl font-semibold text-gray-900">Review Your Details</h2>
-        <p className="text-gray-500">Please review the information before submitting for AI analysis.</p>
+        <h2 className="text-2xl font-semibold text-slate-900">Review Your Details</h2>
+        <p className="text-slate-500 leading-6">Please review the information before submitting for AI analysis.</p>
       </div>
 
-      <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
+      <div className="bg-white border border-slate-200/80 rounded-2xl overflow-hidden shadow-sm">
         <div className="p-6 border-b border-gray-100 flex items-center justify-between bg-gray-50">
           <div>
             <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider">Diagnosis Type</h3>
@@ -89,7 +89,7 @@ export const StepReview: React.FC<StepReviewProps> = ({
               return (
                 <div key={ans.question_id} className="bg-gray-50 rounded-xl p-4 border border-gray-100">
                   <p className="text-sm font-medium text-gray-900 mb-2"><span className="text-emerald-600 mr-2">Q{idx + 1}.</span> {questionText}</p>
-                  <p className="text-gray-600 text-sm pl-6 border-l-2 border-emerald-200 ml-1">{ans.answer}</p>
+                  <p className="text-gray-600 text-sm pl-6 border-l-2 border-emerald-200 ml-1 break-words leading-6">{ans.answer}</p>
                 </div>
               );
             })}

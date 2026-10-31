@@ -43,32 +43,31 @@ export function ReportCard({ report, onClick }: ReportCardProps) {
 
   return (
     <motion.div
-      whileHover={{ y: -4 }}
       transition={{ duration: 0.2 }}
       onClick={onClick}
-      className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden cursor-pointer hover:shadow-md hover:border-emerald-200 transition-all duration-300 group"
+      className="h-full bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden cursor-pointer hover:shadow-md hover:border-emerald-200 transition-all duration-300 group min-w-0"
     >
       {/* Severity colour bar */}
       <div className={`h-1 ${barColor}`} />
 
-      <div className="p-5">
-        <div className="flex items-start justify-between gap-3">
+      <div className="flex h-full min-h-[218px] flex-col p-5">
+        <div className="flex min-w-0 flex-1 items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-2 mb-2">
+            <div className="flex min-w-0 items-center gap-2 mb-3">
               <span className="w-7 h-7 bg-slate-100 rounded-lg flex items-center justify-center shrink-0">
                 {report.type === 'crop'
                   ? <Leaf size={14} className="text-emerald-600" />
                   : <Heart size={14} className="text-rose-500" />}
               </span>
-              <span className="text-xs text-slate-400 font-medium capitalize">
+              <span className="min-w-0 text-xs text-slate-400 font-medium capitalize break-words">
                 {report.type} Disease
               </span>
             </div>
 
-            <h3 className="font-bold text-slate-800 text-base leading-snug mb-1 truncate">
+            <h3 className="font-bold text-slate-800 text-base leading-6 mb-2 line-clamp-2 break-words">
               {report.disease_name || 'Pending Analysis'}
             </h3>
-            <p className="text-xs text-slate-500 truncate">{report.title}</p>
+            <p className="text-xs text-slate-500 leading-5 line-clamp-2 break-words">{report.title || 'Diagnosis report'}</p>
           </div>
 
           <ArrowRight
@@ -77,7 +76,7 @@ export function ReportCard({ report, onClick }: ReportCardProps) {
           />
         </div>
 
-        <div className="mt-4 pt-4 border-t border-slate-50 flex items-center gap-2 flex-wrap">
+        <div className="mt-5 pt-4 border-t border-slate-100 flex min-w-0 items-center gap-2 flex-wrap">
           {report.severity != null && (
             <Badge variant={badgeVariant}>
               <Activity size={10} /> {severityLabel}
@@ -88,7 +87,7 @@ export function ReportCard({ report, onClick }: ReportCardProps) {
               {Math.round(report.confidence * 100)}% conf.
             </Badge>
           )}
-          <span className="text-xs text-slate-400 ml-auto">
+          <span className="text-xs text-slate-400 sm:ml-auto">
             {report.created_at ? formatDate(report.created_at) : ''}
           </span>
         </div>

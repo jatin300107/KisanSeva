@@ -11,7 +11,7 @@ export function Card({ children, className = '', hover = false, onClick }: CardP
   return (
     <div
       onClick={onClick}
-      className={`bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden transition-all duration-300 ${
+      className={`bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden transition-all duration-300 min-w-0 ${
         hover
           ? 'cursor-pointer hover:shadow-md hover:-translate-y-1 hover:border-emerald-200'
           : ''

@@ -83,7 +83,7 @@ export const ConsultationRequest: React.FC<ConsultationRequestProps> = ({
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             placeholder="Explain what specific questions you have about this diagnosis or treatment plan..."
-            className="w-full p-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm text-slate-800 placeholder-slate-400 outline-none"
+            className="w-full min-w-0 resize-y p-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm leading-6 text-slate-800 placeholder-slate-400 outline-none"
           />
         </div>
 

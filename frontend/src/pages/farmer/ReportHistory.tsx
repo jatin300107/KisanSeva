@@ -45,18 +45,18 @@ export default function ReportHistory() {
 
   return (
     <DashboardLayout>
-      <div className="max-w-6xl mx-auto">
+      <div className="page-shell">
         {/* Header */}
-        <div className="flex items-start justify-between mb-8 gap-4">
+        <div className="page-heading flex flex-col sm:flex-row sm:items-end justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-black text-slate-900 mb-1">Report History</h1>
-            <p className="text-slate-500 text-sm">All your past AI diagnoses in one place.</p>
+            <h1 className="text-3xl font-black text-slate-900 mb-2">Report History</h1>
+            <p className="text-slate-500 text-sm leading-6">All your past AI diagnoses in one place.</p>
           </div>
           <Button
             variant="primary"
             icon={<FilePlus size={16} />}
             onClick={() => navigate('/farmer/reports/new')}
-            className="shrink-0"
+            className="shrink-0 self-start sm:self-auto"
           >
             New Diagnosis
           </Button>
@@ -90,7 +90,7 @@ export default function ReportHistory() {
 
         {/* Grid */}
         {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
             {[...Array(6)].map((_, i) => <SkeletonCard key={i} />)}
           </div>
         ) : filtered.length === 0 ? (
@@ -114,7 +114,7 @@ export default function ReportHistory() {
           </div>
         ) : (
           <motion.div
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+            className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5"
             initial="hidden"
             animate="visible"
             variants={{

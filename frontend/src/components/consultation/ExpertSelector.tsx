@@ -47,26 +47,26 @@ export const ExpertSelector: React.FC<ExpertSelectorProps> = ({ selectedExpertId
   }
 
   return (
-    <div className="space-y-3 max-h-60 overflow-y-auto pr-1">
+    <div className="space-y-3 max-h-64 overflow-y-auto pr-1">
       {experts.map((exp) => {
         const isSelected = selectedExpertId === exp.id;
         return (
           <div
             key={exp.id}
             onClick={() => onSelect(exp.id)}
-            className={`p-4 rounded-xl border transition-all cursor-pointer flex items-center justify-between ${
+            className={`min-w-0 p-4 rounded-xl border transition-all cursor-pointer flex items-center justify-between gap-3 ${
               isSelected
                 ? 'border-emerald-500 bg-emerald-50/60 shadow-sm'
                 : 'border-slate-200 bg-white hover:border-emerald-300 hover:bg-slate-50'
             }`}
           >
-            <div className="flex items-center gap-3">
+            <div className="flex min-w-0 items-center gap-3">
               <div className={`p-2.5 rounded-full ${isSelected ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-600'}`}>
                 <ShieldCheck className="w-5 h-5" />
               </div>
-              <div>
-                <h4 className="font-bold text-slate-800 text-sm">{exp.name || 'Certified Specialist'}</h4>
-                <div className="flex items-center gap-2 mt-0.5">
+              <div className="min-w-0">
+                <h4 className="font-bold text-slate-800 text-sm break-words">{exp.name || 'Specialist'}</h4>
+                <div className="flex flex-wrap items-center gap-2 mt-0.5">
                   <span className="text-xs font-semibold px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded-md capitalize">
                     {exp.role === 'vet' ? 'Veterinarian' : 'Agrologist'}
                   </span>

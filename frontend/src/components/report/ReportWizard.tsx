@@ -27,7 +27,7 @@ export const ReportWizard: React.FC<{ onComplete: (res: SubmitReportResponse) =>
   return (
     <div className="w-full">
       {/* Progress Bar */}
-      <div className="mb-12 relative px-4">
+      <div className="mb-10 relative px-1 sm:px-4">
         <div className="absolute top-1/2 left-0 w-full h-1 bg-gray-200 -translate-y-1/2 z-0 rounded-full" />
         <div 
           className="absolute top-1/2 left-0 h-1 bg-emerald-500 -translate-y-1/2 z-0 rounded-full transition-all duration-500" 
@@ -60,7 +60,7 @@ export const ReportWizard: React.FC<{ onComplete: (res: SubmitReportResponse) =>
       </div>
 
       {/* Step Content */}
-      <div className="bg-white/50 backdrop-blur-xl rounded-3xl p-6 md:p-10 shadow-sm border border-gray-100 min-h-[500px]">
+      <div className="bg-white rounded-[1.5rem] p-5 sm:p-8 md:p-10 shadow-sm border border-slate-200/80 min-h-[500px] overflow-hidden">
         <AnimatePresence mode="wait">
           {step === 1 && (
             <StepSelectType key="step1" type={type} setType={setType} onNext={nextStep} />

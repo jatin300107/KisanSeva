@@ -13,7 +13,7 @@ export default function Signup() {
   return (
     <div className="min-h-screen flex">
       {/* Left panel */}
-      <div className="hidden lg:flex lg:w-1/2 gradient-hero flex-col justify-between p-12 relative overflow-hidden">
+      <div className="hidden lg:flex lg:w-1/2 lg:max-w-[720px] gradient-hero flex-col justify-between p-10 xl:p-14 relative overflow-hidden">
         <div className="absolute top-16 right-16 w-72 h-72 bg-emerald-400/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-16 left-8 w-96 h-96 bg-teal-400/10 rounded-full blur-3xl pointer-events-none" />
 
@@ -26,35 +26,33 @@ export default function Signup() {
         </div>
 
         {/* Main content */}
-        <div className="relative">
-          <h2 className="text-4xl font-black text-white mb-4 leading-snug">
+        <div className="relative min-w-0 max-w-xl">
+          <h2 className="max-w-lg text-4xl font-black text-white mb-4 leading-snug break-words">
             Join the farming revolution
           </h2>
-          <p className="text-emerald-100/70 text-base mb-8">
+          <p className="max-w-md text-emerald-100/70 text-base leading-6 mb-8 break-words">
             Whether you&apos;re a farmer or an expert, KisanSeva connects you to smarter agriculture.
           </p>
           <div className="flex flex-col gap-4">
             {roles.map((r) => (
               <div
                 key={r.label}
-                className="flex items-start gap-3 bg-white/10 border border-white/15 rounded-xl p-4"
+                className="flex min-w-0 items-start gap-3 bg-white/10 border border-white/15 rounded-xl p-4"
               >
                 <div className="w-9 h-9 bg-emerald-500/30 border border-emerald-400/30 rounded-lg flex items-center justify-center shrink-0">
                   <r.icon size={18} className="text-emerald-200" />
                 </div>
-                <div>
+                <div className="min-w-0">
                   <p className="text-white font-semibold text-sm">{r.label}</p>
-                  <p className="text-emerald-100/60 text-xs mt-0.5">{r.desc}</p>
+                  <p className="text-emerald-100/60 text-xs leading-5 mt-0.5 break-words">{r.desc}</p>
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Bottom stat */}
-        <div className="glass-dark rounded-2xl p-5 text-center relative">
-          <div className="text-4xl font-black text-white mb-1">10,000+</div>
-          <div className="text-emerald-200/70 text-sm">Farmers already using KisanSeva</div>
+        <div className="relative max-w-md text-emerald-100/60 text-sm leading-5 break-words">
+          Set up a workspace for diagnosis and expert follow-up.
         </div>
       </div>
 

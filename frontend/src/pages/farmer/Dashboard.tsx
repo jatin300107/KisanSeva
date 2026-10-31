@@ -48,17 +48,17 @@ export default function FarmerDashboard() {
 
   return (
     <DashboardLayout>
-      <div className="max-w-6xl mx-auto space-y-8">
+      <div className="page-shell space-y-8">
         {/* Hero banner */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-gradient-to-r from-emerald-700 to-teal-800 rounded-3xl p-8 text-white flex flex-col md:flex-row items-start md:items-center justify-between gap-6"
+          className="overflow-hidden rounded-[1.75rem] bg-gradient-to-r from-emerald-700 to-teal-800 p-6 sm:p-8 text-white flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-lg shadow-emerald-950/10"
         >
           <div>
             <p className="text-emerald-200/70 text-sm mb-1">{greeting},</p>
-            <h1 className="text-3xl font-black mb-2">{firstName}! 👋</h1>
-            <p className="text-emerald-100/70 text-sm max-w-sm">
+            <h1 className="text-3xl sm:text-4xl font-black mb-2">{firstName}! 👋</h1>
+            <p className="text-emerald-100/70 text-sm leading-6 max-w-lg">
               Your crops are counting on you. Start a new AI diagnosis or review your past reports.
             </p>
           </div>
@@ -85,14 +85,14 @@ export default function FarmerDashboard() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
-              className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 flex items-center gap-4"
+              className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5 flex items-center gap-4 min-w-0"
             >
               <div className={`w-12 h-12 ${s.bg} rounded-xl flex items-center justify-center shrink-0`}>
                 <s.icon size={22} className={s.color} />
               </div>
               <div className="min-w-0">
                 <p className="text-xs text-slate-400 font-medium mb-0.5">{s.label}</p>
-                <p className={`font-black text-slate-800 ${s.isText ? 'text-sm truncate' : 'text-2xl'}`}>
+                <p className={`font-black text-slate-800 break-words ${s.isText ? 'text-sm line-clamp-2' : 'text-2xl'}`}>
                   {loading ? '—' : s.value}
                 </p>
               </div>
@@ -126,7 +126,7 @@ export default function FarmerDashboard() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.25 }}
             onClick={() => navigate('/farmer/reports')}
-            className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 cursor-pointer hover:-translate-y-1 hover:shadow-md hover:border-emerald-200 transition-all duration-300 group"
+            className="h-full bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6 cursor-pointer hover:shadow-md hover:border-emerald-200 transition-shadow duration-300 group"
           >
             <div className="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center mb-4">
               <FileText size={22} className="text-slate-600" />
@@ -156,7 +156,7 @@ export default function FarmerDashboard() {
           </div>
 
           {loading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
               {[...Array(3)].map((_, i) => <SkeletonCard key={i} />)}
             </div>
           ) : reports.length === 0 ? (
@@ -177,7 +177,7 @@ export default function FarmerDashboard() {
               </Button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
               {reports.slice(0, 6).map((r) => (
                 <ReportCard
                   key={r.id}

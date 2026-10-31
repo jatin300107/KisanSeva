@@ -101,7 +101,7 @@ export default function ConsultationDetail() {
 
   return (
     <DashboardLayout>
-      <div className="max-w-4xl mx-auto">
+      <div className="page-shell">
         {/* Breadcrumb */}
         <button
           onClick={() => navigate(-1)}
@@ -110,7 +110,7 @@ export default function ConsultationDetail() {
           <ArrowLeft size={16} /> Back to Dashboard
         </button>
 
-        <div className="flex items-center justify-between mb-8 gap-4">
+        <div className="page-heading flex flex-col sm:flex-row sm:items-end justify-between gap-4">
           <div>
             <h1 className="text-2xl font-black text-slate-900">Case Review</h1>
             <p className="text-slate-400 text-sm mt-1">
@@ -131,7 +131,7 @@ export default function ConsultationDetail() {
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5"
+              className="surface p-5"
             >
               <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-4">
                 Farmer Info
@@ -153,7 +153,7 @@ export default function ConsultationDetail() {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5"
+                className="surface p-5"
               >
                 <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-4">
                   Report Summary
@@ -189,7 +189,7 @@ export default function ConsultationDetail() {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.15 }}
-                className="bg-amber-50 border border-amber-200 rounded-2xl p-5"
+                className="rounded-2xl border border-amber-200 bg-amber-50 p-5"
               >
                 <h3 className="text-xs font-semibold text-amber-600 uppercase tracking-widest mb-3">
                   Farmer&apos;s Message
@@ -208,7 +208,7 @@ export default function ConsultationDetail() {
             transition={{ delay: 0.2 }}
             className="lg:col-span-2"
           >
-            <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 sticky top-24">
+            <div className="surface p-5 lg:sticky lg:top-24">
               <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-4">
                 {consultation.status === 'answered' ? 'Your Response' : 'Write Response'}
               </h3>
@@ -238,7 +238,7 @@ export default function ConsultationDetail() {
                     onChange={(e) => setResponse(e.target.value)}
                     placeholder="Write your expert diagnosis and treatment recommendations here…"
                     rows={10}
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 resize-none transition-all focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 focus:bg-white"
+                    className="w-full min-w-0 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm leading-6 text-slate-800 placeholder:text-slate-400 resize-y transition-all focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 focus:bg-white"
                   />
                   <Button
                     variant="primary"

@@ -18,14 +18,14 @@ export const StepSelectType: React.FC<StepSelectTypeProps> = ({ type, setType, o
       className="max-w-2xl mx-auto space-y-8"
     >
       <div className="text-center space-y-2">
-        <h2 className="text-2xl font-semibold text-gray-900">What would you like to diagnose?</h2>
-        <p className="text-gray-500">Select the category that best fits your issue.</p>
+        <h2 className="text-2xl font-semibold text-slate-900">What would you like to diagnose?</h2>
+        <p className="text-slate-500 leading-6">Select the category that best fits your issue.</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
         <button
           onClick={() => setType('crop')}
-          className={`relative p-6 rounded-2xl border-2 transition-all duration-200 text-left ${
+          className={`relative p-5 sm:p-6 rounded-2xl border-2 transition-all duration-200 text-left ${
             type === 'crop'
               ? 'border-emerald-500 bg-emerald-50'
               : 'border-gray-200 bg-white hover:border-emerald-200 hover:shadow-md'
@@ -47,7 +47,7 @@ export const StepSelectType: React.FC<StepSelectTypeProps> = ({ type, setType, o
 
         <button
           onClick={() => setType('animal')}
-          className={`relative p-6 rounded-2xl border-2 transition-all duration-200 text-left ${
+          className={`relative p-5 sm:p-6 rounded-2xl border-2 transition-all duration-200 text-left ${
             type === 'animal'
               ? 'border-emerald-500 bg-emerald-50'
               : 'border-gray-200 bg-white hover:border-emerald-200 hover:shadow-md'

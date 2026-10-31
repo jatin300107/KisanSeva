@@ -15,7 +15,6 @@ import ConsultationDetail from './pages/expert/ConsultationDetail';
 
 // Auth
 import ProtectedRoute from './components/auth/ProtectedRoute';
-import Navbar from './components/layout/Navbar';
 
 function App() {
   const { isLoading } = useAuth();
@@ -33,7 +32,6 @@ function App() {
 
   return (
     <>
-      <Navbar />
       <AnimatePresence mode="wait">
         <Routes>
           {/* Public Routes */}

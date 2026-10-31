@@ -59,12 +59,12 @@ export default function ExpertDashboard() {
 
   return (
     <DashboardLayout>
-      <div className="max-w-5xl mx-auto space-y-8">
+      <div className="page-shell space-y-8">
         {/* Banner */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-gradient-to-r from-teal-800 to-emerald-900 rounded-3xl p-8 text-white"
+          className="overflow-hidden rounded-[1.75rem] bg-gradient-to-r from-teal-800 to-emerald-900 p-6 sm:p-8 text-white shadow-lg shadow-emerald-950/10"
         >
           <div className="flex items-start justify-between gap-4">
             <div>
@@ -72,7 +72,7 @@ export default function ExpertDashboard() {
                 {roleLabel}
               </div>
               <h1 className="text-3xl font-black mb-2">Welcome, {firstName}!</h1>
-              <p className="text-teal-100/70 text-sm max-w-md">
+              <p className="text-teal-100/70 text-sm leading-6 max-w-lg">
                 Review farmer-submitted cases and provide your expert consultation.
               </p>
             </div>
@@ -95,7 +95,7 @@ export default function ExpertDashboard() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.08 }}
-              className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 flex items-center gap-3"
+              className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5 flex items-center gap-3"
             >
               <div className={`w-10 h-10 ${s.bg} rounded-xl flex items-center justify-center shrink-0`}>
                 <s.icon size={18} className={s.color} />

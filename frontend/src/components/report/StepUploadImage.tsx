@@ -80,13 +80,13 @@ export const StepUploadImage: React.FC<StepUploadImageProps> = ({
       className="max-w-2xl mx-auto space-y-8"
     >
       <div className="text-center space-y-2">
-        <h2 className="text-2xl font-semibold text-gray-900">Upload a Photo</h2>
-        <p className="text-gray-500">Take or upload a clear picture of the symptoms (optional).</p>
+        <h2 className="text-2xl font-semibold text-slate-900">Upload a Photo</h2>
+        <p className="text-slate-500 leading-6">Take or upload a clear picture of the symptoms (optional).</p>
       </div>
 
       {!imageUrl && !uploading && (
         <div
-          className={`border-2 border-dashed rounded-2xl p-12 text-center transition-colors cursor-pointer ${
+          className={`border-2 border-dashed rounded-2xl p-8 sm:p-12 text-center transition-colors cursor-pointer ${
             isDragActive ? 'border-emerald-500 bg-emerald-50' : 'border-gray-300 hover:border-emerald-400 bg-gray-50'
           }`}
           onDragOver={(e) => { e.preventDefault(); setIsDragActive(true); }}

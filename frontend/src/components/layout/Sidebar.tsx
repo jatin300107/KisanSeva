@@ -49,9 +49,9 @@ export default function Sidebar() {
   };
 
   return (
-    <aside className="w-64 h-full bg-white border-r border-slate-100 flex flex-col">
+    <aside className="w-64 h-full bg-white border-r border-slate-200/80 flex flex-col">
       {/* Logo */}
-      <div className="h-16 flex items-center px-5 border-b border-slate-100">
+      <div className="h-16 flex items-center px-5 border-b border-slate-200/80">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center shadow-sm">
             <Leaf size={15} className="text-white" />
@@ -63,7 +63,7 @@ export default function Sidebar() {
       </div>
 
       {/* User card */}
-      <div className="px-4 py-4 border-b border-slate-100">
+      <div className="px-4 py-5 border-b border-slate-200/80">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center text-white font-bold text-sm shrink-0">
             {initials}
@@ -76,7 +76,7 @@ export default function Sidebar() {
       </div>
 
       {/* Nav items */}
-      <nav className="flex-1 px-3 py-4 flex flex-col gap-1 overflow-y-auto">
+      <nav className="flex-1 px-3 py-5 flex flex-col gap-1.5 overflow-y-auto">
         {navItems.map((item, i) => (
           <motion.div
             key={`${item.to}-${item.label}`}
@@ -103,7 +103,7 @@ export default function Sidebar() {
       </nav>
 
       {/* Bottom logout */}
-      <div className="px-3 py-4 border-t border-slate-100">
+      <div className="px-3 py-5 border-t border-slate-200/80">
         <button
           onClick={handleLogout}
           className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-500 hover:bg-red-50 hover:text-red-600 transition-all duration-200"

@@ -287,7 +287,7 @@ export default function VoiceMode({
             <MessageSquare size={18} className="text-emerald-600 shrink-0 mt-0.5" />
             <div>
               <p className="text-xs font-bold text-slate-800">Fast Diagnosis</p>
-              <p className="text-[11px] text-slate-500">Takes 1-2 minutes to complete</p>
+              <p className="text-[11px] text-slate-500">Answer each question at your own pace</p>
             </div>
           </div>
         </div>

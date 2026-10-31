@@ -16,7 +16,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #1e293b;
-  background: #f8fafc;
+  background: #f4f7f6;
+  min-width: 320px;
 }
 
 ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -26,6 +27,40 @@ body {
 
 input:focus, textarea:focus, select:focus {
   outline: none;
+}
+
+button, a, input, textarea, select {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:focus-visible, a:focus-visible, input:focus-visible,
+textarea:focus-visible, select:focus-visible {
+  outline: 3px solid rgba(16, 185, 129, 0.28);
+  outline-offset: 2px;
+}
+
+img {
+  max-width: 100%;
+}
+
+.page-shell {
+  width: min(100%, 1180px);
+  margin-inline: auto;
+}
+
+.surface {
+  background: #ffffff;
+  border: 1px solid #e4ebe8;
+  border-radius: 1.25rem;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.045);
+}
+
+.page-heading {
+  margin-bottom: 2rem;
+}
+
+.page-heading h1 {
+  letter-spacing: -0.035em;
 }
 
 .glass {

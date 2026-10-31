@@ -65,7 +65,7 @@ export const ReportView: React.FC<ReportViewProps> = ({
     <motion.div 
       initial={{ opacity: 0, y: 15 }} 
       animate={{ opacity: 1, y: 0 }} 
-      className="max-w-4xl mx-auto space-y-6 pb-12"
+      className="page-shell space-y-6 pb-12"
     >
       {/* Navigation Header */}
       <div className="flex items-center justify-between">
@@ -81,7 +81,7 @@ export const ReportView: React.FC<ReportViewProps> = ({
       </div>
 
       {/* Main Banner */}
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+      <div className="surface overflow-hidden">
         <div className="bg-gradient-to-r from-emerald-800 to-teal-900 p-6 md:p-8 text-white relative">
           <div className="flex flex-wrap items-center justify-between gap-4 mb-3">
             <span className="px-3 py-1 text-xs font-bold uppercase rounded-full bg-emerald-700/80 text-emerald-100 border border-emerald-500/30">
@@ -93,11 +93,11 @@ export const ReportView: React.FC<ReportViewProps> = ({
             </div>
           </div>
 
-          <h1 className="text-2xl md:text-3xl font-extrabold text-white mb-2">
+          <h1 className="text-2xl md:text-3xl font-extrabold text-white mb-2 break-words">
             {report.title || 'Diagnostic Advisory Report'}
           </h1>
           
-          <div className="flex items-center gap-2 text-emerald-100 font-medium text-lg">
+          <div className="flex flex-wrap items-center gap-2 text-emerald-100 font-medium text-lg">
             <span>Diagnosed Disease:</span>
             <span className="underline decoration-emerald-400 font-bold text-white">{report.disease_name}</span>
           </div>
@@ -146,7 +146,7 @@ export const ReportView: React.FC<ReportViewProps> = ({
               <Sparkles className="w-5 h-5 text-emerald-600" />
               Detailed AI Diagnosis
             </h2>
-            <div className="bg-emerald-50/50 border border-emerald-100 rounded-xl p-5 text-slate-700 whitespace-pre-wrap leading-relaxed text-sm md:text-base font-normal">
+            <div className="bg-emerald-50/50 border border-emerald-100 rounded-xl p-5 text-slate-700 whitespace-pre-wrap break-words leading-relaxed text-sm md:text-base font-normal">
               {report.ai_diagnosis}
             </div>
           </div>
@@ -157,7 +157,7 @@ export const ReportView: React.FC<ReportViewProps> = ({
               <Stethoscope className="w-5 h-5 text-teal-600" />
               Recommended Treatment & Advisory Plan
             </h2>
-            <div className="bg-teal-50/50 border border-teal-100 rounded-xl p-5 text-slate-700 whitespace-pre-wrap leading-relaxed text-sm md:text-base font-normal">
+            <div className="bg-teal-50/50 border border-teal-100 rounded-xl p-5 text-slate-700 whitespace-pre-wrap break-words leading-relaxed text-sm md:text-base font-normal">
               {report.ai_suggestions}
             </div>
           </div>
@@ -205,14 +205,14 @@ export const ReportView: React.FC<ReportViewProps> = ({
                         {c.status}
                       </span>
                     </div>
-                    <p className="text-sm text-slate-700 bg-slate-50 p-3 rounded-lg border border-slate-100">{c.message}</p>
+                    <p className="text-sm text-slate-700 bg-slate-50 p-3 rounded-lg border border-slate-100 break-words leading-6">{c.message}</p>
 
                     {c.response ? (
                       <div className="mt-2 pt-2 border-t border-slate-100">
                         <p className="text-xs font-bold text-emerald-800 mb-1 flex items-center gap-1">
                           <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> Expert Response:
                         </p>
-                        <p className="text-sm text-slate-800 bg-emerald-50/70 p-3 rounded-lg border border-emerald-100 font-medium">
+                        <p className="text-sm text-slate-800 bg-emerald-50/70 p-3 rounded-lg border border-emerald-100 font-medium break-words leading-6">
                           {c.response}
                         </p>
                       </div>

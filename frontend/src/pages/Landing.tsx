@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import {
-  Leaf, Brain, Camera, Users, Globe, Shield, Clock,
+  Leaf, Brain, Camera, Users, Globe,
   ArrowRight, ChevronDown, Sparkles, CheckCircle2,
   FileText, Zap,
 } from 'lucide-react';
@@ -9,12 +9,10 @@ import { Link } from 'react-router-dom';
 import Navbar from '../components/layout/Navbar';
 
 const features = [
-  { icon: Brain,   title: 'AI-Powered Diagnosis', desc: 'Upload images and get instant disease identification using our trained agricultural AI model.', color: 'emerald' },
+  { icon: Brain,   title: 'AI-Powered Diagnosis', desc: 'Upload an image and receive a structured diagnosis for the issue you describe.', color: 'emerald' },
   { icon: Camera,  title: 'Photo Analysis',       desc: 'Simply photograph your crop or animal — no special equipment or expertise needed.', color: 'teal' },
-  { icon: Users,   title: 'Expert Network',       desc: 'Connect directly with certified veterinarians and agrologists for deeper consultation.', color: 'blue' },
+  { icon: Users,   title: 'Expert Consultation',   desc: 'Request a consultation from an available veterinarian or agrologist when you need another perspective.', color: 'blue' },
   { icon: Globe,   title: 'Bilingual Reports',    desc: 'Receive full diagnosis reports in both English and Hindi for wider accessibility.', color: 'violet' },
-  { icon: Shield,  title: '95% Accuracy',         desc: 'Our model is trained on thousands of validated disease cases from agricultural experts.', color: 'amber' },
-  { icon: Clock,   title: '2-Min Reports',        desc: 'Get comprehensive AI-backed diagnosis reports in under 2 minutes.', color: 'rose' },
 ];
 
 const steps = [
@@ -24,20 +22,11 @@ const steps = [
   { icon: CheckCircle2, label: 'Report',   desc: 'Receive a detailed bilingual diagnosis and treatment plan' },
 ];
 
-const stats = [
-  { value: '95%',  label: 'Diagnosis Accuracy' },
-  { value: '2 min', label: 'Avg. Report Time' },
-  { value: '500+', label: 'Verified Experts' },
-  { value: '10K+', label: 'Farmers Helped' },
-];
-
 const iconColorMap: Record<string, string> = {
   emerald: 'bg-emerald-100 text-emerald-700',
   teal:    'bg-teal-100 text-teal-700',
   blue:    'bg-blue-100 text-blue-700',
   violet:  'bg-violet-100 text-violet-700',
-  amber:   'bg-amber-100 text-amber-700',
-  rose:    'bg-rose-100 text-rose-700',
 };
 
 function FadeInSection({ children }: { children: React.ReactNode }) {
@@ -65,11 +54,6 @@ export default function Landing() {
         {/* Decorative blobs */}
         <div className="absolute top-20 left-10 w-72 h-72 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-20 right-10 w-96 h-96 bg-teal-400/10 rounded-full blur-3xl pointer-events-none" />
-        {/* Floating leaves */}
-        <span className="absolute top-32 left-24 text-emerald-400/30 animate-float pointer-events-none"><Leaf size={36} /></span>
-        <span className="absolute top-52 right-32 text-teal-300/25 animate-float-delayed pointer-events-none"><Leaf size={26} /></span>
-        <span className="absolute bottom-36 left-36 text-emerald-300/15 animate-float-slow pointer-events-none"><Leaf size={52} /></span>
-
         {/* Badge */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
@@ -78,7 +62,7 @@ export default function Landing() {
           className="inline-flex items-center gap-2 bg-emerald-500/20 border border-emerald-400/30 text-emerald-200 text-sm font-medium px-4 py-2 rounded-full mb-8"
         >
           <Sparkles size={14} />
-          Trusted by 10,000+ farmers across India
+          Practical tools for clearer farm decisions
         </motion.div>
 
         {/* Headline */}
@@ -99,8 +83,8 @@ export default function Landing() {
           transition={{ duration: 0.7, delay: 0.2 }}
           className="text-emerald-100/75 text-lg md:text-xl max-w-2xl mb-10 leading-relaxed"
         >
-          Upload a photo, answer a few questions, and receive an expert-backed diagnosis in minutes.
-          Protect your harvest before it&apos;s too late.
+          Upload a photo, answer a few questions, and receive an AI-assisted diagnosis.
+          Keep the result available for review and follow-up.
         </motion.p>
 
         {/* CTA buttons */}
@@ -124,25 +108,21 @@ export default function Landing() {
           </a>
         </motion.div>
 
-        {/* Stats strip */}
         <motion.div
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.45 }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-6 bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl px-8 py-5"
+          className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm text-emerald-100/80"
         >
-          {stats.map((s) => (
-            <div key={s.label} className="text-center">
-              <div className="text-3xl font-black text-white">{s.value}</div>
-              <div className="text-emerald-200/65 text-xs mt-1">{s.label}</div>
-            </div>
-          ))}
+          <span>Crop diagnosis</span>
+          <span>Livestock diagnosis</span>
+          <span>Expert follow-up</span>
         </motion.div>
       </section>
 
       {/* ── Features ── */}
       <section id="features" className="py-24 px-4 bg-white">
-        <div className="max-w-6xl mx-auto">
+        <div className="page-shell">
           <FadeInSection>
             <div className="text-center mb-16">
               <span className="text-emerald-600 font-semibold text-sm uppercase tracking-widest">Features</span>
@@ -154,7 +134,7 @@ export default function Landing() {
               </p>
             </div>
           </FadeInSection>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
             {features.map((f, i) => (
               <motion.div
                 key={f.title}
@@ -162,7 +142,7 @@ export default function Landing() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.08, duration: 0.5 }}
-                className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300"
+                className="h-full bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow duration-300"
               >
                 <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 ${iconColorMap[f.color]}`}>
                   <f.icon size={22} />
@@ -177,7 +157,7 @@ export default function Landing() {
 
       {/* ── How It Works ── */}
       <section id="how-it-works" className="py-24 px-4 bg-emerald-50/60">
-        <div className="max-w-5xl mx-auto">
+        <div className="page-shell">
           <FadeInSection>
             <div className="text-center mb-16">
               <span className="text-emerald-600 font-semibold text-sm uppercase tracking-widest">Process</span>
@@ -213,7 +193,7 @@ export default function Landing() {
 
       {/* ── CTA ── */}
       <section className="gradient-hero py-28 px-4">
-        <div className="max-w-3xl mx-auto text-center">
+        <div className="page-shell max-w-3xl text-center">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
@@ -227,7 +207,7 @@ export default function Landing() {
               Ready to protect your farm?
             </h2>
             <p className="text-emerald-100/70 text-lg mb-10">
-              Join thousands of farmers using AI to safeguard their livelihood.
+              Start with a photo and a few observations about the issue.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
@@ -249,7 +229,7 @@ export default function Landing() {
 
       {/* ── Footer ── */}
       <footer className="bg-slate-900 py-10 px-4">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="page-shell flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2 text-white font-black text-xl">
             <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center">
               <Leaf size={16} className="text-white" />

@@ -13,10 +13,10 @@ export const NewReport: React.FC = () => {
 
   return (
     <DashboardLayout>
-      <div className="max-w-5xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-        <div className="mb-10">
-          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Create New Report</h1>
-          <p className="mt-2 text-gray-500">Provide details to get an instant AI diagnosis for your crops or livestock.</p>
+      <div className="page-shell py-2 sm:py-4">
+        <div className="page-heading">
+          <h1 className="text-3xl font-black text-slate-900 tracking-tight">Create New Report</h1>
+          <p className="mt-2 max-w-2xl text-slate-500 leading-6">Provide details to get an instant AI diagnosis for your crops or livestock.</p>
         </div>
         
         <ReportWizard onComplete={handleComplete} />

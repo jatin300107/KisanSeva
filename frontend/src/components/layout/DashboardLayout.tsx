@@ -48,13 +48,14 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         </AnimatePresence>
 
         {/* Main content */}
-        <main className="flex-1 p-4 md:p-8 min-w-0">
+        <main className="flex-1 min-w-0 p-4 sm:p-6 lg:p-8">
           {/* Mobile toggle */}
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="md:hidden mb-4 p-2 rounded-lg bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors"
+            className="md:hidden mb-5 inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-600 shadow-sm hover:bg-slate-50 transition-colors"
           >
-            {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
+            {sidebarOpen ? <X size={18} /> : <Menu size={18} />}
+            {sidebarOpen ? 'Close menu' : 'Open menu'}
           </button>
           {children}
         </main>
