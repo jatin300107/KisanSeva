@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import type { ReactNode } from 'react';
 import { 
   AlertTriangle, 
   CheckCircle2, 
@@ -23,6 +24,70 @@ interface ReportViewProps {
   consultations: Consultation[];
   onRequestConsultation: () => void;
   onBackToDashboard: () => void;
+}
+
+function renderInlineMarkdown(value: string): ReactNode[] {
+  const parts = value.split(/(\*\*[^*]+\*\*|\*[^*]+\*)/g);
+  return parts.filter(Boolean).map((part, index) => {
+    if (part.startsWith('**') && part.endsWith('**')) {
+      return <strong key={index} className="font-bold text-slate-900">{part.slice(2, -2)}</strong>;
+    }
+    if (part.startsWith('*') && part.endsWith('*')) {
+      return <em key={index}>{part.slice(1, -1)}</em>;
+    }
+    return <span key={index}>{part}</span>;
+  });
+}
+
+function RichReportText({ content }: { content: string }) {
+  const lines = content.split(/\r?\n/);
+  const blocks: ReactNode[] = [];
+  let listItems: string[] = [];
+
+  const flushList = () => {
+    if (listItems.length === 0) return;
+    blocks.push(
+      <ul key={`list-${blocks.length}`} className="my-3 list-disc space-y-2 pl-5 marker:text-emerald-600">
+        {listItems.map((item, index) => (
+          <li key={index} className="pl-1">
+            {renderInlineMarkdown(item)}
+          </li>
+        ))}
+      </ul>,
+    );
+    listItems = [];
+  };
+
+  lines.forEach((line, index) => {
+    const trimmed = line.trim();
+    if (!trimmed) {
+      flushList();
+      return;
+    }
+
+    const bullet = trimmed.match(/^(?:[*-])\s+(.*)$/);
+    if (bullet) {
+      listItems.push(bullet[1]);
+      return;
+    }
+
+    flushList();
+    const heading = trimmed.match(/^#{1,6}\s+(.*)$/);
+    blocks.push(
+      heading ? (
+        <h3 key={`heading-${index}`} className="mb-2 mt-4 text-base font-bold text-slate-900 first:mt-0">
+          {renderInlineMarkdown(heading[1])}
+        </h3>
+      ) : (
+        <p key={`paragraph-${index}`} className="mb-3 last:mb-0">
+          {renderInlineMarkdown(trimmed)}
+        </p>
+      ),
+    );
+  });
+
+  flushList();
+  return <div>{blocks}</div>;
 }
 
 export const ReportView: React.FC<ReportViewProps> = ({
@@ -81,89 +146,83 @@ export const ReportView: React.FC<ReportViewProps> = ({
         </span>
       </div>
 
-      {/* Main Banner */}
+      {/* Report header */}
       <div className="surface overflow-hidden">
-        <div className="bg-gradient-to-r from-emerald-800 to-teal-900 p-6 md:p-8 text-white relative">
-          <div className="flex flex-wrap items-center justify-between gap-4 mb-3">
-            <span className="px-3 py-1 text-xs font-bold uppercase rounded-full bg-emerald-700/80 text-emerald-100 border border-emerald-500/30">
-              {report.type === 'crop' ? '🌾 Crop Diagnosis' : '🐄 Livestock Diagnosis'}
-            </span>
-            <div className="flex items-center text-emerald-200 text-xs font-medium gap-1.5">
-              <Calendar className="w-4 h-4" />
-              <span>{new Date(report.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+        <div className="h-1 bg-gradient-to-r from-emerald-500 to-teal-500" />
+        <div className="p-5 sm:p-7">
+          {mainImage && (
+            <div className="mb-6 overflow-hidden rounded-xl border border-slate-200 bg-slate-100">
+              <img src={mainImage} alt="Submitted specimen" className="mx-auto max-h-80 w-full object-contain" />
             </div>
-          </div>
+          )}
 
-          <h1 className="text-2xl md:text-3xl font-extrabold text-white mb-2 break-words">
-            {report.title || 'Diagnostic Advisory Report'}
-          </h1>
-          
-          <div className="flex flex-wrap items-center gap-2 text-emerald-100 font-medium text-lg">
-            <span>Diagnosed Disease:</span>
-            <span className="underline decoration-emerald-400 font-bold text-white">{report.disease_name}</span>
-          </div>
-        </div>
-
-        {/* Diagnostic Meta Section */}
-        <div className="p-6 bg-slate-50 border-b border-slate-200 grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="flex items-center gap-3 bg-white p-4 rounded-xl border border-slate-200">
-            <div>
-              <p className="text-xs text-slate-500 font-medium uppercase tracking-wider mb-1">Severity Rating</p>
-              {getSeverityBadge(report.severity)}
+          <div className="flex min-w-0 flex-col gap-4">
+            <div className="flex min-w-0 flex-wrap items-center gap-2">
+              <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold uppercase tracking-wide text-emerald-700">
+                {report.type === 'crop' ? 'Crop' : 'Livestock'}
+              </span>
+              <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600">
+                <Calendar className="mr-1 inline-block h-3.5 w-3.5" />
+                {new Date(report.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}
+              </span>
             </div>
-          </div>
 
-          <div className="flex items-center gap-3 bg-white p-4 rounded-xl border border-slate-200">
-            <div className="w-full">
-              <div className="flex justify-between items-center text-xs mb-1">
-                <span className="text-slate-500 font-medium uppercase tracking-wider">AI Confidence Score</span>
-                <span className="font-bold text-emerald-700">{Math.round((report.confidence || 0) * 100)}%</span>
+            <div className="min-w-0">
+              <h1 className="max-w-4xl break-words text-2xl font-bold leading-tight tracking-tight text-slate-900 sm:text-3xl">
+                {report.title || 'Diagnostic Advisory Report'}
+              </h1>
+              <p className="mt-2 break-words text-base font-semibold leading-6 text-emerald-700">
+                Diagnosed: {report.disease_name || 'Pending analysis'}
+              </p>
+            </div>
+
+            <div className="grid min-w-0 grid-cols-1 gap-3 border-t border-slate-100 pt-4 sm:grid-cols-2">
+              <div className="min-w-0 rounded-xl border border-slate-200 bg-slate-50 p-4">
+                <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-500">Severity</p>
+                <div className="min-w-0">{getSeverityBadge(report.severity)}</div>
               </div>
-              <div className="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
-                <div 
-                  className="bg-emerald-500 h-full rounded-full transition-all duration-1000" 
-                  style={{ width: `${Math.round((report.confidence || 0) * 100)}%` }}
-                />
+              <div className="min-w-0 rounded-xl border border-slate-200 bg-slate-50 p-4">
+                <div className="mb-2 flex items-center justify-between gap-3 text-xs">
+                  <span className="font-semibold uppercase tracking-wider text-slate-500">Confidence</span>
+                  <span className="shrink-0 font-bold text-emerald-700">{Math.round((report.confidence || 0) * 100)}%</span>
+                </div>
+                <div className="h-2.5 w-full overflow-hidden rounded-full bg-slate-200">
+                  <div
+                    className="h-full rounded-full bg-emerald-500 transition-all duration-1000"
+                    style={{ width: `${Math.round((report.confidence || 0) * 100)}%` }}
+                  />
+                </div>
               </div>
             </div>
           </div>
         </div>
 
         {/* Content Body */}
-        <div className="p-6 md:p-8 space-y-8">
+        <div className="space-y-7 border-t border-slate-200 bg-white p-5 sm:p-7">
           {/* Audio Summary Narration Player */}
           <ReportNarrationPlayer reportId={report.id} />
-          {/* Uploaded Image preview if present */}
-          {mainImage && (
-            <div>
-              <h2 className="text-sm font-bold uppercase tracking-wider text-slate-500 mb-3">Submitted Specimen Image</h2>
-              <div className="relative rounded-xl overflow-hidden max-h-72 border border-slate-200 bg-slate-900 flex justify-center">
-                <img src={mainImage} alt="Specimen" className="object-contain max-h-72 w-auto" />
-              </div>
-            </div>
-          )}
 
           {/* AI Diagnosis Details */}
-          <div className="space-y-3">
-            <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <section className="min-w-0 rounded-xl border border-emerald-100 bg-emerald-50/40 p-5 sm:p-6">
+            <h2 className="mb-3 flex items-center gap-2 text-base font-bold text-slate-900 sm:text-lg">
               <Sparkles className="w-5 h-5 text-emerald-600" />
-              Detailed AI Diagnosis
+              AI Diagnosis
             </h2>
-            <div className="bg-emerald-50/50 border border-emerald-100 rounded-xl p-5 text-slate-700 whitespace-pre-wrap break-words leading-relaxed text-sm md:text-base font-normal">
-              {report.ai_diagnosis}
+            <div className="max-w-none break-words [overflow-wrap:anywhere] text-sm leading-7 text-slate-700 sm:text-base">
+              <RichReportText content={report.ai_diagnosis || 'No diagnosis details are available.'} />
             </div>
-          </div>
+          </section>
 
           {/* AI Suggestions / Action Plan */}
-          <div className="space-y-3">
-            <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <section className="min-w-0 rounded-xl border border-teal-100 bg-teal-50/40 p-5 sm:p-6">
+            <h2 className="mb-3 flex items-center gap-2 text-base font-bold text-slate-900 sm:text-lg">
               <Stethoscope className="w-5 h-5 text-teal-600" />
-              Recommended Treatment & Advisory Plan
+              Recommendations
             </h2>
-            <div className="bg-teal-50/50 border border-teal-100 rounded-xl p-5 text-slate-700 whitespace-pre-wrap break-words leading-relaxed text-sm md:text-base font-normal">
-              {report.ai_suggestions}
+            <div className="break-words [overflow-wrap:anywhere] text-sm leading-7 text-slate-700 sm:text-base">
+              <RichReportText content={report.ai_suggestions || 'No recommendations are available.'} />
             </div>
-          </div>
+          </section>
 
           {/* Questionnaire Answers Toggle */}
           {answers && answers.length > 0 && (
