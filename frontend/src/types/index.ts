@@ -177,6 +177,16 @@ export interface SubmitReportResponse {
 }
 
 // ========================
+// ========================
+// Report Narration
+// ========================
+
+export interface ReportNarrationResponse {
+  lang: string;
+  text: string;
+  audio_url: string;
+}
+
 // Image Upload
 // ========================
 

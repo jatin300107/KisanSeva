@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import type { Report, ReportImage, ReportAnswer, Consultation } from '../../types';
 import Button from '../ui/Button';
+import ReportNarrationPlayer from './ReportNarrationPlayer';
 
 interface ReportViewProps {
   report: Report;
@@ -130,6 +131,8 @@ export const ReportView: React.FC<ReportViewProps> = ({
 
         {/* Content Body */}
         <div className="p-6 md:p-8 space-y-8">
+          {/* Audio Summary Narration Player */}
+          <ReportNarrationPlayer reportId={report.id} />
           {/* Uploaded Image preview if present */}
           {mainImage && (
             <div>
