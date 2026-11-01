@@ -181,24 +181,15 @@ class NarrationService:
 
     async def _make_audio(self, report_id: str, lang: str, digest: str, text: str) -> str:
         started_at = time.perf_counter()
-        ch = SentenceChunker()
-        sentences = ch.feed(text + " ")
-        rest = ch.flush()
-        if rest:
-            sentences.append(rest)
 
         tts = GnaniTTS(self.s)
         try:
-            async def one(sentence: str) -> bytes:
-                return b"".join([c async for c in tts.synthesize(sentence, lang)])
-
-            parts = await asyncio.gather(*[one(x) for x in sentences])   # order is preserved
+            pcm = b"".join([c async for c in tts.synthesize(text, lang)])
         except Exception as e:
             log.exception(
-                "narration audio generation failed report_id=%s lang=%s sentences=%d duration_ms=%d error_type=%s",
+                "narration audio generation failed report_id=%s lang=%s duration_ms=%d error_type=%s",
                 report_id,
                 lang,
-                len(sentences),
                 round((time.perf_counter() - started_at) * 1000),
                 type(e).__name__,
             )
@@ -206,7 +197,6 @@ class NarrationService:
         finally:
             await tts.close()
 
-        pcm = b"".join(parts)
         if not pcm:
             log.error("narration audio response empty report_id=%s lang=%s", report_id, lang)
             raise NarrationUnavailable("narration audio was empty")
