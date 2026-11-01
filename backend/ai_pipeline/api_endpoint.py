@@ -1,15 +1,22 @@
-import json , re
-from backend.exceptions import TranslationError
+import json
+import re
+
+from backend.exceptions import (
+    NarrationNotFound,
+    NarrationUnavailable,
+    ReportGenerationError,
+    TranslationError,
+)
 #from backend.ai_pipeline.translation import translate
 from backend.auth.services import get_current_user
 from backend.db import supabase
-from fastapi import APIRouter, Depends , HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel
 from .primary_daignosis import primary_diagnosis
 from .report_generation import generate_report
-from backend.exceptions import ReportGenerationError
 from fastapi.concurrency import run_in_threadpool
 from .ai_clients import get_genai_client , get_genai_client_2 
+from voice_layer.prompts import LANGUAGE_NAMES
 ai_router = APIRouter(prefix="/ai", tags=["AI"])
 
 
@@ -163,3 +170,17 @@ async def translate_text(
         "translated_ai_suggestions": translated_ai_suggestions
     }
     '''
+
+
+@ai_router.get("/ai/reports/{report_id}/narration")
+async def report_narration(report_id: str, request: Request, lang: str = "hi-IN",
+                           user=Depends(get_current_user)):
+    if lang not in LANGUAGE_NAMES:
+        raise HTTPException(400, "unsupported language")
+    svc = request.app.state.narration
+    try:
+        return await svc.get(report_id, str(user.id), lang)
+    except NarrationNotFound:
+        raise HTTPException(404, "report not found")
+    except NarrationUnavailable as e:
+        raise HTTPException(502, str(e))
