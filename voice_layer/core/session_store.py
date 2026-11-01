@@ -12,6 +12,7 @@ class VoiceSession:
     questions: list
     ws_token: str
     token_expires: float
+    closing: str = ""
     claimed: bool = False
     created_at: float = field(default_factory=time.time)
 
@@ -28,13 +29,13 @@ class SessionStore:
         for sid in [k for k, v in self._s.items() if now - v.created_at > self.session_ttl_s]:
             del self._s[sid]
 
-    def create(self, session_id, user_id, category, language, questions) -> VoiceSession:
+    def create(self, session_id, user_id, category, language, questions, closing: str = "") -> VoiceSession:
         self._purge()
         if len(self._s) >= self.max_sessions:
             raise RuntimeError("too many active voice sessions")
         sess = VoiceSession(
             id=session_id, user_id=user_id, category=category, language=language,
-            questions=questions, ws_token=secrets.token_urlsafe(32),
+            questions=questions, closing=closing, ws_token=secrets.token_urlsafe(32),
             token_expires=time.time() + self.token_ttl_s,
         )
         self._s[session_id] = sess

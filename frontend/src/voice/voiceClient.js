@@ -4,7 +4,7 @@ export function createVoiceClient({
   apiBase = "",
   getAccessToken,
   category,                 // "animal" | "crop"
-  language = "hi-IN",
+  language,
   onState = () => {},       // idle | connecting | agent_speaking | listening | thinking | done | error
   onEvent = () => {},       // every server JSON event, plus {type:"client_error", code, message}
   onLevel = () => {},       // 0..1 mic level, only while listening
@@ -124,9 +124,20 @@ export function createVoiceClient({
         },
         body: JSON.stringify({ category, language }),
       });
-      if (!r.ok) throw new Error(`start failed: ${r.status}`);
+      if (!r.ok) {
+        const detail = await r.text();
+        const error = new Error(`start failed: ${r.status}`);
+        error.status = r.status;
+        error.detail = detail;
+        throw error;
+      }
       info = await r.json();
-    } catch (e) { return fail("start_failed", e.message); }
+    } catch (e) {
+      if (e.status === 400 && e.detail.includes("language not available")) {
+        return fail("language_unavailable", "The selected language is not available");
+      }
+      return fail("start_failed", e.message);
+    }
 
     // the ws_token is single use and expires in about 60 s, so connect immediately, never retry with it
     const url = new URL(info.ws_path, apiBase || window.location.origin);

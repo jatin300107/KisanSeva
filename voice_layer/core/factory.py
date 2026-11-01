@@ -12,9 +12,6 @@ from .question_queue import QuestionQueue
 from .retry_policy import RetryPolicy
 from .session_store import SessionStore
 
-CLOSING = {"hi-IN": "धन्यवाद। आपकी सारी जानकारी दर्ज हो गई है। नमस्ते।"}
-
-
 @dataclass
 class VoiceRuntime:
     settings: ProviderSettings
@@ -26,7 +23,7 @@ def build_orchestrator(rt: VoiceRuntime, session, transport) -> VoiceOrchestrato
     queue = QuestionQueue(list(session.questions), RetryPolicy(max_attempts=3))
     return VoiceOrchestrator(
         session_id=session.id,
-        config=OrchestratorConfig(language=session.language, closing_line=CLOSING[session.language]),
+        config=OrchestratorConfig(language=session.language, closing_line=session.closing),
         queue=queue,
         validator=AnswerValidator(queue),
         dialogue=GeminiDialogue(

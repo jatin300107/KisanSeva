@@ -1,21 +1,6 @@
 import { motion } from 'framer-motion';
-import { ArrowRight, Activity, Leaf, Heart } from 'lucide-react';
+import { ArrowRight, Leaf, Heart } from 'lucide-react';
 import type { Report } from '../../types/index';
-import { Badge } from '../ui/Badge';
-
-const severityBarColor: Record<string, string> = {
-  low:      'bg-emerald-500',
-  medium:   'bg-amber-500',
-  high:     'bg-red-500',
-  critical: 'bg-red-700',
-};
-
-const severityBadgeVariant: Record<string, 'success' | 'warning' | 'danger'> = {
-  low:      'success',
-  medium:   'warning',
-  high:     'danger',
-  critical: 'danger',
-};
 
 /** Backend severity is a number 1-4 (or 0-1 float). Normalise to label. */
 function getSeverityLabel(severity: number): string {
@@ -38,18 +23,13 @@ interface ReportCardProps {
 
 export function ReportCard({ report, onClick }: ReportCardProps) {
   const severityLabel = getSeverityLabel(report.severity ?? 0);
-  const barColor = severityBarColor[severityLabel];
-  const badgeVariant = severityBadgeVariant[severityLabel] || 'neutral';
 
   return (
     <motion.div
       transition={{ duration: 0.2 }}
       onClick={onClick}
-      className="h-full bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden cursor-pointer hover:shadow-md hover:border-emerald-200 transition-all duration-300 group min-w-0"
+      className="h-full min-w-0 cursor-pointer rounded-xl border border-slate-200/80 bg-white shadow-sm transition-all duration-300 group hover:border-emerald-200 hover:shadow-md"
     >
-      {/* Severity colour bar */}
-      <div className={`h-1 ${barColor}`} />
-
       <div className="flex h-full min-h-[218px] flex-col p-5">
         <div className="flex min-w-0 flex-1 items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
@@ -64,10 +44,10 @@ export function ReportCard({ report, onClick }: ReportCardProps) {
               </span>
             </div>
 
-            <h3 className="font-bold text-slate-800 text-base leading-6 mb-2 line-clamp-2 break-words">
+            <h3 className="mb-2 line-clamp-1 break-words text-base font-bold leading-6 text-slate-900">
               {report.disease_name || 'Pending Analysis'}
             </h3>
-            <p className="text-xs text-slate-500 leading-5 line-clamp-2 break-words">{report.title || 'Diagnosis report'}</p>
+            <p className="line-clamp-1 break-words text-sm leading-5 text-slate-500">{report.title || 'Diagnosis report'}</p>
           </div>
 
           <ArrowRight
@@ -76,16 +56,22 @@ export function ReportCard({ report, onClick }: ReportCardProps) {
           />
         </div>
 
-        <div className="mt-5 pt-4 border-t border-slate-100 flex min-w-0 items-center gap-2 flex-wrap">
+        <div className="mt-5 flex min-w-0 flex-wrap items-center gap-2 border-t border-slate-100 pt-4">
           {report.severity != null && (
-            <Badge variant={badgeVariant}>
-              <Activity size={10} /> {severityLabel}
-            </Badge>
+            <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${
+              severityLabel === 'low'
+                ? 'bg-emerald-50 text-emerald-700'
+                : severityLabel === 'medium'
+                  ? 'bg-amber-50 text-amber-700'
+                  : 'bg-red-50 text-red-700'
+            }`}>
+              {severityLabel}
+            </span>
           )}
           {report.confidence != null && (
-            <Badge variant="info">
+            <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-700">
               {Math.round(report.confidence * 100)}% conf.
-            </Badge>
+            </span>
           )}
           <span className="text-xs text-slate-400 sm:ml-auto">
             {report.created_at ? formatDate(report.created_at) : ''}

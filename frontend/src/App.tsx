@@ -15,6 +15,7 @@ import ConsultationDetail from './pages/expert/ConsultationDetail';
 
 // Auth
 import ProtectedRoute from './components/auth/ProtectedRoute';
+import { LanguageProvider } from './context/LanguageContext';
 
 function App() {
   const { isLoading } = useAuth();
@@ -31,7 +32,7 @@ function App() {
   }
 
   return (
-    <>
+    <LanguageProvider>
       <AnimatePresence mode="wait">
         <Routes>
           {/* Public Routes */}
@@ -95,7 +96,7 @@ function App() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </AnimatePresence>
-    </>
+    </LanguageProvider>
   );
 }
 

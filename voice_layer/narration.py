@@ -13,7 +13,7 @@ from .base import PCM_CHANNELS, PCM_SAMPLE_RATE, PCM_SAMPLE_WIDTH
 from .sentence_chunker import SentenceChunker
 from .settings import ProviderSettings
 from .providers.tts.gnani_tts import GnaniTTS
-from .prompts import LANGUAGE_NAMES
+from .languages import LANGS, enabled_langs
 from .exceptions import NarrationNotFound, NarrationUnavailable
 
 log = logging.getLogger("voice.narration")
@@ -54,6 +54,8 @@ class NarrationService:
         self._locks: dict[str, asyncio.Lock] = {}
 
     async def get(self, report_id: str, user_id: str, lang: str) -> dict:
+        if lang not in enabled_langs(self.s):
+            raise NarrationUnavailable("unsupported language")
         started_at = time.perf_counter()
         log.info(
             "narration request started report_id=%s lang=%s",
@@ -138,7 +140,7 @@ class NarrationService:
         started_at = time.perf_counter()
         client = genai.Client(api_key=self.s.gemini_api_key)
         cfg = types.GenerateContentConfig(
-            system_instruction=PROMPT.replace("{language_name}", LANGUAGE_NAMES[lang]),
+            system_instruction=PROMPT.replace("{language_name}", LANGS[lang].name),
             temperature=0.2,
             thinking_config=types.ThinkingConfig(thinking_level=self.s.gemini_thinking_level),
         )

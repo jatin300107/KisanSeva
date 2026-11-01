@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { FilePlus, FileText, Activity, TrendingUp, ArrowRight } from 'lucide-react';
+import { FilePlus, FileText, ArrowRight } from 'lucide-react';
 import DashboardLayout from '../../components/layout/DashboardLayout';
 import { ReportCard } from '../../components/report/ReportCard';
 import { Button } from '../../components/ui/Button';
@@ -48,103 +47,47 @@ export default function FarmerDashboard() {
 
   return (
     <DashboardLayout>
-      <div className="page-shell space-y-8">
-        {/* Hero banner */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="overflow-hidden rounded-[1.75rem] bg-gradient-to-r from-emerald-700 to-teal-800 p-6 sm:p-8 text-white flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-lg shadow-emerald-950/10"
-        >
-          <div>
-            <p className="text-emerald-200/70 text-sm mb-1">{greeting},</p>
-            <h1 className="text-3xl sm:text-4xl font-black mb-2">{firstName}! 👋</h1>
-            <p className="text-emerald-100/70 text-sm leading-6 max-w-lg">
-              Your crops are counting on you. Start a new AI diagnosis or review your past reports.
+      <div className="w-full space-y-8">
+        <header className="flex flex-col justify-between gap-4 border-b border-slate-200/60 pb-6 pt-2 sm:flex-row sm:items-center">
+          <div className="min-w-0">
+            <h1 className="break-words text-2xl font-bold text-slate-900">
+              {greeting}, {firstName}! <span aria-hidden="true">👋</span>
+            </h1>
+            <p className="mt-1 text-sm text-slate-500">
+              Review your recent diagnoses or start a new crop or livestock report.
             </p>
           </div>
-          <Button
-            variant="ghost"
-            size="lg"
-            icon={<FilePlus size={18} />}
+          <button
             onClick={() => navigate('/farmer/reports/new')}
-            className="bg-white text-emerald-700 hover:bg-emerald-50 shrink-0 shadow-lg"
+            className="flex shrink-0 items-center gap-2 self-start rounded-xl bg-emerald-600 px-4 py-2.5 font-medium text-white shadow-sm transition hover:bg-emerald-700 sm:self-auto"
           >
-            New Diagnosis
-          </Button>
-        </motion.div>
+            <span className="text-lg">+</span> Start New Diagnosis
+          </button>
+        </header>
 
         {/* Stats */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          {[
-            { label: 'Total Reports',   value: totalReports,   icon: FileText,   color: 'text-emerald-600', bg: 'bg-emerald-50', isText: false },
-            { label: 'Latest Disease',  value: latestDisease,  icon: Activity,   color: 'text-teal-600',    bg: 'bg-teal-50',    isText: true },
-            { label: 'Avg. Confidence', value: `${avgConf}%`,  icon: TrendingUp, color: 'text-amber-600',   bg: 'bg-amber-50',   isText: false },
-          ].map((s, i) => (
-            <motion.div
-              key={s.label}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.1 }}
-              className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5 flex items-center gap-4 min-w-0"
-            >
-              <div className={`w-12 h-12 ${s.bg} rounded-xl flex items-center justify-center shrink-0`}>
-                <s.icon size={22} className={s.color} />
-              </div>
-              <div className="min-w-0">
-                <p className="text-xs text-slate-400 font-medium mb-0.5">{s.label}</p>
-                <p className={`font-black text-slate-800 break-words ${s.isText ? 'text-sm line-clamp-2' : 'text-2xl'}`}>
-                  {loading ? '—' : s.value}
-                </p>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Quick actions */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.2 }}
-            onClick={() => navigate('/farmer/reports/new')}
-            className="bg-gradient-to-br from-emerald-600 to-teal-700 rounded-2xl p-6 cursor-pointer hover:-translate-y-1 hover:shadow-xl hover:shadow-emerald-500/20 transition-all duration-300 group"
-          >
-            <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-4">
-              <FilePlus size={22} className="text-white" />
-            </div>
-            <h3 className="text-white font-bold text-lg mb-1">New AI Diagnosis</h3>
-            <p className="text-emerald-100/70 text-sm mb-4">
-              Upload a photo and answer a few questions to get your report.
-            </p>
-            <div className="flex items-center gap-1 text-white/70 text-xs font-medium group-hover:gap-2 transition-all">
-              Start now <ArrowRight size={14} />
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.25 }}
-            onClick={() => navigate('/farmer/reports')}
-            className="h-full bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6 cursor-pointer hover:shadow-md hover:border-emerald-200 transition-shadow duration-300 group"
-          >
-            <div className="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center mb-4">
-              <FileText size={22} className="text-slate-600" />
-            </div>
-            <h3 className="text-slate-800 font-bold text-lg mb-1">View All Reports</h3>
-            <p className="text-slate-500 text-sm mb-4">
-              Browse and filter your complete diagnosis history.
-            </p>
-            <div className="flex items-center gap-1 text-slate-400 text-xs font-medium group-hover:text-emerald-600 group-hover:gap-2 transition-all">
-              View history <ArrowRight size={14} />
-            </div>
-          </motion.div>
-        </div>
+        <section className="grid grid-cols-1 gap-5 sm:grid-cols-3">
+          <div className="min-w-0 rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm">
+            <p className="text-xs font-medium text-slate-500">Total Reports</p>
+            <p className="mt-1 text-2xl font-bold text-slate-900">{loading ? '—' : totalReports}</p>
+          </div>
+          <div className="min-w-0 rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm">
+            <p className="text-xs font-medium text-slate-500">Latest Disease</p>
+            <p className="mt-1 truncate text-base font-bold text-slate-900">{loading ? '—' : latestDisease}</p>
+          </div>
+          <div className="min-w-0 rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm">
+            <p className="text-xs font-medium text-slate-500">Avg. Confidence</p>
+            <p className="mt-1 text-2xl font-bold text-slate-900">{loading ? '—' : `${avgConf}%`}</p>
+          </div>
+        </section>
 
         {/* Recent reports */}
-        <div>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-bold text-slate-800">Recent Reports</h2>
+        <section className="space-y-4">
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <h2 className="text-xl font-bold tracking-tight text-slate-900">Recent Reports</h2>
+              <p className="mt-1 text-sm text-slate-500">Your latest diagnosis results.</p>
+            </div>
             {reports.length > 0 && (
               <button
                 onClick={() => navigate('/farmer/reports')}
@@ -156,7 +99,7 @@ export default function FarmerDashboard() {
           </div>
 
           {loading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
               {[...Array(3)].map((_, i) => <SkeletonCard key={i} />)}
             </div>
           ) : reports.length === 0 ? (
@@ -177,7 +120,7 @@ export default function FarmerDashboard() {
               </Button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
               {reports.slice(0, 6).map((r) => (
                 <ReportCard
                   key={r.id}
@@ -187,7 +130,7 @@ export default function FarmerDashboard() {
               ))}
             </div>
           )}
-        </div>
+        </section>
       </div>
     </DashboardLayout>
   );

@@ -92,7 +92,7 @@ class GnaniSTT:
                 additional_headers=self._headers(language),
                 open_timeout=s.gnani_connect_timeout_s,
                 proxy=None,
-                family=socket.AF_INET,
+                family=socket.AF_INET if s.gnani_force_ipv4 else 0,
             )
         except (OSError, asyncio.TimeoutError, WebSocketException) as e:
             raise STTError(f"stt connect failed: {type(e).__name__}: {e}") from e

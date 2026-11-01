@@ -18,7 +18,7 @@ from .primary_daignosis import primary_diagnosis
 from .report_generation import generate_report
 from fastapi.concurrency import run_in_threadpool
 from .ai_clients import get_genai_client , get_genai_client_2 
-from voice_layer.prompts import LANGUAGE_NAMES
+from voice_layer.languages import enabled_langs
 
 log = logging.getLogger("backend.ai.narration")
 
@@ -187,7 +187,7 @@ async def report_narration(report_id: str, request: Request, lang: str = "hi-IN"
         user.id,
         lang,
     )
-    if lang not in LANGUAGE_NAMES:
+    if lang not in enabled_langs(request.app.state.voice.settings):
         log.warning("narration endpoint unsupported language report_id=%s lang=%s", report_id, lang)
         raise HTTPException(400, "unsupported language")
     svc = request.app.state.narration

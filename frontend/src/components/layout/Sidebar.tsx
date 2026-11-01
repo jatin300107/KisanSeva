@@ -49,7 +49,7 @@ export default function Sidebar() {
   };
 
   return (
-    <aside className="w-64 h-full bg-white border-r border-slate-200/80 flex flex-col">
+    <div className="flex h-full w-full flex-col">
       {/* Logo */}
       <div className="h-16 flex items-center px-5 border-b border-slate-200/80">
         <div className="flex items-center gap-2">
@@ -112,6 +112,6 @@ export default function Sidebar() {
           Sign Out
         </button>
       </div>
-    </aside>
+    </div>
   );
 }

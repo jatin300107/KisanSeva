@@ -2,7 +2,7 @@ export interface VoiceClientOptions {
   apiBase?: string;
   getAccessToken: () => string | Promise<string>;
   category: 'animal' | 'crop';
-  language?: string;
+  language: string;
   onState?: (state: string) => void;
   onEvent?: (event: Record<string, unknown>) => void;
   onLevel?: (level: number) => void;

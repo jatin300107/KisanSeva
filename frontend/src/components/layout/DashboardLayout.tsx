@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import type { ReactNode } from 'react';
-import Navbar from './Navbar';
 import Sidebar from './Sidebar';
+import { useLanguage } from '../../context/LanguageContext';
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -11,55 +10,78 @@ interface DashboardLayoutProps {
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const {
+    languages, language, setLanguage, loading, voiceActive,
+    hasStoredLanguage, dismissFirstUse,
+  } = useLanguage();
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <Navbar />
-      <div className="flex pt-16 min-h-screen">
-        {/* Desktop sidebar */}
-        <div className="hidden md:flex shrink-0">
-          <div className="h-[calc(100vh-4rem)] sticky top-16 overflow-y-auto">
-            <Sidebar />
-          </div>
-        </div>
+    <div className="flex min-h-screen bg-slate-50">
+      <aside className="hidden min-h-screen w-64 shrink-0 flex-col justify-between border-r border-slate-200 bg-white p-4 md:flex">
+        <Sidebar />
+      </aside>
 
-        {/* Mobile sidebar overlay */}
-        <AnimatePresence>
-          {sidebarOpen && (
-            <>
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="fixed inset-0 z-40 bg-slate-900/50 backdrop-blur-sm md:hidden"
-                onClick={() => setSidebarOpen(false)}
-              />
-              <motion.div
-                initial={{ x: -264 }}
-                animate={{ x: 0 }}
-                exit={{ x: -264 }}
-                transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                className="fixed top-16 left-0 bottom-0 z-50 md:hidden"
-              >
-                <Sidebar />
-              </motion.div>
-            </>
-          )}
-        </AnimatePresence>
-
-        {/* Main content */}
-        <main className="flex-1 min-w-0 p-4 sm:p-6 lg:p-8">
-          {/* Mobile toggle */}
+      <main className="min-w-0 max-w-7xl flex-1 p-8">
+        <div className="md:hidden">
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="md:hidden mb-5 inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-600 shadow-sm hover:bg-slate-50 transition-colors"
+            className="mb-5 inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-600 shadow-sm transition-colors hover:bg-slate-50"
           >
             {sidebarOpen ? <X size={18} /> : <Menu size={18} />}
             {sidebarOpen ? 'Close menu' : 'Open menu'}
           </button>
-          {children}
-        </main>
-      </div>
+          {sidebarOpen && (
+            <aside className="mb-5 min-h-0 w-full border-b border-slate-200 bg-white pb-4">
+              <Sidebar />
+            </aside>
+          )}
+        </div>
+        <div className="mb-5 flex items-center justify-end border-b border-slate-200/60 pb-4">
+          {!loading && languages.length > 0 && (
+            <label className="flex items-center gap-2 text-sm font-medium text-slate-600">
+              <span>Language</span>
+              <select
+                value={language}
+                disabled={voiceActive}
+                onChange={(event) => setLanguage(event.target.value)}
+                className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 shadow-sm disabled:cursor-not-allowed disabled:opacity-60"
+                aria-label="Voice language"
+              >
+                {languages.map((item) => (
+                  <option key={item.code} value={item.code}>{item.label} ({item.name})</option>
+                ))}
+              </select>
+            </label>
+          )}
+        </div>
+        {children}
+      </main>
+      {!loading && languages.length > 0 && !hasStoredLanguage && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-4">
+          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
+            <h2 className="text-xl font-bold text-slate-900">Choose your voice language</h2>
+            <p className="mt-2 text-sm text-slate-600">
+              This language will be used for voice questions and report summaries.
+            </p>
+            <select
+              value={language}
+              onChange={(event) => setLanguage(event.target.value)}
+              className="mt-5 w-full rounded-xl border border-slate-200 px-3 py-3 text-sm"
+              aria-label="Choose voice language"
+            >
+              {languages.map((item) => (
+                <option key={item.code} value={item.code}>{item.label} ({item.name})</option>
+              ))}
+            </select>
+            <button
+              onClick={dismissFirstUse}
+              className="mt-5 w-full rounded-xl bg-emerald-600 px-4 py-3 font-semibold text-white hover:bg-emerald-700"
+            >
+              Continue
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

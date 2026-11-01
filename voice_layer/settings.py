@@ -12,11 +12,11 @@ class ProviderSettings(BaseSettings):
     # Gnani shared
     gnani_api_key: str
     gnani_connect_timeout_s: float = 10.0
+    gnani_force_ipv4: bool = True
+    voice_enabled_langs: str = "hi-IN,en-IN,pa-IN"
 
     # Gnani TTS (SSE over HTTP POST)
     gnani_tts_url: str = "https://api.vachana.ai/api/v1/tts/sse"
-    gnani_tts_model: str = "timbre-v2.5"
-    gnani_tts_voice: str = "Nalini"
     gnani_tts_speed: float = 1.0
     gnani_tts_timeout_s: float = 20.0    # max wait between events
 

@@ -4,7 +4,7 @@ import type { SubmitReportRequest, SubmitReportResponse, ReportNarrationResponse
 export const aiApi = {
   submitReport: (data: SubmitReportRequest) =>
     api.post<SubmitReportResponse>('/ai/reports/submit', data),
-  getReportNarration: (reportId: string, lang = 'hi-IN') =>
+  getReportNarration: (reportId: string, lang: string) =>
     api.get<ReportNarrationResponse>(`/ai/reports/${reportId}/narration`, {
       params: { lang },
     }),

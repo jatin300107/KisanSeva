@@ -13,6 +13,7 @@ from ...base import (
     TTSError,
 )
 from ...settings import ProviderSettings
+from ...languages import LANGS
 
 log = logging.getLogger("voice.tts")
 
@@ -33,6 +34,7 @@ class GnaniTTS:
         )
 
     def _body(self, text: str, language: str) -> dict:
+        lang = LANGS[language]
         return {
             "text": text,
             "audio_config": {
@@ -42,9 +44,9 @@ class GnaniTTS:
                 "encoding": "linear_pcm",
                 "container": "raw",
             },
-            "model": self._s.gnani_tts_model,
-            "voice": self._s.gnani_tts_voice,
-            "language": language,          # e.g. "hi-IN"
+            "model": lang.tts_model,
+            "voice": lang.tts_voice,
+            "language": language,
             "speed": self._s.gnani_tts_speed,
         }
 

@@ -6,9 +6,9 @@ import {
 } from 'lucide-react';
 import { createVoiceClient } from '../../voice/voiceClient';
 import type { AnswerEntry, Question } from '../../types';
+import { useLanguage } from '../../context/LanguageContext';
 
 // ─── Config ──────────────────────────────────────────────────────────────────
-const VOICE_LANGUAGE = 'hi-IN';
 const ENABLE_TAP_TO_SEND = false; // show "Done speaking" button when true
 // An empty base keeps local HTTP and WebSocket traffic on the Vite origin,
 // where the /voice proxy forwards both requests and upgrades.
@@ -75,6 +75,7 @@ export default function VoiceMode({
   onVoiceComplete,
   onSwitchToTyped,
 }: VoiceModeProps) {
+  const { language, setLanguage, setVoiceActive } = useLanguage();
   const [voiceState, setVoiceState] = useState<VoiceState>('idle');
   const [bubbles, setBubbles] = useState<ChatBubble[]>([]);
   const [micLevel, setMicLevel] = useState(0);
@@ -88,6 +89,17 @@ export default function VoiceMode({
   const clientRef = useRef<ReturnType<typeof createVoiceClient> | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const isActive = voiceState !== 'idle' && voiceState !== 'done' && voiceState !== 'error';
+
+  useEffect(() => {
+    setVoiceActive(isActive);
+    return () => setVoiceActive(false);
+  }, [isActive, setVoiceActive]);
+
+  useEffect(() => {
+    return () => {
+      clientRef.current?.stop();
+    };
+  }, []);
 
   // Auto-scroll chat
   useEffect(() => {
@@ -139,6 +151,11 @@ export default function VoiceMode({
 
   function switchToTypedWithPartial() {
     onSwitchToTyped(buildAnswerEntries());
+  }
+
+  function stopAndSwitchToTyped() {
+    clientRef.current?.stop();
+    switchToTypedWithPartial();
   }
 
   // ── Event handler ────────────────────────────────────────────────────────
@@ -200,10 +217,14 @@ export default function VoiceMode({
     if (type === 'client_error') {
       const code = ev.code as string;
       const message = ev.message as string;
+      if (code === 'language_unavailable') {
+        setLanguage('hi-IN', true);
+        addSystemBubble('That language is temporarily unavailable. Hindi has been selected instead. Please try again.');
+      }
       setClientError({ code, message });
       setVoiceState('error');
     }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [setLanguage]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // ── Start / stop ─────────────────────────────────────────────────────────
   function startVoice() {
@@ -219,7 +240,7 @@ export default function VoiceMode({
       apiBase: API_BASE,
       getAccessToken,
       category,
-      language: VOICE_LANGUAGE,
+      language,
       onState: (s: string) => setVoiceState(s as VoiceState),
       onEvent: handleEvent,
       onLevel: (l: number) => setMicLevel(l),
@@ -352,7 +373,7 @@ export default function VoiceMode({
         <ClientErrorBanner
           code={clientError.code}
           message={clientError.message}
-          onSwitchToTyped={() => onSwitchToTyped(buildAnswerEntries())}
+          onSwitchToTyped={stopAndSwitchToTyped}
         />
       )}
 
@@ -445,7 +466,7 @@ export default function VoiceMode({
             )}
 
             <button
-              onClick={() => onSwitchToTyped(buildAnswerEntries())}
+              onClick={stopAndSwitchToTyped}
               className="flex items-center gap-2 px-4 py-3 rounded-xl border border-slate-200 text-slate-500 font-medium text-sm hover:bg-slate-50 transition-colors ml-auto min-h-[52px]"
             >
               <Keyboard size={15} />
@@ -458,7 +479,7 @@ export default function VoiceMode({
       {/* Error fallback action */}
       {(voiceState === 'error') && !clientError && (
         <button
-          onClick={() => onSwitchToTyped(buildAnswerEntries())}
+          onClick={stopAndSwitchToTyped}
           className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-slate-800 text-white font-semibold text-sm hover:bg-slate-900 transition-colors min-h-[52px]"
         >
           <Keyboard size={16} />

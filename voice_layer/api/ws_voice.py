@@ -26,6 +26,7 @@ async def _reader(ws: WebSocket, orch) -> None:
     while True:
         msg = await ws.receive()
         if msg["type"] == "websocket.disconnect":
+            log.info("websocket disconnected by client")
             return
         if msg.get("bytes") is not None:
             orch.feed_audio(msg["bytes"])
@@ -55,6 +56,7 @@ async def voice_ws(ws: WebSocket, session_id: str, token: str):
     try:
         done, _ = await asyncio.wait({run_task, read_task}, return_when=asyncio.FIRST_COMPLETED)
         if run_task not in done:
+            log.info("session %s ended because websocket reader stopped", session_id)
             orch.on_client_end()               # socket dropped or  quit client
         with contextlib.suppress(Exception, asyncio.CancelledError):
             status = await run_task

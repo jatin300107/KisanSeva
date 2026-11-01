@@ -6,7 +6,8 @@ from pydantic import BaseModel
 
 from backend.auth.services import get_current_user
 
-from ..prompts import LANGUAGE_NAMES
+from ..db.voice_repo import MissingTranslations
+from ..languages import enabled_langs
 
 voice_router = APIRouter(prefix="/voice")
 
@@ -21,21 +22,33 @@ class StartRequest(BaseModel):
     language: str = "hi-IN"
 
 
+@voice_router.get("/languages")
+async def list_languages(request: Request):
+    rt = request.app.state.voice
+    return [
+        {"code": lang.code, "label": lang.label, "name": lang.name}
+        for lang in enabled_langs(rt.settings).values()
+    ]
+
+
 @voice_router.post("/sessions")
 async def start_session(body: StartRequest, request: Request, user=Depends(get_current_user)):
     user_id = str(user.id)
     rt = request.app.state.voice
-    if body.language not in LANGUAGE_NAMES:
-        raise HTTPException(400, f"unsupported language: {body.language}")
+    if body.language not in enabled_langs(rt.settings):
+        raise HTTPException(400, "language not available")
     db_type = DB_TYPE[body.category]
 
-    questions = await rt.repo.load_questions(db_type, body.language)
+    try:
+        questions, closing = await rt.repo.load_questions(db_type, body.language)
+    except MissingTranslations:
+        raise HTTPException(400, "language not available")
     if not questions:
         raise HTTPException(404, "no questions found for this category")
 
     sid = str(uuid.uuid4())
     try:
-        sess = rt.store.create(sid, user_id, db_type, body.language, questions)
+        sess = rt.store.create(sid, user_id, db_type, body.language, questions, closing)
     except RuntimeError:
         raise HTTPException(503, "server busy, try again shortly")
     await rt.repo.create_session(sid, user_id, db_type, body.language)
