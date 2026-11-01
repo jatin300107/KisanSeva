@@ -1,5 +1,7 @@
 import json
+import logging
 import re
+import time
 
 from backend.exceptions import (
     NarrationNotFound,
@@ -17,6 +19,9 @@ from .report_generation import generate_report
 from fastapi.concurrency import run_in_threadpool
 from .ai_clients import get_genai_client , get_genai_client_2 
 from voice_layer.prompts import LANGUAGE_NAMES
+
+log = logging.getLogger("backend.ai.narration")
+
 ai_router = APIRouter(prefix="/ai", tags=["AI"])
 
 
@@ -172,15 +177,43 @@ async def translate_text(
     '''
 
 
-@ai_router.get("/ai/reports/{report_id}/narration")
+@ai_router.get("/reports/{report_id}/narration")
 async def report_narration(report_id: str, request: Request, lang: str = "hi-IN",
                            user=Depends(get_current_user)):
+    started_at = time.perf_counter()
+    log.info(
+        "narration endpoint request report_id=%s user_id=%s lang=%s",
+        report_id,
+        user.id,
+        lang,
+    )
     if lang not in LANGUAGE_NAMES:
+        log.warning("narration endpoint unsupported language report_id=%s lang=%s", report_id, lang)
         raise HTTPException(400, "unsupported language")
     svc = request.app.state.narration
     try:
-        return await svc.get(report_id, str(user.id), lang)
+        response = await svc.get(report_id, str(user.id), lang)
+        log.info(
+            "narration endpoint success report_id=%s lang=%s duration_ms=%d",
+            report_id,
+            lang,
+            round((time.perf_counter() - started_at) * 1000),
+        )
+        return response
     except NarrationNotFound:
+        log.warning(
+            "narration endpoint report not found report_id=%s user_id=%s duration_ms=%d",
+            report_id,
+            user.id,
+            round((time.perf_counter() - started_at) * 1000),
+        )
         raise HTTPException(404, "report not found")
     except NarrationUnavailable as e:
+        log.exception(
+            "narration endpoint unavailable report_id=%s user_id=%s lang=%s duration_ms=%d",
+            report_id,
+            user.id,
+            lang,
+            round((time.perf_counter() - started_at) * 1000),
+        )
         raise HTTPException(502, str(e))
