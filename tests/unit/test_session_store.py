@@ -1,6 +1,6 @@
 import time
 
-from voice_layer.core.session_store import SessionStore
+from backend.voice_layer.core.session_store import SessionStore
 
 
 def test_token_is_single_use():

@@ -5,13 +5,13 @@ from fastapi.responses import FileResponse
 from backend.auth.auth_routes import router
 from backend.farmer.endpoints import farmer, expert
 from backend.ai_pipeline.api_endpoint import ai_router
-from voice_layer.api.router_sesion import voice_router
-from voice_layer.api.ws_voice import wss_router
-from voice_layer.core.factory import VoiceRuntime
-from voice_layer.core.session_store import SessionStore
-from voice_layer.db.voice_repo import VoiceRepo
-from voice_layer.narration import NarrationService
-from voice_layer.settings import ProviderSettings
+from backend.voice_layer.api.router_sesion import voice_router
+from backend.voice_layer.api.ws_voice import wss_router
+from backend.voice_layer.core.factory import VoiceRuntime
+from backend.voice_layer.core.session_store import SessionStore
+from backend.voice_layer.db.voice_repo import VoiceRepo
+from backend.voice_layer.narration import NarrationService
+from backend.voice_layer.settings import ProviderSettings
 from backend.db import supabase
 from dotenv import load_dotenv
 import logging

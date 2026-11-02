@@ -1,7 +1,7 @@
 
 
 
-from voice_layer.exceptions import NarrationNotFound, NarrationUnavailable
+from backend.voice_layer.exceptions import NarrationNotFound, NarrationUnavailable
 
 
 class DiseaseNotFound(Exception):

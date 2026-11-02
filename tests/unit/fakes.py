@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from voice_layer.base import LLMTurn, ToolCall, Utterance
+from backend.voice_layer.base import LLMTurn, ToolCall, Utterance
 
 
 def tc(*items):

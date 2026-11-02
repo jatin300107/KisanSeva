@@ -18,7 +18,7 @@ from .primary_daignosis import primary_diagnosis
 from .report_generation import generate_report
 from fastapi.concurrency import run_in_threadpool
 from .ai_clients import get_genai_client , get_genai_client_2 
-from voice_layer.languages import enabled_langs
+from backend.voice_layer.languages import enabled_langs
 
 log = logging.getLogger("backend.ai.narration")
 

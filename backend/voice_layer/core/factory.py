@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from ..prompts import build_system_prompt
 from ..providers.llm.gemini_dialogue import GeminiDialogue
 from ..providers.llm.tools import submit_answers_declaration
-from voice_layer.settings import ProviderSettings
+from backend.voice_layer.settings import ProviderSettings
 from ..providers.stt.gnani_stt import GnaniSTT
 from ..providers.tts.gnani_tts import GnaniTTS
 from .answer_validator import AnswerValidator

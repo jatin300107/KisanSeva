@@ -2,12 +2,12 @@ import asyncio
 
 from fakes import FakeDialogue, FakeRepo, FakeSTT, FakeTransport, FakeTTS, Rig, tc, turn
 
-from voice_layer.core.answer_validator import AnswerValidator
-from voice_layer.core.orchestrator import OrchestratorConfig, VoiceOrchestrator
-from voice_layer.core.question_queue import QuestionQueue
-from voice_layer.core.questions import Question
-from voice_layer.core.retry_policy import RetryPolicy
-from voice_layer.base import LLMError
+from backend.voice_layer.core.answer_validator import AnswerValidator
+from backend.voice_layer.core.orchestrator import OrchestratorConfig, VoiceOrchestrator
+from backend.voice_layer.core.question_queue import QuestionQueue
+from backend.voice_layer.core.questions import Question
+from backend.voice_layer.core.retry_policy import RetryPolicy
+from backend.voice_layer.base import LLMError
 
 
 def build(n_questions, utterances, llm_script, **cfg):

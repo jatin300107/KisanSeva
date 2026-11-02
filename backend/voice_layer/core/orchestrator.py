@@ -8,7 +8,7 @@ from typing import AsyncIterator, Protocol
 
 from pydantic import ValidationError
 
-from voice_layer.base import (
+from backend.voice_layer.base import (
     PCM_CHANNELS,
     PCM_SAMPLE_RATE,
     PCM_SAMPLE_WIDTH,

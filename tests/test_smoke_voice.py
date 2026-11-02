@@ -15,18 +15,18 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from voice_layer.core.answer_validator import AnswerValidator, make_context
-from voice_layer.core.question_queue import QuestionQueue
-from voice_layer.core.questions import Question
-from voice_layer.core.retry_policy import RetryPolicy
-from voice_layer.core.turn_message import build_turn_message
-from voice_layer.prompts.prompts import build_system_prompt
-from voice_layer.base import PCM_SAMPLE_RATE
-from voice_layer.providers.llm.gemini_dialogue import GeminiDialogue
-from voice_layer.providers.llm.tools import parse_submit_answers, submit_answers_declaration
-from voice_layer.settings import ProviderSettings
-from voice_layer.providers.stt.gnani_stt import GnaniSTT
-from voice_layer.providers.tts.gnani_tts import GnaniTTS
+from backend.voice_layer.core.answer_validator import AnswerValidator, make_context
+from backend.voice_layer.core.question_queue import QuestionQueue
+from backend.voice_layer.core.questions import Question
+from backend.voice_layer.core.retry_policy import RetryPolicy
+from backend.voice_layer.core.turn_message import build_turn_message
+from backend.voice_layer.prompts.prompts import build_system_prompt
+from backend.voice_layer.base import PCM_SAMPLE_RATE
+from backend.voice_layer.providers.llm.gemini_dialogue import GeminiDialogue
+from backend.voice_layer.providers.llm.tools import parse_submit_answers, submit_answers_declaration
+from backend.voice_layer.settings import ProviderSettings
+from backend.voice_layer.providers.stt.gnani_stt import GnaniSTT
+from backend.voice_layer.providers.tts.gnani_tts import GnaniTTS
 
 LANG = "hi-IN"
 CATEGORY = "livestock"
