@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Brain, Sparkles, AlertCircle } from 'lucide-react';
 import { aiApi } from '../../api/ai';
 import type { DiagnosisType, AnswerEntry, SubmitReportResponse } from '../../types';
 
 interface StepProcessingProps {
-  submissionId: string;
   type: DiagnosisType | null;
   answers: AnswerEntry[];
   imageUrl: string | null;
@@ -21,11 +20,10 @@ const MESSAGES = [
   'Almost done...'
 ];
 
-const submittedReports = new Set<string>();
-
-export const StepProcessing: React.FC<StepProcessingProps> = ({ submissionId, type, answers, imageUrl, onComplete, onError }) => {
+export const StepProcessing: React.FC<StepProcessingProps> = ({ type, answers, imageUrl, onComplete, onError }) => {
   const [msgIndex, setMsgIndex] = useState(0);
-  const [errorState, setErrorState] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const submittedRef = useRef(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -35,23 +33,39 @@ export const StepProcessing: React.FC<StepProcessingProps> = ({ submissionId, ty
   }, []);
 
   useEffect(() => {
-    if (!type) return;
+    if (submittedRef.current || !type || answers.length === 0) {
+      if (!type) {
+        setErrorMessage('No diagnosis type was selected. Please return to the review step.');
+      }
+      return;
+    }
+    submittedRef.current = true;
 
-    const submissionKey = submissionId;
-    if (submittedReports.has(submissionKey)) return;
-    submittedReports.add(submissionKey);
-
-    aiApi.submitReport({ type, answers, image_url: imageUrl })
+    const request = { type, answers, image_url: imageUrl };
+    aiApi.submitReport(request)
       .then(res => {
         onComplete(res.data);
       })
-      .catch(() => {
-        submittedReports.delete(submissionKey);
-        setErrorState(true);
+      .catch((error: unknown) => {
+        submittedRef.current = false;
+        const responseDetail =
+          typeof error === 'object' &&
+          error !== null &&
+          'response' in error &&
+          typeof error.response === 'object' &&
+          error.response !== null &&
+          'data' in error.response &&
+          typeof error.response.data === 'object' &&
+          error.response.data !== null &&
+          'detail' in error.response.data &&
+          typeof error.response.data.detail === 'string'
+            ? error.response.data.detail
+            : null;
+        setErrorMessage(responseDetail || 'Unable to generate the analysis. Please try again.');
       });
-  }, [submissionId, type, answers, imageUrl, onComplete]);
+  }, [type, answers, imageUrl, onComplete]);
 
-  if (errorState) {
+  if (errorMessage) {
     return (
       <div className="flex flex-col items-center justify-center py-20 space-y-6 max-w-lg mx-auto text-center">
         <div className="w-20 h-20 bg-red-50 text-red-500 rounded-full flex items-center justify-center">
@@ -59,10 +73,14 @@ export const StepProcessing: React.FC<StepProcessingProps> = ({ submissionId, ty
         </div>
         <div>
           <h3 className="text-xl font-semibold text-gray-900 mb-2">Analysis Failed</h3>
-          <p className="text-gray-500 mb-6">We encountered an error while analyzing your report. Please try again.</p>
+          <p className="text-gray-500 mb-2">{errorMessage}</p>
+          <p className="text-gray-400 text-sm mb-6">Your answers are still available. You can try the analysis again.</p>
         </div>
         <button
-          onClick={onError}
+          onClick={() => {
+            setErrorMessage(null);
+            onError();
+          }}
           className="px-8 py-3 bg-gray-900 text-white rounded-xl font-medium hover:bg-gray-800 transition-colors"
         >
           Try Again

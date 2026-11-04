@@ -8,7 +8,7 @@ interface StepReviewProps {
   imageUrl: string | null;
   questions: Question[];
   answers: AnswerEntry[];
-  onSubmit: () => void;
+  onSubmit: (answers: AnswerEntry[]) => void;
   onGoToStep: (step: number) => void;
   onBack: () => void;
 }
@@ -105,7 +105,8 @@ export const StepReview: React.FC<StepReviewProps> = ({
           Back
         </button>
         <button
-          onClick={onSubmit}
+          type="button"
+          onClick={() => onSubmit(answers)}
           className="px-8 py-3 bg-gradient-to-r from-emerald-600 to-emerald-500 text-white rounded-xl font-semibold shadow-md shadow-emerald-500/20 hover:shadow-lg hover:shadow-emerald-500/30 transform hover:-translate-y-0.5 transition-all"
         >
           Submit for AI Analysis

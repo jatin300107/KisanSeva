@@ -17,10 +17,17 @@ export const ReportWizard: React.FC<{ onComplete: (res: SubmitReportResponse) =>
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [answers, setAnswers] = useState<AnswerEntry[]>([]);
+  const [analysisAnswers, setAnalysisAnswers] = useState<AnswerEntry[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [submissionId] = useState(() => crypto.randomUUID());
-
-  const nextStep = () => setStep(prev => Math.min(prev + 1, 5));
+  const nextStep = (nextAnswers?: AnswerEntry[]) => {
+    if (nextAnswers) setAnswers(nextAnswers);
+    setStep(prev => Math.min(prev + 1, 5));
+  };
+  const submitForAnalysis = (reviewAnswers: AnswerEntry[]) => {
+    setAnalysisAnswers(reviewAnswers);
+    setAnswers(reviewAnswers);
+    setStep(5);
+  };
   const prevStep = () => setStep(prev => Math.max(prev - 1, 1));
   const goToStep = (s: number) => setStep(s);
 
@@ -72,10 +79,17 @@ export const ReportWizard: React.FC<{ onComplete: (res: SubmitReportResponse) =>
             <StepQuestionnaire key="step3" type={type} questions={questions} setQuestions={setQuestions} answers={answers} setAnswers={setAnswers} currentQuestionIndex={currentQuestionIndex} setCurrentQuestionIndex={setCurrentQuestionIndex} onNext={nextStep} onBack={prevStep} />
           )}
           {step === 4 && (
-            <StepReview key="step4" type={type} imageUrl={imageUrl} questions={questions} answers={answers} onSubmit={nextStep} onGoToStep={goToStep} onBack={prevStep} />
+            <StepReview key="step4" type={type} imageUrl={imageUrl} questions={questions} answers={answers} onSubmit={submitForAnalysis} onGoToStep={goToStep} onBack={prevStep} />
           )}
           {step === 5 && (
-            <StepProcessing key="step5" submissionId={submissionId} type={type} answers={answers} imageUrl={imageUrl} onComplete={onComplete} onError={() => setStep(4)} />
+            <StepProcessing
+              key="step5"
+              type={type}
+              answers={analysisAnswers.length > 0 ? analysisAnswers : answers}
+              imageUrl={imageUrl}
+              onComplete={onComplete}
+              onError={() => setStep(4)}
+            />
           )}
         </AnimatePresence>
       </div>

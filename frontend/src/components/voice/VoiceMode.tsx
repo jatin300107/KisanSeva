@@ -86,6 +86,7 @@ export default function VoiceMode({
 
   // Accumulated answers from answer_saved events
   const savedAnswers = useRef<Record<string, VoiceAnswerSaved>>({});
+  const voiceSessionId = useRef<string | null>(null);
   const clientRef = useRef<ReturnType<typeof createVoiceClient> | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const isActive = voiceState !== 'idle' && voiceState !== 'done' && voiceState !== 'error';
@@ -188,7 +189,7 @@ export default function VoiceMode({
 
     if (type === 'done') {
       const d = ev as unknown as VoiceDoneEvent;
-      if (d.status === 'completed' || d.status === 'abandoned') {
+      if (d.status === 'completed') {
         // Merge done.answers into savedAnswers for completeness
         for (const [qid, val] of Object.entries(d.answers || {})) {
           savedAnswers.current[qid] = { question_id: qid, ...val } as VoiceAnswerSaved;
@@ -196,6 +197,12 @@ export default function VoiceMode({
         addSystemBubble('✓ Voice consultation completed! Proceeding to report creation...');
         setTimeout(() => {
           onVoiceComplete(buildAnswerEntries());
+        }, 1200);
+      } else if (d.status === 'abandoned') {
+        addSystemBubble('Voice consultation ended because no answer was detected. Please continue by typing.');
+        setVoiceState('error');
+        setTimeout(() => {
+          onSwitchToTyped(buildAnswerEntries());
         }, 1200);
       } else {
         // failed / timeout — fall back to typed with partial
@@ -230,6 +237,7 @@ export default function VoiceMode({
   function startVoice() {
     if (isActive) return;
     savedAnswers.current = {};
+    voiceSessionId.current = null;
     setBubbles([]);
     setClientError(null);
     setTtsFailed(null);
@@ -244,6 +252,9 @@ export default function VoiceMode({
       onState: (s: string) => setVoiceState(s as VoiceState),
       onEvent: handleEvent,
       onLevel: (l: number) => setMicLevel(l),
+      onSessionId: (sessionId: string) => {
+        voiceSessionId.current = sessionId;
+      },
     });
     clientRef.current = client;
     client.start();

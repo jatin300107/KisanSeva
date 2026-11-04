@@ -13,7 +13,7 @@ interface StepQuestionnaireProps {
   setAnswers: (a: AnswerEntry[]) => void;
   currentQuestionIndex: number;
   setCurrentQuestionIndex: (i: number) => void;
-  onNext: () => void;
+  onNext: (answers?: AnswerEntry[]) => void;
   onBack: () => void;
 }
 
@@ -83,8 +83,7 @@ export const StepQuestionnaire: React.FC<StepQuestionnaireProps> = ({
 
   // Voice session completed — merge answers, jump to review & report creation
   const handleVoiceComplete = (voiceAnswers: AnswerEntry[]) => {
-    setAnswers(voiceAnswers);
-    onNext(); // Proceed directly to StepReview -> Report Creation
+    onNext(voiceAnswers);
   };
 
   // Voice session ended early or failed — merge partial answers, switch to typed form as fallback

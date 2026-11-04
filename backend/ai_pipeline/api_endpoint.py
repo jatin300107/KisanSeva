@@ -42,9 +42,32 @@ async def submit_report(
     current_user=Depends(get_current_user)
 ):
     try:
-     
-        primary_response = await run_in_threadpool(primary_diagnosis, body=body , gemini_client= get_genai_client() )
-        report = await run_in_threadpool(generate_report,body=body , primary_response=primary_response , gemini_client = get_genai_client_2())
+        if body.type.lower() not in {"animal", "crop"}:
+            raise HTTPException(status_code=400, detail="type must be animal or crop")
+        answers = body.answers
+        if not answers:
+            raise HTTPException(status_code=400, detail="at least one answer is required")
+        if any(
+            not isinstance(answer.get("question_id"), str)
+            or not answer["question_id"].strip()
+            or not isinstance(answer.get("answer"), str)
+            or not answer["answer"].strip()
+            for answer in answers
+        ):
+            raise HTTPException(
+                status_code=400,
+                detail="each answer must include a question_id and non-empty answer",
+            )
+        report_body = body.model_copy(update={"answers": answers})
+        primary_response = await run_in_threadpool(
+            primary_diagnosis, body=report_body, gemini_client=get_genai_client()
+        )
+        report = await run_in_threadpool(
+            generate_report,
+            body=report_body,
+            primary_response=primary_response,
+            gemini_client=get_genai_client_2(),
+        )
         clean_report = re.sub(r"```json|```", "", report).strip()
         try:
             report_data = json.loads(clean_report)
@@ -72,7 +95,7 @@ async def submit_report(
                 "question_id": a["question_id"],
                 "answer": a["answer"]
             }
-            for a in body.answers
+            for a in answers
         ]
         supabase.table("answers").insert(answer_rows).execute()
 
